@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take the Quiz</title>
+    <link rel="stylesheet" href="styles/quiz.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-globe-americas"></i>
+                    <h1>PolitiScan</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="quiz-container">
+            <h2>Political Ideology Quiz</h2>
+            <p>Answer honestly based on your personal beliefs. There are no right or wrong answers.</p>
+            
+            <div class="progress-container">
+                <div class="progress-bar-quiz" id="quiz-progress" style="width: 0%"></div>
+            </div>
+            
+            <div class="question">
+                <div class="question-text" id="question-text">The government should play a larger role in the economy.</div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(this, 1)">Strongly Disagree</div>
+                    <div class="option" onclick="selectOption(this, 2)">Disagree</div>
+                    <div class="option" onclick="selectOption(this, 3)">Neutral</div>
+                    <div class="option" onclick="selectOption(this, 4)">Agree</div>
+                    <div class="option" onclick="selectOption(this, 5)">Strongly Agree</div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="prevQuestion()" id="prev-btn" disabled><i class="fas fa-arrow-left"></i> Previous</button>
+                <button class="btn" onclick="nextQuestion()" id="next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                <button class="btn" onclick="submitQuiz()" id="submit-btn" style="display: none;">Submit Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="copyright">
+                <p>&copy; 2023 PolitiScan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="scripts/quiz.js"></script>
+</body>
+</html>
