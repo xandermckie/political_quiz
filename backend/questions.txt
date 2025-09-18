@@ -1,0 +1,36 @@
+# Political Ideology Quiz Questions
+# Format: Axis:Weight:Question Text
+# Axes: Economic, Diplomatic, Civil, Societal
+
+Economic:1.0:The US government is ran and controlled by elites.
+Civil:1.0:The right to bear arms is a human right.
+Economic:1.0:Housing is a human right.
+Economic:1.0:Landlords are parasites.
+Diplomatic:1.0:China is imperialist.
+Diplomatic:1.0:Russia is imperialist.
+Diplomatic:1.0:The United States is Imperialist.
+Diplomatic:1.0:Anti-Imperialism is a vital tenant of anti-capitalism.
+Societal:1.0:Stalin was good for the soviet union and a great leader.
+Societal:1.0:Mao was good for china and a great leader.
+Societal:1.0:Xiaoping was good for china and a great leader.
+Economic:1.0:A truly free market would be beneficial for society.
+Societal:1.0:The damage we are doing to the environment must be curbed immediately.
+Societal:1.0:It is okay to lose some luxuries, both personal and economic in order to protect the environment.
+Societal:1.0:Socialism is a process toward communism.
+Societal:1.0:Socialism is inevitable.
+Diplomatic:1.0:China's foreign policy is tactical and necessary.
+Societal:1.0:Revolution is necessary.
+Economic:1.0:We can reform capitalism.
+Societal:1.0:We can vote socialism in.
+Economic:1.0:The government should play a larger role in the economy.
+Diplomatic:1.0:Military action is often necessary to protect national interests.
+Civil:1.0:Individual freedoms should be protected above all else.
+Societal:1.0:Society should uphold traditional values and morals.
+Economic:1.0:Taxes should be increased on the wealthy to fund social programs.
+Diplomatic:1.0:International cooperation is more important than national sovereignty.
+Civil:1.0:Security is more important than privacy.
+Societal:1.0:Progressive values benefit society.
+Economic:1.0:Free market competition leads to better outcomes for all.
+Diplomatic:1.0:Diplomacy is usually better than military action.
+Civil:1.0:The right to free speech should be absolute.
+Societal:1.0:Religion should play a role in government.

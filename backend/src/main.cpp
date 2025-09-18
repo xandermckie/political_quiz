@@ -1,11 +1,17 @@
 #include "quiz.h"
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 int main() {
-    Quiz quiz;
+    Quiz quiz("questions.txt", "config/axes.txt", "config/ideologies.txt");
     std::vector<Question> questions = quiz.getQuestions();
     std::vector<int> answers;
+    
+    if (questions.empty()) {
+        std::cerr << "Error: No questions loaded. Exiting." << std::endl;
+        return 1;
+    }
     
     std::cout << "Political Ideology Quiz\n";
     std::cout << "For each statement, enter your response:\n";
@@ -40,7 +46,7 @@ int main() {
     quiz.generateHTMLResult(scores, result);
     
     std::cout << "Quiz completed! Your results have been saved to '../frontend/results.html'\n";
-    std::cout << "Your ideology: " << result.ideology << " (" << round(result.score) << "% match)\n";
+    std::cout << "Your ideology: " << result.ideology << " (" << std::round(result.score) << "% match)\n";
     
     return 0;
 }

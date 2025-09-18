@@ -1,0 +1,77 @@
+# Political Ideologies Configuration
+# Format:
+# [Ideology Name]
+# Description: Ideology description
+# Axis1: Score (0-100)
+# Axis2: Score (0-100)
+# ...
+
+[Libertarian]
+Description: Emphasizes individual liberty, limited government, and free markets
+Economic: 80
+Diplomatic: 70
+Civil: 90
+Societal: 80
+
+[Conservative]
+Description: Values tradition, authority, and stability with cautious change
+Economic: 60
+Diplomatic: 40
+Civil: 40
+Societal: 20
+
+[Liberal]
+Description: Supports individual rights, democracy, and social progress with government intervention
+Economic: 70
+Diplomatic: 80
+Civil: 70
+Societal: 85
+
+[Socialist]
+Description: Advocates for social ownership, economic equality, and redistribution of wealth
+Economic: 20
+Diplomatic: 90
+Civil: 60
+Societal: 70
+
+[Centrist]
+Description: Takes a balanced approach, incorporating ideas from multiple political traditions
+Economic: 50
+Diplomatic: 50
+Civil: 50
+Societal: 50
+
+[Authoritarian]
+Description: Prioritizes order, hierarchy, and state power over individual freedoms
+Economic: 40
+Diplomatic: 30
+Civil: 10
+Societal: 15
+
+[Libertarian Socialist]
+Description: Combines opposition to state power with support for economic equality
+Economic: 30
+Diplomatic: 85
+Civil: 80
+Societal: 90
+
+[Anarchist]
+Description: Rejects all forms of compulsory government and hierarchy
+Economic: 10
+Diplomatic: 90
+Civil: 95
+Societal: 95
+
+[Marxist-Leninist]
+Description: Supports vanguard party leadership, democratic centralism, and the dictatorship of the proletariat
+Economic: 15
+Diplomatic: 85
+Civil: 30
+Societal: 90
+
+[Eco-Socialist]
+Description: Combines socialist principles with environmental conservation and sustainability
+Economic: 25
+Diplomatic: 80
+Civil: 70
+Societal: 95

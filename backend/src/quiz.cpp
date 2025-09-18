@@ -1,44 +1,190 @@
 #include "quiz.h"
 #include <iostream>
-#include <cmath>
 #include <fstream>
+#include <sstream>
+#include <cmath>
 #include <algorithm>
 
-Quiz::Quiz() {
-    // Initialize questions
-    questions = {
-        {"The government should play a larger role in the economy.", "Economic", 1.0},
-        {"Military action is often necessary to protect national interests.", "Diplomatic", 1.0},
-        {"Individual freedoms should be protected above all else.", "Civil", 1.0},
-        {"Society should uphold traditional values and morals.", "Societal", 1.0},
-        {"Taxes should be increased on the wealthy to fund social programs.", "Economic", 1.0},
-        {"International cooperation is more important than national sovereignty.", "Diplomatic", 1.0},
-        {"Security is more important than privacy.", "Civil", 1.0},
-        {"Progressive values benefit society.", "Societal", 1.0},
-        {"Free market competition leads to better outcomes for all.", "Economic", 1.0},
-        {"Diplomacy is usually better than military action.", "Diplomatic", 1.0},
-        {"The right to free speech should be absolute.", "Civil", 1.0},
-        {"Religion should play a role in government.", "Societal", 1.0}
-    };
+std::vector<Question> Quiz::loadQuestionsFromFile(const std::string& filename) {
+    std::vector<Question> questions;
+    std::ifstream file(filename);
+    std::string line;
+    
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open questions file: " << filename << std::endl;
+        return questions;
+    }
+    
+    while (std::getline(file, line)) {
+        // Skip empty lines and comments
+        if (line.empty() || line[0] == '#') continue;
+        
+        size_t firstColon = line.find(':');
+        size_t secondColon = line.find(':', firstColon + 1);
+        
+        if (firstColon != std::string::npos && secondColon != std::string::npos) {
+            std::string axis = line.substr(0, firstColon);
+            std::string weightStr = line.substr(firstColon + 1, secondColon - firstColon - 1);
+            std::string text = line.substr(secondColon + 1);
+            
+            // Trim whitespace
+            text.erase(0, text.find_first_not_of(" \t"));
+            text.erase(text.find_last_not_of(" \t") + 1);
+            
+            try {
+                double weight = std::stod(weightStr);
+                questions.push_back({text, axis, weight});
+            } catch (...) {
+                std::cerr << "Warning: Invalid weight in line: " << line << std::endl;
+            }
+        }
+    }
+    
+    file.close();
+    return questions;
+}
+
+std::vector<Axis> Quiz::loadAxesFromFile(const std::string& filename) {
+    std::vector<Axis> axes;
+    std::ifstream file(filename);
+    std::string line;
+    
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open axes file: " << filename << std::endl;
+        // Return default axes
+        return {
+            {"Economic", "Measures your views on economic policy and wealth distribution"},
+            {"Diplomatic", "Measures your views on foreign policy and international relations"},
+            {"Civil", "Measures your views on individual rights and civil liberties"},
+            {"Societal", "Measures your views on social issues and cultural values"}
+        };
+    }
+    
+    while (std::getline(file, line)) {
+        // Skip empty lines and comments
+        if (line.empty() || line[0] == '#') continue;
+        
+        size_t colonPos = line.find(':');
+        
+        if (colonPos != std::string::npos) {
+            std::string name = line.substr(0, colonPos);
+            std::string description = line.substr(colonPos + 1);
+            
+            // Trim whitespace
+            name.erase(0, name.find_first_not_of(" \t"));
+            name.erase(name.find_last_not_of(" \t") + 1);
+            description.erase(0, description.find_first_not_of(" \t"));
+            description.erase(description.find_last_not_of(" \t") + 1);
+            
+            axes.push_back({name, description});
+        }
+    }
+    
+    file.close();
+    return axes;
+}
+
+std::vector<Ideology> Quiz::loadIdeologiesFromFile(const std::string& filename) {
+    std::vector<Ideology> ideologies;
+    std::ifstream file(filename);
+    std::string line;
+    
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open ideologies file: " << filename << std::endl;
+        return ideologies;
+    }
+    
+    Ideology currentIdeology;
+    bool readingIdeology = false;
+    
+    while (std::getline(file, line)) {
+        // Skip empty lines
+        if (line.empty()) continue;
+        
+        // Check for ideology header
+        if (line[0] == '[' && line[line.size() - 1] == ']') {
+            if (readingIdeology) {
+                ideologies.push_back(currentIdeology);
+            }
+            
+            currentIdeology = Ideology();
+            currentIdeology.name = line.substr(1, line.size() - 2);
+            readingIdeology = true;
+        }
+        // Check for description
+        else if (line.find("Description:") == 0) {
+            currentIdeology.description = line.substr(12);
+            // Trim whitespace
+            currentIdeology.description.erase(0, currentIdeology.description.find_first_not_of(" \t"));
+            currentIdeology.description.erase(currentIdeology.description.find_last_not_of(" \t") + 1);
+        }
+        // Check for score line
+        else if (line.find(':') != std::string::npos) {
+            size_t colonPos = line.find(':');
+            std::string axis = line.substr(0, colonPos);
+            std::string scoreStr = line.substr(colonPos + 1);
+            
+            // Trim whitespace
+            axis.erase(0, axis.find_first_not_of(" \t"));
+            axis.erase(axis.find_last_not_of(" \t") + 1);
+            scoreStr.erase(0, scoreStr.find_first_not_of(" \t"));
+            scoreStr.erase(scoreStr.find_last_not_of(" \t") + 1);
+            
+            try {
+                double score = std::stod(scoreStr);
+                currentIdeology.scores[axis] = score;
+            } catch (...) {
+                std::cerr << "Warning: Invalid score in line: " << line << std::endl;
+            }
+        }
+    }
+    
+    // Add the last ideology
+    if (readingIdeology) {
+        ideologies.push_back(currentIdeology);
+    }
+    
+    file.close();
+    return ideologies;
+}
+
+Quiz::Quiz(const std::string& questionFile, const std::string& axisFile, const std::string& ideologyFile) {
+    questions = loadQuestionsFromFile(questionFile);
+    axes = loadAxesFromFile(axisFile);
+    ideologies = loadIdeologiesFromFile(ideologyFile);
+    
+    std::cout << "Loaded " << questions.size() << " questions, " 
+              << axes.size() << " axes, and " 
+              << ideologies.size() << " ideologies." << std::endl;
 }
 
 std::vector<Question> Quiz::getQuestions() {
     return questions;
 }
 
+std::vector<Axis> Quiz::getAxes() {
+    return axes;
+}
+
 std::map<std::string, double> Quiz::calculateScores(const std::vector<int>& answers) {
-    std::map<std::string, double> scores = {
-        {"Economic", 0.0}, {"Diplomatic", 0.0}, {"Civil", 0.0}, {"Societal", 0.0}
-    };
-    std::map<std::string, int> count = {
-        {"Economic", 0}, {"Diplomatic", 0}, {"Civil", 0}, {"Societal", 0}
-    };
+    std::map<std::string, double> scores;
+    std::map<std::string, int> count;
+    
+    // Initialize scores for all axes
+    for (const auto& axis : axes) {
+        scores[axis.name] = 0.0;
+        count[axis.name] = 0;
+    }
     
     for (size_t i = 0; i < questions.size(); i++) {
         std::string axis = questions[i].axis;
         double answerValue = (answers[i] - 2) / 2.0; // Convert to -1 to 1 range
-        scores[axis] += answerValue * questions[i].weight;
-        count[axis]++;
+        
+        // Only process if axis exists
+        if (scores.find(axis) != scores.end()) {
+            scores[axis] += answerValue * questions[i].weight;
+            count[axis]++;
+        }
     }
     
     // Normalize scores
@@ -52,37 +198,21 @@ std::map<std::string, double> Quiz::calculateScores(const std::vector<int>& answ
 }
 
 Result Quiz::determineIdeology(const std::map<std::string, double>& scores) {
-    // Define ideological positions
-    std::vector<std::pair<std::string, std::vector<double>>> ideologies = {
-        {"Libertarian", {80, 70, 90, 80}},
-        {"Conservative", {60, 40, 40, 20}},
-        {"Liberal", {70, 80, 70, 85}},
-        {"Socialist", {20, 90, 60, 70}},
-        {"Centrist", {50, 50, 50, 50}},
-        {"Authoritarian", {40, 30, 10, 15}},
-        {"Libertarian Socialist", {30, 85, 80, 90}},
-        {"Anarchist", {10, 90, 95, 95}}
-    };
-    
-    std::vector<std::string> descriptions = {
-        "Libertarians emphasize individual liberty, limited government, and free markets.",
-        "Conservatives value tradition, authority, and stability with cautious change.",
-        "Liberals support individual rights, democracy, and social progress with government intervention.",
-        "Socialists advocate for social ownership, economic equality, and redistribution of wealth.",
-        "Centrists take a balanced approach, incorporating ideas from multiple political traditions.",
-        "Authoritarians prioritize order, hierarchy, and state power over individual freedoms.",
-        "Libertarian Socialists combine opposition to state power with support for economic equality.",
-        "Anarchists reject all forms of compulsory government and hierarchy."
-    };
+    if (ideologies.empty()) {
+        return {"Unknown", "No ideologies defined", 0.0};
+    }
     
     // Calculate distances to each ideology
     std::vector<std::pair<double, int>> distances;
     for (int i = 0; i < ideologies.size(); i++) {
         double distance = 0;
-        distance += pow(scores.at("Economic") - ideologies[i].second[0], 2);
-        distance += pow(scores.at("Diplomatic") - ideologies[i].second[1], 2);
-        distance += pow(scores.at("Civil") - ideologies[i].second[2], 2);
-        distance += pow(scores.at("Societal") - ideologies[i].second[3], 2);
+        
+        for (const auto& axis : axes) {
+            double ideologyScore = ideologies[i].scores[axis.name];
+            double userScore = scores.at(axis.name);
+            distance += pow(userScore - ideologyScore, 2);
+        }
+        
         distances.push_back({sqrt(distance), i});
     }
     
@@ -91,10 +221,10 @@ Result Quiz::determineIdeology(const std::map<std::string, double>& scores) {
     int closestIdx = distances[0].second;
     
     // Calculate match percentage (0-100%)
-    double maxDistance = sqrt(pow(100, 2) * 4); // Maximum possible distance
+    double maxDistance = sqrt(pow(100, 2) * axes.size()); // Maximum possible distance
     double matchPercent = (1 - distances[0].first / maxDistance) * 100;
     
-    return {ideologies[closestIdx].first, descriptions[closestIdx], matchPercent};
+    return {ideologies[closestIdx].name, ideologies[closestIdx].description, matchPercent};
 }
 
 void Quiz::generateHTMLResult(const std::map<std::string, double>& scores, const Result& result) {
@@ -114,21 +244,23 @@ void Quiz::generateHTMLResult(const std::map<std::string, double>& scores, const
         
         <div class="result-box">
             <div class="ideology">)" << result.ideology << R"(</div>
-            <div class="match">Match: )" << round(result.score) << R"(%</div>
+            <div class="match">Match: )" << std::round(result.score) << R"(%</div>
             <div class="description">)" << result.description << R"(</div>
         </div>
         
         <h2>Detailed Scores</h2>
         <div class="axis-container">)";
     
-    for (const auto& score : scores) {
+    for (const auto& axis : axes) {
+        double score = scores.at(axis.name);
         htmlFile << R"(
             <div class="axis">
-                <span class="axis-name">)" << score.first << R"(:</span>
+                <span class="axis-name">)" << axis.name << R"(:</span>
                 <div class="bar-container">
-                    <div class="bar" style="width: )" << score.second << R"(%;"></div>
+                    <div class="bar" style="width: )" << score << R"(%;"></div>
                 </div>
-                <span class="percentage">)" << round(score.second) << R"(%</span>
+                <span class="percentage">)" << std::round(score) << R"(%</span>
+                <div class="axis-description">)" << axis.description << R"(</div>
             </div>)";
     }
     

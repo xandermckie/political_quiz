@@ -1,0 +1,7 @@
+# Political Axes Configuration
+# Format: AxisName:Description
+
+Economic:Measures your views on economic policy, wealth distribution, and government intervention in the economy
+Diplomatic:Measures your views on foreign policy, international relations, and nationalism vs. globalism
+Civil:Measures your views on individual rights, civil liberties, and the balance between freedom and security
+Societal:Measures your views on social issues, cultural values, and social progress vs. tradition
