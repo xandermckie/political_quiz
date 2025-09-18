@@ -228,15 +228,44 @@ Result Quiz::determineIdeology(const std::map<std::string, double>& scores) {
 }
 
 void Quiz::generateHTMLResult(const std::map<std::string, double>& scores, const Result& result) {
-    std::ofstream htmlFile("../frontend/results.html");
+    // Try to create the results file in the current directory instead of ../frontend/
+    std::ofstream htmlFile("quiz_results.html");
     
+    if (!htmlFile.is_open()) {
+        // If that fails, try creating it in a temporary location
+        std::cerr << "Warning: Could not create results file in current directory. Trying temp location..." << std::endl;
+        htmlFile.open("C:\\temp\\quiz_results.html");
+    }
+    
+    if (!htmlFile.is_open()) {
+        std::cerr << "Error: Could not create results file anywhere!" << std::endl;
+        return;
+    }
+    
+    // Rest of the HTML generation code remains the same...
     htmlFile << R"(<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Results</title>
-    <link rel="stylesheet" href="styles/results.css">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #f5f5f5; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; }
+        .result-box { background: #e8f4f8; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .ideology { font-size: 24px; font-weight: bold; color: #2980b9; }
+        .match { font-size: 18px; margin: 10px 0; }
+        .description { font-style: italic; margin-top: 10px; }
+        .axis-container { margin: 20px 0; }
+        .axis { margin: 10px 0; }
+        .axis-name { display: inline-block; width: 120px; }
+        .bar-container { display: inline-block; width: 300px; height: 20px; background: #eee; border-radius: 10px; overflow: hidden; vertical-align: middle; }
+        .bar { height: 100%; background: #3498db; }
+        .percentage { display: inline-block; width: 50px; text-align: right; margin-left: 10px; }
+        .retake-btn { display: block; width: 200px; margin: 30px auto 0; padding: 10px; background: #3498db; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; }
+        .retake-btn:hover { background: #2980b9; }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -267,10 +296,11 @@ void Quiz::generateHTMLResult(const std::map<std::string, double>& scores, const
     htmlFile << R"(
         </div>
         
-        <a href="quiz.html" class="retake-btn">Retake Quiz</a>
+        <a href="#" onclick="window.location.reload();" class="retake-btn">Retake Quiz</a>
     </div>
 </body>
 </html>)";
     
     htmlFile.close();
+    std::cout << "Results saved to: quiz_results.html" << std::endl;
 }
