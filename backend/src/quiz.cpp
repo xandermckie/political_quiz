@@ -5,6 +5,8 @@
 #include <cmath>
 #include <algorithm>
 
+//mlm, third worldism, liberal, conservative, far right (g), centrist, ml, jucheist
+
 std::vector<Question> Quiz::loadQuestionsFromFile(const std::string& filename) {
     std::vector<Question> questions;
     std::ifstream file(filename);
