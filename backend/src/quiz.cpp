@@ -85,7 +85,7 @@ std::vector<Axis> Quiz::loadAxesFromFile(const std::string& filename) {
     file.close();
     return axes;
 }
-//open ideologies
+//open ideologies need input
 std::vector<Ideology> Quiz::loadIdeologiesFromFile(const std::string& filename) {
     std::vector<Ideology> ideologies;
     std::ifstream file(filename);
