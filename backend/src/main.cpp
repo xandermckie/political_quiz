@@ -21,7 +21,7 @@ int main() {
     std::cout << "4 - Agree\n";
     std::cout << "5 - Strongly Agree\n\n";
     
-    // Get user answers
+    // Get user answers.
     for (size_t i = 0; i < questions.size(); i++) {
         int answer;
         std::cout << "Question " << (i+1) << "/" << questions.size() << ": " << questions[i].text << "\n";
