@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #f5f5f5; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; }
+        .result-box { background: #e8f4f8; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .ideology { font-size: 24px; font-weight: bold; color: #2980b9; }
+        .match { font-size: 18px; margin: 10px 0; }
+        .description { font-style: italic; margin-top: 10px; }
+        .axis-container { margin: 20px 0; }
+        .axis { margin: 10px 0; }
+        .axis-name { display: inline-block; width: 120px; }
+        .bar-container { display: inline-block; width: 300px; height: 20px; background: #eee; border-radius: 10px; overflow: hidden; vertical-align: middle; }
+        .bar { height: 100%; background: #3498db; }
+        .percentage { display: inline-block; width: 50px; text-align: right; margin-left: 10px; }
+        .retake-btn { display: block; width: 200px; margin: 30px auto 0; padding: 10px; background: #3498db; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; }
+        .retake-btn:hover { background: #2980b9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Political Ideology Results</h1>
+        
+        <div class="result-box">
+            <div class="ideology">Liberal</div>
+            <div class="match">Match: 88%</div>
+            <div class="description">Supports individual rights, democracy, and social progress with government intervention</div>
+        </div>
+        
+        <h2>Detailed Scores</h2>
+        <div class="axis-container">
+            <div class="axis">
+                <span class="axis-name">Economic:</span>
+                <div class="bar-container">
+                    <div class="bar" style="width: 87.5%;"></div>
+                </div>
+                <span class="percentage">88%</span>
+                <div class="axis-description">Measures your views on economic policy, wealth distribution, and government intervention in the economy</div>
+            </div>
+            <div class="axis">
+                <span class="axis-name">Diplomatic:</span>
+                <div class="bar-container">
+                    <div class="bar" style="width: 87.5%;"></div>
+                </div>
+                <span class="percentage">88%</span>
+                <div class="axis-description">Measures your views on foreign policy, international relations, and nationalism vs. globalism</div>
+            </div>
+            <div class="axis">
+                <span class="axis-name">Civil:</span>
+                <div class="bar-container">
+                    <div class="bar" style="width: 75%;"></div>
+                </div>
+                <span class="percentage">75%</span>
+                <div class="axis-description">Measures your views on individual rights, civil liberties, and the balance between freedom and security</div>
+            </div>
+            <div class="axis">
+                <span class="axis-name">Societal:</span>
+                <div class="bar-container">
+                    <div class="bar" style="width: 100%;"></div>
+                </div>
+                <span class="percentage">100%</span>
+                <div class="axis-description">Measures your views on social issues, cultural values, and social progress vs. tradition</div>
+            </div>
+        </div>
+        
+        <a href="#" onclick="window.location.reload();" class="retake-btn">Retake Quiz</a>
+    </div>
+</body>
+</html>
