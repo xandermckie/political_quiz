@@ -171,6 +171,45 @@
             .mia-banner,.yt-banner{flex-direction:column;gap:20px;padding:28px;}
             .btn-secondary{margin-left:0;margin-top:12px;display:inline-block;}
         }
+
+        /* ── MOBILE NAV ─────────────────────────────────────────
+           Hamburger menu for screens under 768px.
+           The nav links collapse into a full-width dropdown
+           toggled by a hamburger button. ── */
+        .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;margin-left:8px;}
+        .nav-toggle span{display:block;width:24px;height:2px;background:#fff;margin:5px 0;transition:all 0.25s;}
+        .nav-toggle.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+        .nav-toggle.open span:nth-child(2){opacity:0;}
+        .nav-toggle.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+        @media(max-width:768px){
+            header{padding:0 20px;position:relative;}
+            .nav-toggle{display:block;}
+            nav{
+                display:none;
+                position:absolute;
+                top:68px;left:0;right:0;
+                background:var(--ink);
+                border-top:2px solid var(--red);
+                border-bottom:4px solid var(--red);
+                flex-direction:column;
+                z-index:200;
+                padding:8px 0;
+            }
+            nav.open{display:flex;}
+            nav a{
+                border:none;
+                border-left:4px solid transparent;
+                padding:14px 24px;
+                font-size:0.9rem;
+                width:100%;
+                text-align:left;
+            }
+            nav a:hover,nav a.active{
+                border-left-color:var(--red);
+                background:rgba(192,57,43,0.12);
+                color:#fff;
+            }
+        }
     </style>
 </head>
 <body>
@@ -186,6 +225,7 @@
         <a href="resources.html" class="active">Resources</a>
         <a href="contribute.html">Contribute</a><a href="quiz.html">Take the Quiz</a>
     </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
 
 <!-- ── PAGE HERO ─────────────────────────────────────────────────────────── -->
@@ -485,5 +525,26 @@
     <p>&copy; 2024 MarxValues. Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:rgba(255,255,255,0.4);text-decoration:underline;">CC BY-NC-SA 4.0</a>. Your answers are never stored or shared.</p>
 </footer>
 
+<script>
+/* Mobile nav toggle - hamburger button shows/hides the nav on small screens */
+(function(){
+    var btn = document.getElementById('nav-toggle');
+    var nav = document.querySelector('nav');
+    if(!btn || !nav) return;
+    btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+    });
+    // Close nav when a link is clicked
+    nav.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', function(){
+            nav.classList.remove('open');
+            btn.classList.remove('open');
+            btn.setAttribute('aria-expanded', false);
+        });
+    });
+})();
+</script>
 </body>
 </html>

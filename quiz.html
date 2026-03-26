@@ -93,6 +93,45 @@
 
         footer{background:#060a0f;color:rgba(255,255,255,0.25);padding:24px 48px;text-align:center;font-size:0.8rem;position:relative;z-index:1;letter-spacing:0.06em;}
         @media(max-width:640px){header{padding:0 20px;}.progress-strip{padding:12px 20px;}.question-card{padding:28px 20px;}.options{grid-template-columns:1fr 1fr;}.option:nth-child(5){grid-column:span 2;}.quiz-wrapper{padding:32px 16px 100px;}}
+
+        /* ── MOBILE NAV ─────────────────────────────────────────
+           Hamburger menu for screens under 768px.
+           The nav links collapse into a full-width dropdown
+           toggled by a hamburger button. ── */
+        .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;margin-left:8px;}
+        .nav-toggle span{display:block;width:24px;height:2px;background:#fff;margin:5px 0;transition:all 0.25s;}
+        .nav-toggle.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+        .nav-toggle.open span:nth-child(2){opacity:0;}
+        .nav-toggle.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+        @media(max-width:768px){
+            header{padding:0 20px;position:relative;}
+            .nav-toggle{display:block;}
+            nav{
+                display:none;
+                position:absolute;
+                top:68px;left:0;right:0;
+                background:var(--ink);
+                border-top:2px solid var(--red);
+                border-bottom:4px solid var(--red);
+                flex-direction:column;
+                z-index:200;
+                padding:8px 0;
+            }
+            nav.open{display:flex;}
+            nav a{
+                border:none;
+                border-left:4px solid transparent;
+                padding:14px 24px;
+                font-size:0.9rem;
+                width:100%;
+                text-align:left;
+            }
+            nav a:hover,nav a.active{
+                border-left-color:var(--red);
+                background:rgba(192,57,43,0.12);
+                color:#fff;
+            }
+        }
     </style>
 </head>
 <body>
@@ -102,6 +141,7 @@
         <span class="logo-text">Marx<span>Values</span></span>
     </a>
     <nav><a href="index.html">Home</a><a href="about.html">About</a><a href="resources.html">Resources</a><a href="contribute.html">Contribute</a></nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
 <!-- Sticky progress bar below the header.
      Updated by render() as the user moves through questions. -->
@@ -469,6 +509,27 @@ function showToast(msg) {
 }
 
 render();
+</script>
+<script>
+/* Mobile nav toggle - hamburger button shows/hides the nav on small screens */
+(function(){
+    var btn = document.getElementById('nav-toggle');
+    var nav = document.querySelector('nav');
+    if(!btn || !nav) return;
+    btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+    });
+    // Close nav when a link is clicked
+    nav.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', function(){
+            nav.classList.remove('open');
+            btn.classList.remove('open');
+            btn.setAttribute('aria-expanded', false);
+        });
+    });
+})();
 </script>
 </body>
 </html>
