@@ -221,6 +221,25 @@
                 color:#fff;
             }
         }
+        /* RETURNING USER LOAD PANEL */
+        .return-section{position:relative;z-index:1;background:var(--ink);border-bottom:4px solid var(--red);padding:28px 48px;}
+        .return-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+        .return-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:rgba(255,255,255,0.45);white-space:nowrap;}
+        .return-input-row{display:flex;flex:1;min-width:240px;}
+        .return-input{flex:1;padding:10px 14px;border:2px solid rgba(255,255,255,0.18);border-right:none;font-family:'Georgia','Times New Roman',Times,serif;font-size:0.85rem;background:rgba(255,255,255,0.06);color:#fff;outline:none;transition:border-color 0.2s;}
+        .return-input:focus{border-color:var(--red);}
+        .return-input::placeholder{color:rgba(255,255,255,0.25);}
+        .return-btn{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.3);padding:10px 22px;font-family:'Georgia','Times New Roman',Times,serif;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+        .return-btn:hover{background:var(--red);border-color:var(--red);}
+        .return-msg{font-size:0.8rem;font-weight:600;min-height:16px;width:100%;padding-left:2px;}
+        .return-msg.err{color:var(--red);}
+        .return-msg.ok{color:#2ecc71;}
+        @media(max-width:768px){
+            .return-section{padding:20px;}
+            .return-inner{flex-direction:column;align-items:stretch;gap:12px;}
+            .return-label{white-space:normal;}
+            .return-input-row{min-width:0;}
+        }
     </style>
 </head>
 <body>
@@ -273,24 +292,6 @@
     </div>
 </section>
 
-        /* RETURNING USER LOAD PANEL */
-        .return-section{position:relative;z-index:1;background:var(--paper);padding:48px;border-bottom:1px solid var(--border);}
-        .return-inner{max-width:780px;margin:0 auto;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
-        .return-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);white-space:nowrap;}
-        .return-input-row{display:flex;flex:1;min-width:260px;gap:0;}
-        .return-input{flex:1;padding:12px 16px;border:2px solid var(--border);border-right:none;font-family:'Georgia','Times New Roman',Times,serif;font-size:0.88rem;background:#fff;color:var(--ink);outline:none;transition:border-color 0.2s;}
-        .return-input:focus{border-color:var(--ink);}
-        .return-input::placeholder{color:var(--muted);}
-        .return-btn{background:var(--ink);color:#fff;border:2px solid var(--ink);padding:12px 24px;font-family:'Georgia','Times New Roman',Times,serif;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-        .return-btn:hover{background:var(--red);border-color:var(--red);}
-        .return-msg{font-size:0.82rem;font-weight:600;min-height:18px;width:100%;}
-        .return-msg.err{color:var(--red);}
-        @media(max-width:768px){.return-section{padding:32px 20px;}.return-inner{gap:16px;}.return-label{width:100%;}}
-
-<!-- ── HOW IT WORKS SECTION ──────────────────────────────────────
-     Three-step explanation: answer questions, get axis scores,
-     match to an ideology. Dark background with red left-border cards.
-──────────────────────────────────────────────────────────────── -->
 <!-- ── RETURNING USER PANEL ──────────────────────────────────────
      Visible on the homepage for users returning with a save code.
      Paste a code here to jump straight to results without retaking the quiz.
@@ -599,7 +600,6 @@ function closeModal(e) {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(null); });
 </script>
 <script>
-<<<<<<< HEAD
 /* ── RETURNING USER VAULT ──────────────────────────────────────────────────
    Decrypts a save code pasted on the homepage and redirects to results.html.
    Uses the same AES-256-GCM decrypt logic as the vault in results.html.
@@ -662,9 +662,6 @@ async function loadReturnCode() {
 
 <script>
 /* Mobile nav toggle, hamburger button shows/hides the nav on small screens */
-=======
-/* Mobile nav toggle - hamburger button shows/hides the nav on small screens */
->>>>>>> 1f9ecf4a59bdd4f5c38f87dadb06b7fb15badc30
 (function(){
     var btn = document.getElementById('nav-toggle');
     var nav = document.querySelector('nav');
