@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- ╔══════════════════════════════════════════════════════╗
-     MarxValues - about.html
+     MarxValues, about.html
      About page: project origins, acknowledgment of LeftValues,
      open source link, and project philosophy.
 ╚══════════════════════════════════════════════════════╝ -->
@@ -24,7 +24,7 @@
         base-uri 'self';
         upgrade-insecure-requests;
     ">
-    <title>MarxValues - About</title>
+    <title>MarxValues, About</title>
     <link rel="icon" type="image/png" href="marx.png">
     <link rel="apple-touch-icon" href="marx.png">
 
@@ -72,7 +72,7 @@
         .prose{font-size:1rem;line-height:1.9;color:#444;margin-bottom:20px;max-width:780px;}
         .prose strong{color:var(--ink);font-weight:700;}
 
-        /* ACKNOWLEDGMENT CARD - dark */
+        /* ACKNOWLEDGMENT CARD, dark */
         .ack-section{background:var(--ink);}
         .ack-section .section-label{color:var(--red);}
         .ack-section h2{color:#fff;}
@@ -91,14 +91,14 @@
         .btn-red{display:inline-block;background:var(--red);color:#fff;text-decoration:none;padding:12px 32px;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:2px solid var(--red);transition:all 0.22s;margin-bottom:8px;}
         .btn-red:hover{background:transparent;color:var(--red);}
 
-        /* HOW IT DIFFERS section - light */
+        /* HOW IT DIFFERS section, light */
         .diff-section{background:var(--paper);}
         .diff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:40px;}
         .diff-card{background:var(--card);border:2px solid var(--border);border-top:4px solid var(--red);padding:28px 24px;}
         .diff-card h3{font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink);margin-bottom:10px;}
         .diff-card p{font-size:0.88rem;line-height:1.7;color:var(--muted);}
 
-        /* OPEN SOURCE section - red */
+        /* OPEN SOURCE section, red */
         .oss-section{background:var(--red);}
         .oss-section .section-label{color:rgba(255,255,255,0.6);}
         .oss-section h2{color:#fff;}
@@ -118,7 +118,7 @@
         .phil-block p{font-size:0.92rem;line-height:1.85;color:#555;}
         .phil-block p + p{margin-top:12px;}
 
-        /* PRIVACY section - dark */
+        /* PRIVACY section, dark */
         .privacy-section{background:var(--ink);}
         .privacy-section .section-label{color:var(--red);}
         .privacy-section h2{color:#fff;}
@@ -148,6 +148,45 @@
             .github-card{flex-direction:column;gap:20px;padding:28px 20px;}
             .phil-grid{grid-template-columns:1fr;}
         }
+
+        /* ── MOBILE NAV ─────────────────────────────────────────
+           Hamburger menu for screens under 768px.
+           The nav links collapse into a full-width dropdown
+           toggled by a hamburger button. ── */
+        .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;margin-left:8px;}
+        .nav-toggle span{display:block;width:24px;height:2px;background:#fff;margin:5px 0;transition:all 0.25s;}
+        .nav-toggle.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+        .nav-toggle.open span:nth-child(2){opacity:0;}
+        .nav-toggle.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+        @media(max-width:768px){
+            header{padding:0 20px;position:relative;}
+            .nav-toggle{display:block;}
+            nav{
+                display:none;
+                position:absolute;
+                top:68px;left:0;right:0;
+                background:var(--ink);
+                border-top:2px solid var(--red);
+                border-bottom:4px solid var(--red);
+                flex-direction:column;
+                z-index:200;
+                padding:8px 0;
+            }
+            nav.open{display:flex;}
+            nav a{
+                border:none;
+                border-left:4px solid transparent;
+                padding:14px 24px;
+                font-size:0.9rem;
+                width:100%;
+                text-align:left;
+            }
+            nav a:hover,nav a.active{
+                border-left-color:var(--red);
+                background:rgba(192,57,43,0.12);
+                color:#fff;
+            }
+        }
     </style>
 </head>
 <body>
@@ -163,6 +202,7 @@
         <a href="resources.html">Resources</a>
         <a href="contribute.html">Contribute</a><a href="quiz.html">Take the Quiz</a>
     </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
 
 <!-- PAGE HERO -->
@@ -179,8 +219,8 @@
     <div class="section-inner">
         <div class="section-label">Standing on Shoulders</div>
         <h2>Thank you, <em>LeftValues.</em></h2>
-        <p class="prose">MarxValues would not exist without LeftValues - the open source leftist political quiz that pioneered this format. The LeftValues team created something genuinely valuable: a rigorous, well-researched quiz specifically designed for the left-wing political spectrum, with a thoughtful 7-axis framework that goes far beyond the crude left-right spectrum of mainstream political tests.</p>
-        <p class="prose">Their decision to release the project under the <strong>MIT License</strong> - one of the most permissive open source licenses - made it possible for others to build on their work. MarxValues takes that invitation seriously. We have used LeftValues as our conceptual and structural foundation, expanded the ideology set, deepened the reading materials, added an encrypted results vault, and rebuilt the interface from scratch - but the core intellectual framework of seven axes and Euclidean distance ideology matching comes directly from their work.</p>
+        <p class="prose">MarxValues would not exist without LeftValues, the open source leftist political quiz that pioneered this format. The LeftValues team created something genuinely valuable: a rigorous, well-researched quiz specifically designed for the left-wing political spectrum, with a thoughtful 7-axis framework that goes far beyond the crude left-right spectrum of mainstream political tests.</p>
+        <p class="prose">Their decision to release the project under the <strong>MIT License</strong>, one of the most permissive open source licenses, made it possible for others to build on their work. MarxValues takes that invitation seriously. We have used LeftValues as our conceptual and structural foundation, expanded the ideology set, deepened the reading materials, added an encrypted results vault, and rebuilt the interface from scratch, but the core intellectual framework of seven axes and Euclidean distance ideology matching comes directly from their work.</p>
         <p class="prose">The LeftValues team is no longer actively developing their quiz, but their project remains live and is well worth visiting. If you appreciate what MarxValues does, you owe a debt to what they built first.</p>
 
         <div class="ack-card">
@@ -188,10 +228,10 @@
                 <div class="ack-logo"><span class="ack-logo-text">LV</span></div>
                 <div>
                     <div class="ack-card-title">LeftValues</div>
-                    <div class="ack-card-sub">The leftist quiz that started it all - built on 8values, released under MIT License</div>
+                    <div class="ack-card-sub">The leftist quiz that started it all, built on 8values, released under MIT License</div>
                 </div>
             </div>
-            <p>LeftValues measures left-wing political positions across 7 axes - Revolution vs Reform, Collectivism vs Liberalism, Internationalism vs Nationalism, Communist vs Social Democracy, Regulationism vs Laissez-Faire, Acid vs Tradition, and Party vs Union. It was itself built on the open source 8values quiz, continuing a tradition of open political tools built by volunteers.</p>
+            <p>LeftValues measures left-wing political positions across 7 axes, Revolution vs Reform, Collectivism vs Liberalism, Internationalism vs Nationalism, Communist vs Social Democracy, Regulationism vs Laissez-Faire, Acid vs Tradition, and Party vs Union. It was itself built on the open source 8values quiz, continuing a tradition of open political tools built by volunteers.</p>
             <p>The quiz features 72 questions and matches users to a range of left-wing ideologies. It remains one of the most thoughtful and well-constructed political quizzes available. The LeftValues GitHub repository is open to forks and the authors explicitly encouraged others to build upon it.</p>
             <a href="https://leftvalues.github.io" target="_blank" rel="noopener noreferrer" class="btn-outline-white">Visit LeftValues</a>
             <a href="https://github.com/LeftValues/leftvalues.github.io" target="_blank" rel="noopener noreferrer" class="btn-outline-white">LeftValues on GitHub</a>
@@ -208,7 +248,7 @@
         <div class="diff-grid">
             <div class="diff-card">
                 <h3>Expanded Ideology Set</h3>
-                <p>LeftValues covers a solid set of left tendencies. MarxValues expands this to 21 ideologies, adding Left Communism, Luxemburgism, Autonomism, Market Socialism, Patriotic Socialism, and a broader catch-all for non-left results - with full descriptions and reading lists for each.</p>
+                <p>LeftValues covers a solid set of left tendencies. MarxValues expands this to 22 ideologies, adding Left Communism, Luxemburgism, Autonomism, Market Socialism, Patriotic Socialism, and a broader catch-all for non-left results, with full descriptions and reading lists for each.</p>
             </div>
             <div class="diff-card">
                 <h3>58 Original Questions</h3>
@@ -216,7 +256,7 @@
             </div>
             <div class="diff-card">
                 <h3>Encrypted Results Vault</h3>
-                <p>MarxValues includes a browser-based AES-256-GCM encrypted save system. Users can generate a save code to reload their results later. No data is stored on our server - the key is embedded in the code itself. LeftValues does not have this feature.</p>
+                <p>MarxValues includes a browser-based AES-256-GCM encrypted save system. Users can generate a save code to reload their results later. No data is stored on our server, the key is embedded in the code itself. LeftValues does not have this feature.</p>
             </div>
             <div class="diff-card">
                 <h3>Primary Source Integration</h3>
@@ -239,15 +279,15 @@
     <div class="section-inner">
         <div class="section-label">Open Source</div>
         <h2>MarxValues is <em>open source.</em></h2>
-        <p class="prose">In the spirit of LeftValues and the broader tradition of open political tools, MarxValues is fully open source. The complete code is available on GitHub - every question, every ideology score, every line of the scoring algorithm. You can inspect it, fork it, build on it, or use it to verify that the privacy claims on this site are true.</p>
-        <p class="prose">If you find errors in ideology scores, want to suggest new questions, or want to build your own version - the repository is there. Pull requests are welcome. The project is licensed under <strong>CC BY-NC-SA 4.0</strong> - you can use and adapt it freely for non-commercial purposes as long as you credit the project and share your version under the same terms.</p>
+        <p class="prose">In the spirit of LeftValues and the broader tradition of open political tools, MarxValues is fully open source. The complete code is available on GitHub, every question, every ideology score, every line of the scoring algorithm. You can inspect it, fork it, build on it, or use it to verify that the privacy claims on this site are true.</p>
+        <p class="prose">If you find errors in ideology scores, want to suggest new questions, or want to build your own version, the repository is there. Pull requests are welcome. The project is licensed under <strong>CC BY-NC-SA 4.0</strong>, you can use and adapt it freely for non-commercial purposes as long as you credit the project and share your version under the same terms.</p>
 
         <div class="github-card">
             <!-- GitHub mark SVG -->
             <svg class="github-icon" viewBox="0 0 98 96" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z"/></svg>
             <div class="github-card-text">
                 <h3>xandermckie / political_quiz</h3>
-                <p>The complete source code for MarxValues - all HTML, CSS, JavaScript, questions, ideology scores, and the scoring algorithm. Open to inspection, forks, and contributions. Built on the shoulders of LeftValues and the open source tradition.</p>
+                <p>The complete source code for MarxValues, all HTML, CSS, JavaScript, questions, ideology scores, and the scoring algorithm. Open to inspection, forks, and contributions. Built on the shoulders of LeftValues and the open source tradition.</p>
                 <a href="https://github.com/xandermckie/political_quiz" target="_blank" rel="noopener noreferrer" class="btn-white">View on GitHub</a>
             </div>
         </div>
@@ -259,7 +299,7 @@
     <div class="section-inner">
         <div class="section-label">Project Philosophy</div>
         <h2>What this project <em>is and isn't</em></h2>
-        <p class="prose">MarxValues is an educational tool, not a political authority. A quiz cannot determine your ideology - only your own study, experience, and reflection can do that. What it can do is give you a rough map of where your current views place you within the tradition of left-wing thought, and point you toward the texts and thinkers who share those positions.</p>
+        <p class="prose">MarxValues is an educational tool, not a political authority. A quiz cannot determine your ideology, only your own study, experience, and reflection can do that. What it can do is give you a rough map of where your current views place you within the tradition of left-wing thought, and point you toward the texts and thinkers who share those positions.</p>
         <div class="phil-grid">
             <div class="phil-block">
                 <h3>What MarxValues is</h3>
@@ -280,7 +320,7 @@
     <div class="section-inner">
         <div class="section-label">Privacy</div>
         <h2>What we collect: <em>nothing.</em></h2>
-        <p class="prose">Given the political nature of this quiz, privacy is not an afterthought - it is a core design requirement. Here is exactly what happens to your data when you use MarxValues.</p>
+        <p class="prose">Given the political nature of this quiz, privacy is not an afterthought, it is a core design requirement. Here is exactly what happens to your data when you use MarxValues.</p>
         <div class="privacy-grid">
             <div class="privacy-item">
                 <h3>Your Answers</h3>
@@ -288,7 +328,7 @@
             </div>
             <div class="privacy-item">
                 <h3>Your Results</h3>
-                <p>If you use the encrypted save vault, your result is encrypted in your browser using AES-256-GCM before being shown to you as a code. The encryption key is embedded in that code - we never see it and cannot decrypt your result.</p>
+                <p>If you use the encrypted save vault, your result is encrypted in your browser using AES-256-GCM before being shown to you as a code. The encryption key is embedded in that code, we never see it and cannot decrypt your result.</p>
             </div>
             <div class="privacy-item">
                 <h3>Analytics</h3>
@@ -305,7 +345,7 @@
 <!-- CTA -->
 <section class="cta-banner">
     <h2>Ready to find your <em>place on the left?</em></h2>
-    <p>58 questions. 7 axes. 21 ideologies.</p>
+    <p>65 questions. 7 axes. 22 ideologies.</p>
     <a href="quiz.html" class="btn-cta">Take the Quiz</a>
 </section>
 
@@ -313,5 +353,26 @@
     <p>&copy; 2024 MarxValues. Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:rgba(255,255,255,0.4);text-decoration:underline;">CC BY-NC-SA 4.0</a>. Your answers are never stored or shared.</p>
 </footer>
 
+<script>
+/* Mobile nav toggle, hamburger button shows/hides the nav on small screens */
+(function(){
+    var btn = document.getElementById('nav-toggle');
+    var nav = document.querySelector('nav');
+    if(!btn || !nav) return;
+    btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+    });
+    // Close nav when a link is clicked
+    nav.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', function(){
+            nav.classList.remove('open');
+            btn.classList.remove('open');
+            btn.setAttribute('aria-expanded', false);
+        });
+    });
+})();
+</script>
 </body>
 </html>

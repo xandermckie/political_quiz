@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <!-- ╔══════════════════════════════════════════════════════╗
-     MarxValues - results.html
+     MarxValues, results.html
      Reads quiz result from sessionStorage, renders:
-       - Hero: matched ideology + match percentage
-       - Axis score bars (7 axes, animated)
-       - Radar chart (pure canvas, no libraries)
-       - Full ideology breakdown (all 21 ranked)
-       - Runner-up ideology cards (top 3)
-       - Encrypted vault: save/load result as AES-256-GCM code
+      , Hero: matched ideology + match percentage
+      , Axis score bars (7 axes, animated)
+      , Radar chart (pure canvas, no libraries)
+      , Full ideology breakdown (all 21 ranked)
+      , Runner-up ideology cards (top 3)
+      , Encrypted vault: save/load result as AES-256-GCM code
      If sessionStorage is empty, shows a "no results" fallback.
 ╚══════════════════════════════════════════════════════╝ -->
 <html lang="en">
@@ -31,7 +31,7 @@
         base-uri 'self';
         upgrade-insecure-requests;
     ">
-    <title>MarxValues - Your Results</title>
+    <title>MarxValues, Your Results</title>
     <link rel="icon" type="image/png" href="marx.png">
     <link rel="apple-touch-icon" href="marx.png">
     <style>
@@ -181,6 +181,45 @@
         @media(max-width:480px){
             .runner-grid{grid-template-columns:1fr;}
         }
+
+        /* ── MOBILE NAV ─────────────────────────────────────────
+           Hamburger menu for screens under 768px.
+           The nav links collapse into a full-width dropdown
+           toggled by a hamburger button. ── */
+        .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;margin-left:8px;}
+        .nav-toggle span{display:block;width:24px;height:2px;background:#fff;margin:5px 0;transition:all 0.25s;}
+        .nav-toggle.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+        .nav-toggle.open span:nth-child(2){opacity:0;}
+        .nav-toggle.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+        @media(max-width:768px){
+            header{padding:0 20px;position:relative;}
+            .nav-toggle{display:block;}
+            nav{
+                display:none;
+                position:absolute;
+                top:68px;left:0;right:0;
+                background:var(--ink);
+                border-top:2px solid var(--red);
+                border-bottom:4px solid var(--red);
+                flex-direction:column;
+                z-index:200;
+                padding:8px 0;
+            }
+            nav.open{display:flex;}
+            nav a{
+                border:none;
+                border-left:4px solid transparent;
+                padding:14px 24px;
+                font-size:0.9rem;
+                width:100%;
+                text-align:left;
+            }
+            nav a:hover,nav a.active{
+                border-left-color:var(--red);
+                background:rgba(192,57,43,0.12);
+                color:#fff;
+            }
+        }
     </style>
 </head>
 <body>
@@ -191,6 +230,7 @@
         <span class="logo-text">Marx<span>Values</span></span>
     </a>
     <nav><a href="about.html">About</a><a href="resources.html">Resources</a><a href="contribute.html">Contribute</a><a href="quiz.html">Retake Quiz</a></nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
 
 <div id="app"></div>
@@ -249,9 +289,9 @@ if (!raw) {
    Builds all HTML sections and injects them into #app,
    then triggers the staggered animations after the DOM settles. */
 function renderResults(scores, top, runnerUps, allRanked) {
-    document.title = 'MarxValues - ' + top.name;
+    document.title = 'MarxValues, ' + top.name;
 
-    // Sanitize scores - default missing axes to 50
+    // Sanitize scores, default missing axes to 50
     AXES.forEach(ax => {
         if (typeof scores[ax] !== 'number' || isNaN(scores[ax])) scores[ax] = 50;
         scores[ax] = Math.max(0, Math.min(100, scores[ax]));
@@ -312,7 +352,7 @@ function renderResults(scores, top, runnerUps, allRanked) {
         </div>`).join('');
 
     // ── Full ideology breakdown table ───────────────────────────
-    // All 21 ideologies ranked by match %, with animated bars.
+    // All 22 ideologies ranked by match %, with animated bars.
     // Top result gets a red left border and highlighted background.
     // Falls back gracefully if allRanked is missing (old saved results).
     const breakdownHTML = (allRanked && allRanked.length > 0) ? allRanked.map((r, i) => {
@@ -327,7 +367,7 @@ function renderResults(scores, top, runnerUps, allRanked) {
             </div>
             <div class="breakdown-pct" id="bdown-pct-${i}">${pct}%</div>
         </div>`;
-    }).join('') : '<p style="color:var(--muted);font-size:0.9rem;">Full breakdown not available - retake the quiz to see all ideology scores.</p>';
+    }).join('') : '<p style="color:var(--muted);font-size:0.9rem;">Full breakdown not available, retake the quiz to see all ideology scores.</p>';
 
     // ── Inject HTML
     document.getElementById('app').innerHTML = `
@@ -346,7 +386,7 @@ function renderResults(scores, top, runnerUps, allRanked) {
             <h2 class="section-title">Save Your Results</h2>
             <div class="vault-panel" id="vault-panel">
                 <div class="vault-intro">
-                    <p>Your results can be saved as an <strong>encrypted local code</strong>. The code is stored only in your browser - no data is sent anywhere, no account needed, no fingerprints retained. Paste the code back here any time to reload your results.</p>
+                    <p>Your results can be saved as an <strong>encrypted local code</strong>. The code is stored only in your browser, no data is sent anywhere, no account needed, no fingerprints retained. Paste the code back here any time to reload your results.</p>
                 </div>
                 <div class="vault-actions">
                     <button class="btn-save" id="btn-save" onclick="saveResult()">Generate Save Code</button>
@@ -357,11 +397,11 @@ function renderResults(scores, top, runnerUps, allRanked) {
                     </div>
                 </div>
                 <div class="vault-code-box" id="vault-code-box" style="display:none;">
-                    <div class="vault-code-label">Your encrypted save code - copy and keep it safe:</div>
+                    <div class="vault-code-label">Your encrypted save code, copy and keep it safe:</div>
                     <textarea class="vault-code-text" id="vault-code-text" readonly></textarea>
                     <button class="btn-copy" id="btn-copy" onclick="copyCode()">Copy Code</button>
                     <div class="vault-security-note">
-                        <strong>Security note:</strong> This code is encrypted with AES-256-GCM using a key generated in your browser. It contains only your axis scores and ideology match - no timestamps, no IP address, no identifying information of any kind.
+                        <strong>Security note:</strong> This code is encrypted with AES-256-GCM using a key generated in your browser. It contains only your axis scores and ideology match, no timestamps, no IP address, no identifying information of any kind.
                     </div>
                 </div>
                 <div class="vault-msg" id="vault-msg"></div>
@@ -381,7 +421,7 @@ function renderResults(scores, top, runnerUps, allRanked) {
             // Match counter
             animateCounter('match-counter', matchPct, true);
 
-            // Axis fills + counters - staggered
+            // Axis fills + counters, staggered
             AXES.forEach((ax, i) => {
                 setTimeout(() => {
                     const pct = Math.round(scores[ax]);
@@ -426,7 +466,7 @@ function animateCounter(id, target, isMatch) {
     let startTime = null;
     function step(ts) {
         if (!startTime) startTime = ts;
-        const progress = Math.min((ts - startTime) / duration, 1);
+        const progress = Math.min((ts, startTime) / duration, 1);
         const ease = 1 - Math.pow(1 - progress, 4);
         const current = Math.round(ease * target);
         if (isMatch) {
@@ -441,7 +481,7 @@ function animateCounter(id, target, isMatch) {
 
 // ── Radar chart (pure canvas) ──────────────────────────────
 /* drawRadar(): draws an animated 7-axis radar chart on a <canvas>.
-   Pure canvas - no charting library needed.
+   Pure canvas, no charting library needed.
    Renders: grid rings, spokes, animated data polygon, axis dots, labels.
    Animation runs via requestAnimationFrame until progress reaches 1. */
 function drawRadar(scores) {
@@ -550,18 +590,18 @@ function drawRadar(scores) {
 // Uses the browser's native Web Crypto API (AES-256-GCM).
 //
 // SECURITY MODEL:
-//   - Key is generated fresh each time and embedded IN the save code
-//   - Nothing is sent to any server - all crypto runs in the browser
-//   - Stored payload: { ideology, match%, scores } only
-//   - No timestamps, no IP, no session ID, no fingerprints
+//  , Key is generated fresh each time and embedded IN the save code
+//  , Nothing is sent to any server, all crypto runs in the browser
+//  , Stored payload: { ideology, match%, scores } only
+//  , No timestamps, no IP, no session ID, no fingerprints
 //
 // SAVE CODE FORMAT:
 //   "MV1." + base64url(32-byte AES key) + "." + base64url(12-byte IV + ciphertext)
 //
-// The code is the only way to decrypt - we cannot read saved results.
+// The code is the only way to decrypt, we cannot read saved results.
 // ──────────────────────────────────────────────────────────────── ─────────────────────────────────
-// Uses Web Crypto API (AES-256-GCM) - all browser-native, no libraries.
-// Stored payload: { ideology, matchPct, scores } - no timestamps, no IDs.
+// Uses Web Crypto API (AES-256-GCM), all browser-native, no libraries.
+// Stored payload: { ideology, matchPct, scores }, no timestamps, no IDs.
 // Key is embedded in the save code itself (base64url) so we never store it.
 // Format: "MV1." + base64url(key_bytes) + "." + base64url(iv + ciphertext)
 
@@ -569,7 +609,7 @@ const VAULT_PREFIX = 'MV1.';
 
 // Encode bytes to base64url (URL-safe, no padding)
 /* toB64(): encode a buffer to URL-safe base64 (no padding).
-   Uses - and _ instead of + and / so codes are safe in URLs and emails. */
+   Uses, and _ instead of + and / so codes are safe in URLs and emails. */
 function toB64(buf) {
     return btoa(String.fromCharCode(...new Uint8Array(buf)))
         .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
@@ -579,7 +619,7 @@ function toB64(buf) {
 /* fromB64(): decode URL-safe base64 back to a Uint8Array. */
 function fromB64(str) {
     const b64 = str.replace(/-/g,'+').replace(/_/g,'/');
-    const pad = b64.length % 4 ? '='.repeat(4 - b64.length % 4) : '';
+    const pad = b64.length % 4 ? '='.repeat(4, b64.length % 4) : '';
     return Uint8Array.from(atob(b64+pad), c => c.charCodeAt(0));
 }
 
@@ -640,7 +680,7 @@ async function decrypt(key, combined) {
     return new TextDecoder().decode(decrypted);
 }
 
-// Build the minimal payload - NO timestamps, NO IDs, NO fingerprints
+// Build the minimal payload, NO timestamps, NO IDs, NO fingerprints
 /* buildPayload(): construct the minimal JSON to encrypt and store.
    ONLY includes ideology name, match %, and 7 rounded axis scores.
    Deliberately excludes: timestamp, session ID, browser info, IP. */
@@ -673,7 +713,7 @@ async function saveResult() {
     try {
         // Pull current result from sessionStorage
         const raw = sessionStorage.getItem('marxvalues_result');
-        if (!raw) throw new Error('No result found - please complete the quiz first.');
+        if (!raw) throw new Error('No result found, please complete the quiz first.');
         const data = JSON.parse(raw);
         if (!data.top || !data.scores) throw new Error('Result data is incomplete.');
 
@@ -717,14 +757,14 @@ async function loadResult() {
 
     if (!code.startsWith(VAULT_PREFIX)) {
         msg.className = 'vault-msg err';
-        msg.textContent = 'Invalid code - must start with "' + VAULT_PREFIX + '".';
+        msg.textContent = 'Invalid code, must start with "' + VAULT_PREFIX + '".';
         return;
     }
 
     const parts = code.slice(VAULT_PREFIX.length).split('.');
     if (parts.length !== 2) {
         msg.className = 'vault-msg err';
-        msg.textContent = 'Malformed code - check you copied it in full.';
+        msg.textContent = 'Malformed code, check you copied it in full.';
         return;
     }
 
@@ -749,7 +789,7 @@ async function loadResult() {
         setTimeout(() => location.reload(), 900);
     } catch(e) {
         msg.className = 'vault-msg err';
-        msg.textContent = 'Decryption failed - the code may be corrupted or incomplete.';
+        msg.textContent = 'Decryption failed, the code may be corrupted or incomplete.';
     }
 }
 
@@ -780,13 +820,14 @@ async function copyCode() {
 function getDesc(name) {
     const map = {
         'Marxism':'The foundational framework of scientific socialism: class struggle, historical materialism, and the revolutionary overthrow of capitalism.',
-        'Marxism-Leninism':'Vanguard party, democratic centralism, and the dictatorship of the proletariat - the ideology of the Soviet state.',
+        'Marxism-Leninism':'Vanguard party, democratic centralism, and the dictatorship of the proletariat, the ideology of the Soviet state.',
         'Trotskyism':'Permanent revolution, anti-Stalinist workers\' democracy, and uncompromising internationalism.',
         'MLM':'Marxism-Leninism-Maoism: mass line, people\'s war, cultural revolution, and continuing class struggle under socialism.',
+        'Guevarism':'Foco theory and international revolutionary duty: a small guerrilla vanguard can ignite revolution without waiting for objective conditions to mature.',
         'Third Worldism':'The Global South as the primary revolutionary subject; the first-world proletariat as a co-opted labor aristocracy.',
         'Dengism':'Socialism with Chinese characteristics: market mechanisms, CPC leadership, and the primary stage of socialism.',
         'Hoxhaism':'Anti-revisionist Marxism-Leninism: strict defense of Stalin, opposition to Maoism and Soviet revisionism alike.',
-        'Syndicalism':'Revolutionary trade unionism - the union, not the party, is the vehicle of socialist transformation.',
+        'Syndicalism':'Revolutionary trade unionism, the union, not the party, is the vehicle of socialist transformation.',
         'Libertarian':'Emphasizes individual liberty, limited government, and free markets above all else.',
         'Conservative':'Values tradition, authority, and social stability; cautious of rapid change in any direction.',
         'Liberal':'Supports individual rights, democracy, and social progress alongside regulated capitalism.',
@@ -796,16 +837,37 @@ function getDesc(name) {
         'Libertarian Socialist':'Combines opposition to state power with support for economic equality and workers\' self-management.',
         'Anarchist':'Rejects all compulsory government and hierarchy; advocates voluntary association and mutual aid.',
         'Eco-Socialist':'Combines socialist principles with environmental conservation; capitalism is the root of the ecological crisis.',
-        'Social Democrat':'Gradual reform within capitalism - a strong welfare state, progressive taxation, and parliamentary democracy over revolution.',
+        'Social Democrat':'Gradual reform within capitalism, a strong welfare state, progressive taxation, and parliamentary democracy over revolution.',
         'Liberal / Right':'Your answers align with liberal or right-wing politics rather than the left-wing spectrum this quiz measures. Try a general political compass quiz for a fuller picture.',
-        'Patriotic Socialism':'Socialism organized around national identity - state ownership and workers rights combined with cultural conservatism and rejection of liberal social values.',
-        'Left Communism':'A Marxist critique of Leninism from the left - rejecting parliament, vanguard parties, and trade union bureaucracies in favor of workers councils and class autonomy.',
-        'Luxemburgism':'Mass strike, anti-vanguardism, and the insistence that socialist democracy cannot be deferred - it must be practiced inside the revolutionary movement from the start.',
+        'Patriotic Socialism':'Socialism organized around national identity, state ownership and workers rights combined with cultural conservatism and rejection of liberal social values.',
+        'Left Communism':'A Marxist critique of Leninism from the left, rejecting parliament, vanguard parties, and trade union bureaucracies in favor of workers councils and class autonomy.',
+        'Luxemburgism':'Mass strike, anti-vanguardism, and the insistence that socialist democracy cannot be deferred, it must be practiced inside the revolutionary movement from the start.',
         'Autonomism':'Workers self-organization, the refusal of work, and a Marxist analysis expanded to cover all value-producing labor including immaterial, affective, and reproductive work.',
-        'Market Socialism':'Social or worker ownership of productive enterprises combined with market allocation - economic democracy without bureaucratic central planning.',
+        'Market Socialism':'Social or worker ownership of productive enterprises combined with market allocation, economic democracy without bureaucratic central planning.',
     };
     return map[name] || '';
 }
+</script>
+<script>
+/* Mobile nav toggle, hamburger button shows/hides the nav on small screens */
+(function(){
+    var btn = document.getElementById('nav-toggle');
+    var nav = document.querySelector('nav');
+    if(!btn || !nav) return;
+    btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+    });
+    // Close nav when a link is clicked
+    nav.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', function(){
+            nav.classList.remove('open');
+            btn.classList.remove('open');
+            btn.setAttribute('aria-expanded', false);
+        });
+    });
+})();
 </script>
 </body>
 </html>

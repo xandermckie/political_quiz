@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <!-- ╔══════════════════════════════════════════════════════╗
-     MarxValues - quiz.html
+     MarxValues, quiz.html
      The quiz itself: 58 questions across 7 axes.
      Scoring, ideology matching, and sessionStorage handoff
      to results.html are all handled here in JavaScript.
-     No server, no database - everything runs in the browser.
+     No server, no database, everything runs in the browser.
 ╚══════════════════════════════════════════════════════╝ -->
 <html lang="en">
 <head>
@@ -27,7 +27,7 @@
         base-uri 'self';
         upgrade-insecure-requests;
     ">
-    <title>MarxValues - Take the Quiz</title>
+    <title>MarxValues, Take the Quiz</title>
     <link rel="icon" type="image/png" href="marx.png">
     <link rel="apple-touch-icon" href="marx.png">
     <style>
@@ -93,6 +93,45 @@
 
         footer{background:#060a0f;color:rgba(255,255,255,0.25);padding:24px 48px;text-align:center;font-size:0.8rem;position:relative;z-index:1;letter-spacing:0.06em;}
         @media(max-width:640px){header{padding:0 20px;}.progress-strip{padding:12px 20px;}.question-card{padding:28px 20px;}.options{grid-template-columns:1fr 1fr;}.option:nth-child(5){grid-column:span 2;}.quiz-wrapper{padding:32px 16px 100px;}}
+
+        /* ── MOBILE NAV ─────────────────────────────────────────
+           Hamburger menu for screens under 768px.
+           The nav links collapse into a full-width dropdown
+           toggled by a hamburger button. ── */
+        .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;margin-left:8px;}
+        .nav-toggle span{display:block;width:24px;height:2px;background:#fff;margin:5px 0;transition:all 0.25s;}
+        .nav-toggle.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+        .nav-toggle.open span:nth-child(2){opacity:0;}
+        .nav-toggle.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+        @media(max-width:768px){
+            header{padding:0 20px;position:relative;}
+            .nav-toggle{display:block;}
+            nav{
+                display:none;
+                position:absolute;
+                top:68px;left:0;right:0;
+                background:var(--ink);
+                border-top:2px solid var(--red);
+                border-bottom:4px solid var(--red);
+                flex-direction:column;
+                z-index:200;
+                padding:8px 0;
+            }
+            nav.open{display:flex;}
+            nav a{
+                border:none;
+                border-left:4px solid transparent;
+                padding:14px 24px;
+                font-size:0.9rem;
+                width:100%;
+                text-align:left;
+            }
+            nav a:hover,nav a.active{
+                border-left-color:var(--red);
+                background:rgba(192,57,43,0.12);
+                color:#fff;
+            }
+        }
     </style>
 </head>
 <body>
@@ -102,15 +141,16 @@
         <span class="logo-text">Marx<span>Values</span></span>
     </a>
     <nav><a href="index.html">Home</a><a href="about.html">About</a><a href="resources.html">Resources</a><a href="contribute.html">Contribute</a></nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
 <!-- Sticky progress bar below the header.
      Updated by render() as the user moves through questions. -->
 <div class="progress-strip">
-    <span class="progress-label" id="progress-label">Question 1 of 58</span>
+    <span class="progress-label" id="progress-label">Question 1 of 65</span>
     <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
     <span class="progress-pct" id="progress-pct">0%</span>
 </div>
-<!-- Main question card container - centered, max 780px wide.
+<!-- Main question card container, centered, max 780px wide.
      The card re-animates on each question change via fadeSlide. -->
 <div class="quiz-wrapper">
     <div class="question-card" id="question-card">
@@ -146,7 +186,7 @@
    MARXVALUES QUIZ ENGINE
    
    FLOW:
-   1. User answers 58 questions (each tagged with an axis + effect)
+   1. User answers 65 questions (each tagged with an axis + effect)
    2. calculateScores() normalizes answers to axis scores 0-100
    3. determineIdeology() finds closest match via Euclidean distance
    4. Result is stored in sessionStorage and user is sent to results.html
@@ -172,95 +212,110 @@
 // ─────────────────────────────────────────────
 
 // Each question object: { axis, effect, text }
-// axis   - which of the 7 axes this question scores
-// effect - +1 pushes axis high, -1 pushes axis low
-// text   - the statement shown to the user
+// axis  , which of the 7 axes this question scores
+// effect, +1 pushes axis high, -1 pushes axis low
+// text  , the statement shown to the user
 const questions = [
   // REVOLUTION vs REFORM
-  { axis:"Revolution", effect:1,  text:"The capitalist state cannot be reformed - it must be smashed and replaced." },
+  { axis:"Revolution", effect:1,  text:"The capitalist state cannot be reformed, it must be smashed and replaced." },
   { axis:"Revolution", effect:1,  text:"A mass revolutionary uprising is the only path to genuine socialism." },
   { axis:"Revolution", effect:-1, text:"Gradual reforms through electoral politics can meaningfully move society toward socialism." },
   { axis:"Revolution", effect:-1, text:"Working within existing liberal democratic institutions is a valid socialist strategy." },
-  { axis:"Revolution", effect:1,  text:"Any socialist government that does not break decisively with capitalist property relations will be sabotaged and crushed." },
+  { axis:"Revolution", effect:1,  text:"A socialist government that does not break decisively with capitalist property relations will be sabotaged, co-opted, or destroyed by the bourgeoisie. There is no peaceful coexistence between a workers' government and the capitalist class it governs over." },
 
   // SCIENTIFIC vs UTOPIAN
-  { axis:"Scientific", effect:1,  text:"Historical materialism - that material conditions drive history - is the correct framework for understanding society." },
+  { axis:"Scientific", effect:1,  text:"Historical materialism, that material conditions drive history, is the correct framework for understanding society." },
   { axis:"Scientific", effect:1,  text:"The class struggle between the proletariat and bourgeoisie is the central driver of political change today." },
   { axis:"Scientific", effect:-1, text:"Socialism can be built by appealing to shared moral values of fairness and cooperation, without a class-struggle framework." },
   { axis:"Scientific", effect:1,  text:"Dialectical materialism provides a scientifically superior analysis to liberal or idealist political theory." },
-  { axis:"Scientific", effect:-1, text:"Prefigurative politics - building the world we want in the present - is more important than historical-materialist analysis." },
+  { axis:"Scientific", effect:-1, text:"The way we organize our movements now must reflect the society we want to build. Prefiguring communism within socialist organizations is not idealism. Means and ends cannot be separated, and a movement that reproduces hierarchy internally will reproduce it in power." },
 
   // CENTRALIZATION vs DECENTRALIZATION
   { axis:"Centralization", effect:1,  text:"A centralized planned economy is necessary to rationally allocate resources under socialism." },
-  { axis:"Centralization", effect:1,  text:"A strong socialist state is essential during the transition period to defend against capitalist restoration." },
+  { axis:"Centralization", effect:1,  text:"The dictatorship of the proletariat, meaning the direct political rule of the working class over the defeated bourgeoisie during the transitional period between capitalism and communism, is a necessary stage." },
   { axis:"Centralization", effect:-1, text:"Economic planning should be decentralized to communities, workplaces, and localities." },
   { axis:"Centralization", effect:-1, text:"The socialist state should immediately begin to wither away as soon as the revolution succeeds." },
-  { axis:"Centralization", effect:1,  text:"Democratic centralism - unified action after internal debate - is the correct organizational principle for a revolutionary party." },
+  { axis:"Centralization", effect:1,  text:"Democratic centralism, unified action after internal debate, is the correct organizational principle for a revolutionary party." },
 
   // INTERNATIONALISM vs NATIONALISM
-  { axis:"Internationalism", effect:1,  text:"Socialism in one country is impossible - international revolution is necessary for any socialist state to survive." },
+  { axis:"Internationalism", effect:1,  text:"Socialism in one country is impossible, international revolution is necessary for any socialist state to survive." },
   { axis:"Internationalism", effect:1,  text:"The workers of all countries share more in common with each other than with their national ruling classes." },
-  { axis:"Internationalism", effect:-1, text:"Building a strong socialist nation is a valid first step, even if it means prioritizing national development over global revolution." },
+  { axis:"Internationalism", effect:-1, text:"A socialist state under capitalist encirclement is justified in prioritizing its own survival and development, even at the cost of deferring support for revolutionary movements in other countries. Socialism in one country may be necessary before socialism in many." },
   { axis:"Internationalism", effect:-1, text:"Third World nations have the right to pursue national liberation on their own terms, even through alliances with non-socialist forces." },
   { axis:"Internationalism", effect:1,  text:"The ultimate goal of socialism is the abolition of all national borders and a world socialist republic." },
 
   // ORGANIZATION: PARTY vs UNION
   { axis:"Organization", effect:1,  text:"A disciplined vanguard party is necessary to lead the working class to revolution." },
   { axis:"Organization", effect:1,  text:"Without a revolutionary party, the working class will not move beyond trade union consciousness." },
-  { axis:"Organization", effect:-1, text:"Revolutionary industrial unions - not political parties - should be the primary vehicle of socialist transformation." },
-  { axis:"Organization", effect:-1, text:"The general strike is a more powerful tool for socialist change than electoral campaigns." },
+  { axis:"Organization", effect:-1, text:"Revolutionary industrial unions, not political parties, should be the primary vehicle of socialist transformation." },
+  { axis:"Organization", effect:-1, text:"A general strike poses a more direct and immediate challenge to capitalist power than any electoral campaign. Workers stopping production brings the system to a halt in ways that voting never can." },
   { axis:"Organization", effect:1,  text:"The party must maintain political leadership over trade unions and mass organizations." },
 
   // ECOLOGY: PRODUCTION vs NATURE
-  { axis:"Ecology", effect:1,  text:"Rapid industrialization is essential for any socialist country to build the material basis for communism." },
+  { axis:"Ecology", effect:1,  text:"Rapid industrialization is essential for any socialist country, regardless of how underdeveloped it begins. Without building an industrial base, the material preconditions for communism cannot be created." },
   { axis:"Ecology", effect:-1, text:"Ecological sustainability must be a central goal of any socialist project, not an afterthought." },
   { axis:"Ecology", effect:-1, text:"Capitalism's drive for profit is the root cause of the ecological crisis, and only socialism can solve it." },
-  { axis:"Ecology", effect:1,  text:"Prioritizing the environment over industrial output is a luxury that developing socialist nations cannot afford." },
+  { axis:"Ecology", effect:1,  text:"A socialist state that restricts industrial development in the name of environmental protection is sacrificing the material welfare of its working class to an abstraction. Economic development must come before ecological restraint." },
   { axis:"Ecology", effect:-1, text:"A degrowth or eco-socialist model is compatible with, and necessary for, a genuinely emancipatory socialism." },
 
   // SOCIAL: PROGRESSIVE vs CONSERVATIVE
   { axis:"Social", effect:1,  text:"The liberation of women, LGBTQ+ people, and racially oppressed groups is inseparable from socialist struggle." },
   { axis:"Social", effect:1,  text:"Social conservatism among the working class is a product of ruling-class ideology and must be combated." },
-  { axis:"Social", effect:-1, text:"Cultural and social stability should be preserved during socialist transition to maintain working-class unity." },
-  { axis:"Social", effect:-1, text:"Socialist movements should not impose Western social values on cultures with different traditions." },
+  { axis:"Social", effect:-1, text:"Imposing rapid cultural transformation during a revolutionary transition risks fracturing the broad working-class coalition that socialism requires. Changes to social values and norms should emerge organically from material transformation, not be driven ahead of it by the party." },
+  { axis:"Social", effect:-1, text:"Social positions on gender, sexuality, and the family that developed within Western liberal contexts carry their own class and imperial content. Non-Western working-class movements have the right to determine their own social politics without having external frameworks imposed on them." },
   { axis:"Social", effect:1,  text:"Proletarian internationalism requires solidarity with all oppressed groups, regardless of national or cultural boundaries." },
 
-  // BONUS - strongly differentiating questions
-  { axis:"Revolution",      effect:1,  text:"The state is always an instrument of class rule - there is no neutral state." },
-  { axis:"Internationalism",effect:-1, text:"The workers of wealthy imperialist nations are a labor aristocracy and cannot be relied upon as a revolutionary force." },
-  { axis:"Centralization",  effect:-1, text:"Workers' councils and soviets - not a vanguard party - should directly govern a socialist society." },
+  // BONUS, strongly differentiating questions
+  { axis:"Revolution",      effect:1,  text:"The state is always an instrument of class rule, there is no neutral state." },
+  { axis:"Internationalism",effect:-1, text:"Workers in the imperialist core receive material benefits derived from the exploitation of the Global South. This stake in the imperial system makes the first-world working class a structurally unreliable revolutionary force, regardless of their formal political positions." },
+  { axis:"Centralization",  effect:-1, text:"Political power in a socialist society should rest with federated workers' councils, elected directly from workplaces and communities, not with a vanguard party that governs on the workers' behalf." },
   { axis:"Scientific",      effect:1,  text:"Marxism is a science, not a moral philosophy." },
-  { axis:"Organization",    effect:-1, text:"Direct action by organized workers is more effective than waiting for a revolutionary party to lead." },
+  { axis:"Organization",    effect:-1, text:"Workers who strike, occupy, and organize through their own initiative develop more genuine class consciousness than those who wait for a party to lead them. Self-activity is the school of revolution. No organization can substitute for it." },
 
   // SOCIAL DEMOCRACY differentiating questions
-  { axis:"Revolution",      effect:-1, text:"Capitalism can be humanized through strong regulation, progressive taxation, and a robust welfare state - revolution is unnecessary." },
+  { axis:"Revolution",      effect:-1, text:"Capitalism can be humanized through strong regulation, progressive taxation, and a robust welfare state, revolution is unnecessary." },
   { axis:"Scientific",      effect:-1, text:"Socialism is better understood as an ethical ideal of equality and solidarity than as a scientific theory of history." },
-  { axis:"Organization",    effect:-1, text:"Parliamentary elections and trade union pressure are the most realistic tools for advancing workers' interests today." },
+  { axis:"Organization",    effect:-1, text:"Trade union bargaining and progressive electoral politics deliver more tangible improvements to working-class lives than revolutionary strategy, which offers no realistic path to power in contemporary conditions." },
 
   // PATRIOTIC SOCIALISM differentiating questions
-  { axis:"Internationalism", effect:-1, text:"Socialism must be rooted in national culture and identity - an internationalist socialism that ignores the nation is doomed to fail." },
+  { axis:"Internationalism", effect:-1, text:"Socialism that treats national identity as simply false consciousness to be overcome will fail to build mass support. The working class is nationally situated, and socialist movements must engage seriously with national culture and history, not dismiss them." },
   { axis:"Social",           effect:-1, text:"Traditional values and national culture are worth preserving within a socialist framework." },
   { axis:"Centralization",   effect:1,  text:"A strong centralized socialist state is necessary to protect both workers and national sovereignty from foreign capital." },
 
   // LEFT COMMUNISM / COUNCIL COMMUNISM differentiating questions
-  { axis:"Organization",     effect:-1, text:"Workers' councils formed organically in struggle are more legitimate than any political party, including a revolutionary one." },
-  { axis:"Centralization",   effect:-1, text:"A party that seizes state power on behalf of the working class will inevitably become a new ruling class." },
+  { axis:"Organization",     effect:-1, text:"Workers' councils, thrown up by workers themselves in the course of struggle, are the most democratic form of proletarian organization. They derive legitimacy directly from the class. No vanguard party, however correct its program, can substitute for this direct self-governance." },
+  { axis:"Centralization",   effect:-1, text:"A party that takes state power in the name of the working class will develop its own institutional interests and material privileges. Without genuine council democracy from below, it becomes a new ruling stratum, replacing the bourgeoisie without abolishing class rule." },
   { axis:"Scientific",       effect:1,  text:"Leninism was a historical distortion of Marxism that must be overcome, not built upon." },
 
   // LUXEMBURGISM differentiating questions
-  { axis:"Organization",     effect:-1, text:"Revolutionary initiative must come from spontaneous mass action, not from a centralized party directing the class from above." },
-  { axis:"Social",           effect:1,  text:"Socialist democracy cannot be deferred until after the revolution - it must be practiced inside the movement from the start." },
+  { axis:"Organization",     effect:-1, text:"Revolutionary consciousness emerges primarily from workers' own experience of struggle. No party can inject it from outside. The role of socialists is to develop and generalize what workers themselves produce in motion, not to lead from above." },
+  { axis:"Social",           effect:1,  text:"Socialist democracy cannot be postponed until after the revolution and then simply switched on. A movement that suppresses internal dissent in the name of efficiency will produce a state that does the same. The practice of the movement prefigures the society it creates." },
   { axis:"Centralization",   effect:-1, text:"Democratic centralism as practiced by the Bolsheviks suppresses the creative energy of the working class." },
 
   // AUTONOMISM differentiating questions
   { axis:"Organization",     effect:-1, text:"The refusal of work and sabotage of capitalist production are legitimate and important revolutionary tactics." },
-  { axis:"Social",           effect:1,  text:"The revolutionary subject today extends far beyond the industrial proletariat to include all those who produce value in society." },
-  { axis:"Scientific",       effect:-1, text:"Marx's value theory must be updated to account for immaterial labor, affective labor, and biopolitical production." },
+  { axis:"Social",           effect:1,  text:"The working class today extends beyond the industrial factory floor to include care workers, service workers, cognitive laborers, and the unwaged. Capitalism extracts value from all of them. Revolutionary strategy must reflect this expanded composition." },
+  { axis:"Scientific",       effect:-1, text:"Marx's theory of value, developed in the context of industrial capitalism, requires substantial revision to account for the rise of immaterial, affective, and cognitive labor under contemporary capitalism." },
 
   // MARKET SOCIALISM differentiating questions
   { axis:"Centralization",   effect:-1, text:"Worker-owned cooperatives competing in regulated markets are a viable and desirable model for a socialist economy." },
   { axis:"Revolution",       effect:-1, text:"Transforming ownership structures through legislation and economic policy is more practical than revolutionary seizure of the state." },
-  { axis:"Organization",     effect:-1, text:"Workplace democracy - workers electing management and sharing profits - is more important than party control of the economy." },
+  { axis:"Organization",     effect:-1, text:"Workplace democracy, where workers elect management and share in the surplus of their enterprise, is a more concrete and meaningful form of economic self-governance than an economy directed by a central party on the workers' behalf." },
+
+  // GUEVARISM differentiating questions
+  { axis:"Revolution",       effect:1,  text:"A small armed revolutionary vanguard, the foco, can create the objective conditions for revolution through guerrilla action, without waiting for a mass party or economic crisis to mature first." },
+  { axis:"Internationalism", effect:1,  text:"Revolutionaries have a duty to fight imperialism wherever it operates, regardless of their country of origin. The revolutionary must be willing to die for any people\'s liberation." },
+  { axis:"Organization",     effect:1,  text:"In conditions of rural poverty and imperialist domination, the peasantry and armed guerrilla movement can substitute for the industrial proletariat as the revolutionary vanguard." },
+
+  // ECONOMISM and TRADE UNION CONSCIOUSNESS
+  { axis:"Organization",     effect:1,  text:"Trade unions that only fight for higher wages and better conditions, without a political program to overthrow capitalism, reinforce rather than challenge the existing order." },
+
+  // MILITARY AND REVOLUTION
+  { axis:"Revolution",       effect:1,  text:"Socialism cannot be achieved without confronting and defeating the capitalist military and state apparatus by force. Peaceful transitions to socialism are historical illusions." },
+
+  // IMPERIALISM, RUSSIA AND CHINA
+  { axis:"Internationalism", effect:1,  text:"Russia and China, despite claiming socialist or anti-imperialist credentials, operate as great powers pursuing their own imperial interests. Socialists should critically oppose all imperialism including theirs." },
+  { axis:"Internationalism", effect:-1, text:"Russia and China represent a genuine counterweight to US-led Western imperialism. Socialists in the Global North should support them against NATO expansion and economic warfare, whatever their internal contradictions." },
 ];
 
 // ─────────────────────────────────────────────
@@ -276,7 +331,7 @@ const ideologies = [
       desc:"The foundational framework of scientific socialism: class struggle, historical materialism, and the revolutionary overthrow of capitalism.",
       scores:{ Revolution:75, Scientific:90, Centralization:55, Internationalism:80, Organization:50, Ecology:55, Social:70 }},
     { name:"Marxism-Leninism",
-      desc:"Vanguard party, democratic centralism, and the dictatorship of the proletariat - the ideology of the Soviet state.",
+      desc:"Vanguard party, democratic centralism, and the dictatorship of the proletariat, the ideology of the Soviet state.",
       scores:{ Revolution:85, Scientific:90, Centralization:90, Internationalism:60, Organization:90, Ecology:60, Social:55 }},
     { name:"Trotskyism",
       desc:"Permanent revolution, anti-Stalinist workers' democracy, and uncompromising internationalism.",
@@ -287,6 +342,9 @@ const ideologies = [
     { name:"Third Worldism",
       desc:"The Global South as the primary revolutionary subject; the first-world proletariat as a co-opted labor aristocracy.",
       scores:{ Revolution:90, Scientific:80, Centralization:60, Internationalism:55, Organization:65, Ecology:60, Social:65 }},
+    { name:"Guevarism",
+      desc:"Foco theory and international revolutionary duty: a small guerrilla vanguard can ignite revolution without waiting for objective conditions to mature.",
+      scores:{ Revolution:95, Scientific:70, Centralization:60, Internationalism:95, Organization:75, Ecology:50, Social:70 }},
     { name:"Dengism",
       desc:"Socialism with Chinese characteristics: market mechanisms, CPC leadership, and the primary stage of socialism.",
       scores:{ Revolution:30, Scientific:75, Centralization:85, Internationalism:45, Organization:90, Ecology:40, Social:40 }},
@@ -294,11 +352,11 @@ const ideologies = [
       desc:"Anti-revisionist Marxism-Leninism: strict defense of Stalin, opposition to Maoism and Soviet revisionism alike.",
       scores:{ Revolution:80, Scientific:95, Centralization:95, Internationalism:55, Organization:95, Ecology:45, Social:45 }},
     { name:"Syndicalism",
-      desc:"Revolutionary trade unionism - the union, not the party, is the vehicle of socialist transformation.",
+      desc:"Revolutionary trade unionism, the union, not the party, is the vehicle of socialist transformation.",
       scores:{ Revolution:80, Scientific:50, Centralization:15, Internationalism:75, Organization:5, Ecology:55, Social:70 }},
     // ── ORIGINAL: Broader left/political spectrum ideologies ──
     { name:"Liberal / Right",
-      desc:"Your answers suggest you sit outside the left-wing spectrum. This quiz is designed for left ideologies - you may find a general political compass quiz more useful.",
+      desc:"Your answers suggest you sit outside the left-wing spectrum. This quiz is designed for left ideologies, you may find a general political compass quiz more useful.",
       scores:{ Revolution:10, Scientific:30, Centralization:45, Internationalism:30, Organization:45, Ecology:35, Social:20 }},
     { name:"Liberal",
       desc:"Supports individual rights, democracy, and social progress alongside regulated capitalism.",
@@ -319,13 +377,13 @@ const ideologies = [
       desc:"Combines socialist principles with environmental conservation; capitalism is the root of the ecological crisis.",
       scores:{ Revolution:60, Scientific:70, Centralization:45, Internationalism:75, Organization:40, Ecology:10, Social:85 }},
     { name:"Social Democrat",
-      desc:"Gradual reform within capitalism - a strong welfare state, progressive taxation, and parliamentary democracy over revolution.",
+      desc:"Gradual reform within capitalism, a strong welfare state, progressive taxation, and parliamentary democracy over revolution.",
       scores:{ Revolution:10, Scientific:35, Centralization:45, Internationalism:65, Organization:30, Ecology:60, Social:80 }},
     { name:"Patriotic Socialism",
-      desc:"Socialism organized around the nation - state ownership, workers rights, and strong central authority combined with cultural conservatism and national identity.",
+      desc:"Socialism organized around the nation, state ownership, workers rights, and strong central authority combined with cultural conservatism and national identity.",
       scores:{ Revolution:50, Scientific:55, Centralization:85, Internationalism:20, Organization:80, Ecology:40, Social:15 }},
     { name:"Left Communism",
-      desc:"A Marxist critique of Leninism from the left - rejecting parliament, trade union bureaucracies, and the vanguard party in favor of workers' councils and class autonomy.",
+      desc:"A Marxist critique of Leninism from the left, rejecting parliament, trade union bureaucracies, and the vanguard party in favor of workers' councils and class autonomy.",
       scores:{ Revolution:85, Scientific:80, Centralization:10, Internationalism:85, Organization:5, Ecology:55, Social:75 }},
     { name:"Luxemburgism",
       desc:"Mass strike, anti-vanguardism, and the insistence that socialist democracy must be practiced inside the movement now, not deferred until after the revolution.",
@@ -334,7 +392,7 @@ const ideologies = [
       desc:"Workers' self-organization, the refusal of work, and a Marxist analysis expanded to include all value-producing labor beyond the industrial proletariat.",
       scores:{ Revolution:75, Scientific:60, Centralization:10, Internationalism:85, Organization:10, Ecology:65, Social:90 }},
     { name:"Market Socialism",
-      desc:"Social or worker ownership of productive enterprises combined with market allocation - economic democracy without bureaucratic central planning.",
+      desc:"Social or worker ownership of productive enterprises combined with market allocation, economic democracy without bureaucratic central planning.",
       scores:{ Revolution:40, Scientific:60, Centralization:20, Internationalism:60, Organization:40, Ecology:55, Social:65 }},
 ];
 
@@ -403,7 +461,7 @@ function prevQuestion() { if(current>0){current--;render();} }
 /* calculateScores(): converts raw answers (1-5) into axis scores (0-100).
    
    Formula per question:
-     normalized = (answer - 3) / 2     -> maps 1..5 to -1..+1 (neutral=0)
+     normalized = (answer, 3) / 2     -> maps 1..5 to -1..+1 (neutral=0)
      contribution = normalized * effect -> flips direction for -1 effect questions
    
    Per axis:
@@ -430,10 +488,10 @@ function calculateScores() {
 /* determineIdeology(scores): finds the closest ideology using
    Euclidean distance in 7-dimensional axis space.
    
-   For each ideology, distance = sqrt( sum( (userScore - ideoScore)^2 ) )
+   For each ideology, distance = sqrt( sum( (userScore, ideoScore)^2 ) )
    The ideology with the smallest distance is the top match.
    
-   matchPct = (1 - distance / maxPossibleDistance) * 100
+   matchPct = (1, distance / maxPossibleDistance) * 100
    
    Returns: { top, runnerUps (top 3), allRanked (all 21), scores } */
 function determineIdeology(scores) {
@@ -469,6 +527,27 @@ function showToast(msg) {
 }
 
 render();
+</script>
+<script>
+/* Mobile nav toggle, hamburger button shows/hides the nav on small screens */
+(function(){
+    var btn = document.getElementById('nav-toggle');
+    var nav = document.querySelector('nav');
+    if(!btn || !nav) return;
+    btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+    });
+    // Close nav when a link is clicked
+    nav.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', function(){
+            nav.classList.remove('open');
+            btn.classList.remove('open');
+            btn.setAttribute('aria-expanded', false);
+        });
+    });
+})();
 </script>
 </body>
 </html>

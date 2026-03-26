@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!-- ╔══════════════════════════════════════════════════════╗
-     MarxValues - index.html
+     MarxValues, index.html
      Homepage: animated compass, ideology cards with
      modal popups, axes explainer, and CTA banner.
-     No external dependencies - all fonts are system serif.
+     No external dependencies, all fonts are system serif.
 ╚══════════════════════════════════════════════════════╝ -->
 <html lang="en">
 <head>
@@ -32,7 +32,7 @@
         base-uri 'self';
         upgrade-insecure-requests;
     ">
-    <title>MarxValues - Discover Your Left-Wing Compass</title>
+    <title>MarxValues, Discover Your Left-Wing Compass</title>
     <link rel="icon" type="image/png" href="marx.png">
     <link rel="apple-touch-icon" href="marx.png">
 
@@ -67,7 +67,7 @@
         nav a:hover{background:var(--red);border-color:var(--red);color:#fff;}
 
         /* HERO */
-        .hero{position:relative;z-index:1;min-height:calc(100vh - 68px);display:flex;align-items:center;padding:80px 48px;overflow:hidden;background:var(--paper);}
+        .hero{position:relative;z-index:1;min-height:calc(100vh, 68px);display:flex;align-items:center;padding:80px 48px;overflow:hidden;background:var(--paper);}
         .hero::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(0,0,0,0.042) 48px);}
         .hero::after{content:'';position:absolute;top:0;right:0;width:44%;height:100%;background:var(--red);clip-path:polygon(14% 0%,100% 0%,100% 100%,0% 100%);z-index:0;}
         .hero-content{position:relative;z-index:2;max-width:560px;}
@@ -93,7 +93,7 @@
         @keyframes spin{to{transform:rotate(360deg);}}
         .compass-center{position:absolute;inset:36%;background:rgba(0,0,0,0.55);border-radius:50%;display:grid;place-items:center;border:2px solid rgba(255,255,255,0.3);}
         .compass-marx{width:100%;height:100%;border-radius:50%;object-fit:cover;padding:4px;}
-        /* axis poles - positioned relative to compass-wrap center */
+        /* axis poles, positioned relative to compass-wrap center */
         .pole{position:absolute;display:flex;flex-direction:column;align-items:center;gap:5px;}
         .pole-dot{width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(255,255,255,0.6);flex-shrink:0;}
         .pole-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.85);white-space:nowrap;}
@@ -182,6 +182,45 @@
             .hero{padding:56px 20px;min-height:auto;}
             .features-section,.axes-section,.ideologies-section,.cta-banner{padding:60px 20px;}
         }
+
+        /* ── MOBILE NAV ─────────────────────────────────────────
+           Hamburger menu for screens under 768px.
+           The nav links collapse into a full-width dropdown
+           toggled by a hamburger button. ── */
+        .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;margin-left:8px;}
+        .nav-toggle span{display:block;width:24px;height:2px;background:#fff;margin:5px 0;transition:all 0.25s;}
+        .nav-toggle.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+        .nav-toggle.open span:nth-child(2){opacity:0;}
+        .nav-toggle.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+        @media(max-width:768px){
+            header{padding:0 20px;position:relative;}
+            .nav-toggle{display:block;}
+            nav{
+                display:none;
+                position:absolute;
+                top:68px;left:0;right:0;
+                background:var(--ink);
+                border-top:2px solid var(--red);
+                border-bottom:4px solid var(--red);
+                flex-direction:column;
+                z-index:200;
+                padding:8px 0;
+            }
+            nav.open{display:flex;}
+            nav a{
+                border:none;
+                border-left:4px solid transparent;
+                padding:14px 24px;
+                font-size:0.9rem;
+                width:100%;
+                text-align:left;
+            }
+            nav a:hover,nav a.active{
+                border-left-color:var(--red);
+                background:rgba(192,57,43,0.12);
+                color:#fff;
+            }
+        }
     </style>
 </head>
 <body>
@@ -192,6 +231,7 @@
         <span class="logo-text">Marx<span>Values</span></span>
     </a>
     <nav><a href="about.html">About</a><a href="resources.html">Resources</a><a href="contribute.html">Contribute</a><a href="quiz.html">Take the Quiz</a></nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
 
 <!-- ── HERO SECTION ──────────────────────────────────────────────
@@ -204,11 +244,11 @@
     <div class="hero-content">
         <div class="eyebrow">Free &amp; Anonymous Left-Wing Assessment</div>
         <h1>Where do you <em>really</em> stand?</h1>
-        <p>Answer 58 questions across 7 axes. We'll map your beliefs across the left-wing spectrum - from Orthodox Marxism to Syndicalism, Dengism to Third Worldism.</p>
+        <p>Answer 65 questions across 7 axes. We'll map your beliefs across the left-wing spectrum, from Orthodox Marxism to Syndicalism, Dengism to Third Worldism.</p>
         <a href="quiz.html" class="hero-cta"><span class="hero-cta-text">Begin the Quiz</span></a>
         <div class="hero-stats">
-            <div class="stat"><div class="stat-num">58</div><div class="stat-label">Questions</div></div>
-            <div class="stat"><div class="stat-num">21</div><div class="stat-label">Ideologies</div></div>
+            <div class="stat"><div class="stat-num">65</div><div class="stat-label">Questions</div></div>
+            <div class="stat"><div class="stat-num">22</div><div class="stat-label">Ideologies</div></div>
             <div class="stat"><div class="stat-num">7</div><div class="stat-label">Axes</div></div>
         </div>
     </div>
@@ -233,10 +273,39 @@
     </div>
 </section>
 
+        /* RETURNING USER LOAD PANEL */
+        .return-section{position:relative;z-index:1;background:var(--paper);padding:48px;border-bottom:1px solid var(--border);}
+        .return-inner{max-width:780px;margin:0 auto;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+        .return-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);white-space:nowrap;}
+        .return-input-row{display:flex;flex:1;min-width:260px;gap:0;}
+        .return-input{flex:1;padding:12px 16px;border:2px solid var(--border);border-right:none;font-family:'Georgia','Times New Roman',Times,serif;font-size:0.88rem;background:#fff;color:var(--ink);outline:none;transition:border-color 0.2s;}
+        .return-input:focus{border-color:var(--ink);}
+        .return-input::placeholder{color:var(--muted);}
+        .return-btn{background:var(--ink);color:#fff;border:2px solid var(--ink);padding:12px 24px;font-family:'Georgia','Times New Roman',Times,serif;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+        .return-btn:hover{background:var(--red);border-color:var(--red);}
+        .return-msg{font-size:0.82rem;font-weight:600;min-height:18px;width:100%;}
+        .return-msg.err{color:var(--red);}
+        @media(max-width:768px){.return-section{padding:32px 20px;}.return-inner{gap:16px;}.return-label{width:100%;}}
+
 <!-- ── HOW IT WORKS SECTION ──────────────────────────────────────
      Three-step explanation: answer questions, get axis scores,
      match to an ideology. Dark background with red left-border cards.
 ──────────────────────────────────────────────────────────────── -->
+<!-- ── RETURNING USER PANEL ──────────────────────────────────────
+     Visible on the homepage for users returning with a save code.
+     Paste a code here to jump straight to results without retaking the quiz.
+────────────────────────────────────────────────────────────────── -->
+<section class="return-section">
+    <div class="return-inner">
+        <span class="return-label">Returning? Load your saved results:</span>
+        <div class="return-input-row">
+            <input class="return-input" id="return-code-input" type="text" placeholder="Paste your save code here...">
+            <button class="return-btn" onclick="loadReturnCode()">Load Results</button>
+        </div>
+        <div class="return-msg" id="return-msg"></div>
+    </div>
+</section>
+
 <section class="features-section">
     <div class="section-header">
         <h2>How <span>It Works</span></h2>
@@ -245,7 +314,7 @@
     <div class="features-grid">
         <div class="feature-card">
             <div class="feature-num">01</div>
-            <h3>Answer 58 Questions</h3>
+            <h3>Answer 65 Questions</h3>
             <p>Rate your agreement with statements on revolution, internationalism, the role of the party, ecology, social values and more.</p>
         </div>
         <div class="feature-card">
@@ -309,7 +378,7 @@
 ──────────────────────────────────────────────────────────────── -->
 <section class="ideologies-section">
     <div class="section-header">
-        <h2>21 Ideologies - Click to Learn More</h2>
+        <h2>22 Ideologies, Click to Learn More</h2>
         <p>Which one will you match?</p>
     </div>
     <div class="ideo-grid" id="ideo-grid"></div>
@@ -349,10 +418,10 @@
 <script>
 /* ── IDEOLOGIES DATA ARRAY ─────────────────────────────────────────
    Each object contains:
-     name    - ideology name (must match quiz.html ideologies array)
-     named   - founder / origin attribution
-     blurb   - one-sentence card description
-     full    - full HTML modal content including Further Reading links
+     name   , ideology name (must match quiz.html ideologies array)
+     named  , founder / origin attribution
+     blurb  , one-sentence card description
+     full   , full HTML modal content including Further Reading links
    This array drives both the card grid and the modal popups.
    To add a new ideology: add an entry here AND in quiz.html.
 ────────────────────────────────────────────────────────────────── */
@@ -361,37 +430,43 @@ const IDEOLOGIES = [
         name: "Marxism",
         named: "Karl Marx (1818-1883) and Friedrich Engels (1820-1895)",
         blurb: "The foundational framework of scientific socialism based on historical materialism and class struggle.",
-        full: `<p>Marxism is the political and economic theory developed by Karl Marx and Friedrich Engels. It holds that human history is the history of class struggle - that the material conditions of production shape all social, political, and intellectual life.</p><p>Marx argued that capitalism necessarily produces contradictions: it concentrates wealth while immiserating the proletariat, and will eventually be overthrown by a working-class revolution. Core texts: The Communist Manifesto (1848) and Capital (1867).</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/marx/works/1848/communist-manifesto/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Communist Manifesto (1848)</a></li><li><a href="https://www.marxists.org/archive/marx/works/1867-c1/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Capital Vol. I (1867)</a></li><li><a href="https://www.marxists.org/archive/marx/works/1875/gotha/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Critique of the Gotha Programme (1875)</a></li><li><a href="https://www.marxists.org/archive/marx/works/1847/wage-labour/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Wage Labour and Capital (1849)</a></li></ul></div>`,
+        full: `<p>Marxism is the political and economic theory developed by Karl Marx and Friedrich Engels. It holds that human history is the history of class struggle, that the material conditions of production shape all social, political, and intellectual life.</p><p>Marx argued that capitalism necessarily produces contradictions: it concentrates wealth while immiserating the proletariat, and will eventually be overthrown by a working-class revolution. Core texts: The Communist Manifesto (1848) and Capital (1867).</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/marx/works/1848/communist-manifesto/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Communist Manifesto (1848)</a></li><li><a href="https://www.marxists.org/archive/marx/works/1867-c1/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Capital Vol. I (1867)</a></li><li><a href="https://www.marxists.org/archive/marx/works/1875/gotha/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Critique of the Gotha Programme (1875)</a></li><li><a href="https://www.marxists.org/archive/marx/works/1847/wage-labour/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Wage Labour and Capital (1849)</a></li></ul></div>`,
     },
     {
         name: "Marxism-Leninism",
         named: "Vladimir Lenin (1870-1924), building on Marx",
-        blurb: "Vanguard party, democratic centralism, and the dictatorship of the proletariat - the ideology of the Soviet state.",
+        blurb: "Vanguard party, democratic centralism, and the dictatorship of the proletariat, the ideology of the Soviet state.",
         full: `<p>Marxism-Leninism developed Lenin's concept of a disciplined vanguard party to lead the working class, developed in response to Tsarist repression. Key tenets include democratic centralism, the dictatorship of the proletariat as a transitional state form, and Lenin's theory of imperialism as capitalism's highest stage. ML remains the dominant tendency in Cuba, Vietnam, Laos, and (in modified form) China.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/lenin/works/1901/witbd/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">What Is To Be Done? (1902)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1916/imp-hsc/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Imperialism, the Highest Stage (1917)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1917/staterev/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">State and Revolution (1917)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1920/lwc/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Left-Wing Communism (1920)</a></li></ul></div>`,
     },
     {
         name: "Trotskyism",
         named: "Leon Trotsky (1879-1940), founder of the Fourth International",
         blurb: "Permanent revolution, internationalism, and fierce opposition to Stalinist bureaucracy.",
-        full: `<p>Trotsky's theory of Permanent Revolution argued the socialist revolution must be international to survive. He characterized the USSR under Stalin as a degenerated workers' state - bureaucratically deformed but resting on socialist property relations - and called for a political revolution to restore workers' democracy. His Fourth International was founded in 1938 to oppose both capitalism and Stalinism.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/trotsky/1931/tpr/index.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Permanent Revolution (1928)</a></li><li><a href="https://www.marxists.org/archive/trotsky/1936/revbet/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Revolution Betrayed (1936)</a></li><li><a href="https://www.marxists.org/archive/trotsky/1938/tp/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Transitional Program (1938)</a></li><li><a href="https://www.marxists.org/archive/trotsky/1938/morals/morals.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Their Morals and Ours (1938)</a></li></ul></div>`,
+        full: `<p>Trotsky's theory of Permanent Revolution argued the socialist revolution must be international to survive. He characterized the USSR under Stalin as a degenerated workers' state, bureaucratically deformed but resting on socialist property relations, and called for a political revolution to restore workers' democracy. His Fourth International was founded in 1938 to oppose both capitalism and Stalinism.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/trotsky/1931/tpr/index.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Permanent Revolution (1928)</a></li><li><a href="https://www.marxists.org/archive/trotsky/1936/revbet/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Revolution Betrayed (1936)</a></li><li><a href="https://www.marxists.org/archive/trotsky/1938/tp/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Transitional Program (1938)</a></li><li><a href="https://www.marxists.org/archive/trotsky/1938/morals/morals.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Their Morals and Ours (1938)</a></li></ul></div>`,
     },
     {
         name: "MLM",
         named: "Mao Zedong (1893-1976); MLM formalized by the Communist Party of Peru (1988)",
         blurb: "Marxism-Leninism-Maoism: mass line, people's war, and the Cultural Revolution as advances in Marxist theory.",
-        full: `<p>MLM synthesizes Marxism-Leninism with Mao's contributions - the Mass Line (from the masses, to the masses), People's War as universal military strategy, and the theory that class struggle continues under socialism (Cultural Revolution). MLM was first formally systematized by the Communist Party of Peru in 1988. Contemporary MLM parties include the Communist Party of India (Maoist) and Communist Party of the Philippines.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/mao/selected-works/volume-2/mswv2_26.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On New Democracy (1940)</a></li><li><a href="https://www.marxists.org/reference/archive/mao/selected-works/volume-1/mswv1_16.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On Practice (1937)</a></li><li><a href="https://www.marxists.org/reference/archive/mao/selected-works/volume-1/mswv1_17.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On Contradiction (1937)</a></li><li><a href="https://www.marxists.org/reference/archive/mao/selected-works/volume-3/mswv3_12.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On the Mass Line</a></li></ul></div>`,
+        full: `<p>MLM synthesizes Marxism-Leninism with Mao's contributions, the Mass Line (from the masses, to the masses), People's War as universal military strategy, and the theory that class struggle continues under socialism (Cultural Revolution). MLM was first formally systematized by the Communist Party of Peru in 1988. Contemporary MLM parties include the Communist Party of India (Maoist) and Communist Party of the Philippines.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/mao/selected-works/volume-2/mswv2_26.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On New Democracy (1940)</a></li><li><a href="https://www.marxists.org/reference/archive/mao/selected-works/volume-1/mswv1_16.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On Practice (1937)</a></li><li><a href="https://www.marxists.org/reference/archive/mao/selected-works/volume-1/mswv1_17.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On Contradiction (1937)</a></li><li><a href="https://www.marxists.org/reference/archive/mao/selected-works/volume-3/mswv3_12.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On the Mass Line</a></li></ul></div>`,
     },
     {
         name: "Third Worldism",
         named: "Frantz Fanon, Lin Biao, and the Maoist Internationalist Movement",
         blurb: "The Global South is the primary revolutionary subject; the first-world proletariat is a co-opted labor aristocracy.",
-        full: `<p>Third Worldism holds that the primary revolutionary contradiction is between imperialism and the oppressed nations of the Global South. Drawing on Lin Biao's Long Live the Victory of People's War and the labor aristocracy theory, Third Worldists argue that high wages in imperialist countries have bought off the first-world working class. The Maoist Internationalist Movement (MIM) is the most prominent contemporary Third Worldist organization.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/lin-biao/1965/09/peoples_war/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Long Live the Victory of People's War - Lin Biao (1965)</a></li><li><a href="https://www.marxists.org/subject/africa/fanon/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Wretched of the Earth - Fanon (1961)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1916/imp-hsc/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Imperialism, the Highest Stage - Lenin</a></li></ul></div>`,
+        full: `<p>Third Worldism holds that the primary revolutionary contradiction is between imperialism and the oppressed nations of the Global South. Drawing on Lin Biao's Long Live the Victory of People's War and the labor aristocracy theory, Third Worldists argue that high wages in imperialist countries have bought off the first-world working class. The Maoist Internationalist Movement (MIM) is the most prominent contemporary Third Worldist organization.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/lin-biao/1965/09/peoples_war/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Long Live the Victory of People's War, Lin Biao (1965)</a></li><li><a href="https://www.marxists.org/subject/africa/fanon/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Wretched of the Earth, Fanon (1961)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1916/imp-hsc/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Imperialism, the Highest Stage, Lenin</a></li></ul></div>`,
+    },
+    {
+        name: "Guevarism",
+        named: "Ernesto 'Che' Guevara (1928-1967), Regis Debray (1940-2024)",
+        blurb: "Foco theory and international revolutionary duty: a small guerrilla vanguard can ignite revolution without waiting for objective conditions to mature.",
+        full: `<p>Guevarism, also called foco theory, holds that a small armed guerrilla nucleus operating in the countryside does not need to wait for a revolutionary party, a mass movement, or a mature economic crisis. The foco itself creates the conditions for revolution by demonstrating that the state is not invincible, inspiring broader insurrection.</p><p>Guevara drew on the experience of the Cuban Revolution under Castro, where a small guerrilla force toppled the Batista regime without a prior mass party. He generalized this into a theory applicable across Latin America and the Global South. His concept of the New Man proposed that socialist transformation required a simultaneous moral and economic revolution in human consciousness.</p><p>Guevara's internationalism was total. He left Cuba to fight in the Congo and then Bolivia, arguing that revolutionaries had a duty to fight imperialism everywhere. He was captured and executed by CIA-backed Bolivian forces in 1967. His image became the most reproduced revolutionary symbol of the 20th century.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/guevara/1961/guerrilla-warfare/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Guerrilla Warfare, Guevara (1961)</a></li><li><a href="https://www.marxists.org/archive/guevara/1965/04/man-and-socialism.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Socialism and Man in Cuba, Guevara (1965)</a></li><li><a href="https://www.marxists.org/archive/guevara/1967/04/16.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Message to the Tricontinental, Guevara (1967)</a></li></ul></div>`,
     },
     {
         name: "Dengism",
         named: "Deng Xiaoping (1904-1997), architect of China's post-1978 reforms",
         blurb: "Socialism with Chinese characteristics: market mechanisms within a socialist state under Communist Party leadership.",
-        full: `<p>Dengism guides China's economic reforms from 1978 onward. Deng argued China was in the primary stage of socialism and needed to develop productive forces first - justifying market mechanisms and foreign investment under CPC leadership. Deeply controversial: Maoists argue it represents capitalist restoration, while Dengists maintain China remains on a longer road to communism.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/deng-xiaoping/works/volume-ii/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Deng Xiaoping Selected Works Vol. II</a></li><li><a href="https://www.marxists.org/reference/archive/deng-xiaoping/works/volume-iii/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Deng Xiaoping Selected Works Vol. III</a></li><li><a href="https://www.marxists.org/reference/archive/deng-xiaoping/1980/168.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On the Reform of Party and State Leadership (1980)</a></li></ul></div>`,
+        full: `<p>Dengism guides China's economic reforms from 1978 onward. Deng argued China was in the primary stage of socialism and needed to develop productive forces first, justifying market mechanisms and foreign investment under CPC leadership. Deeply controversial: Maoists argue it represents capitalist restoration, while Dengists maintain China remains on a longer road to communism.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/deng-xiaoping/works/volume-ii/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Deng Xiaoping Selected Works Vol. II</a></li><li><a href="https://www.marxists.org/reference/archive/deng-xiaoping/works/volume-iii/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Deng Xiaoping Selected Works Vol. III</a></li><li><a href="https://www.marxists.org/reference/archive/deng-xiaoping/1980/168.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On the Reform of Party and State Leadership (1980)</a></li></ul></div>`,
     },
     {
         name: "Hoxhaism",
@@ -402,12 +477,12 @@ const IDEOLOGIES = [
     {
         name: "Syndicalism",
         named: "Georges Sorel (1847-1922), Daniel De Leon (1852-1914); IWW founded 1905",
-        blurb: "Revolutionary trade unionism - the union, not the party, is the vehicle of socialist transformation.",
-        full: `<p>Syndicalism holds that workers should organize in revolutionary industrial unions which will both fight capitalism and form the administrative structure of a future socialist society. The general strike - not the vanguard party or electoral campaign - is the chief weapon. Key variants include Anarcho-Syndicalism and De Leonism. The IWW (Industrial Workers of the World), founded 1905, remains the most famous syndicalist organization.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/deleon/works/1904/040531.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Burning Question of Trades Unionism - De Leon (1904)</a></li><li><a href="https://www.marxists.org/history/usa/unions/iww/1905/preamble.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">IWW Preamble (1905)</a></li><li><a href="https://www.marxists.org/archive/trotsky/1931/unions/3-commsyn.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Communism and Syndicalism - Trotsky (1929)</a></li></ul></div>`,
+        blurb: "Revolutionary trade unionism, the union, not the party, is the vehicle of socialist transformation.",
+        full: `<p>Syndicalism holds that workers should organize in revolutionary industrial unions which will both fight capitalism and form the administrative structure of a future socialist society. The general strike, not the vanguard party or electoral campaign, is the chief weapon. Key variants include Anarcho-Syndicalism and De Leonism. The IWW (Industrial Workers of the World), founded 1905, remains the most famous syndicalist organization.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/deleon/works/1904/040531.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Burning Question of Trades Unionism, De Leon (1904)</a></li><li><a href="https://www.marxists.org/history/usa/unions/iww/1905/preamble.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">IWW Preamble (1905)</a></li><li><a href="https://www.marxists.org/archive/trotsky/1931/unions/3-commsyn.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Communism and Syndicalism, Trotsky (1929)</a></li></ul></div>`,
     },
     {
         name: "Liberal / Right",
-        named: "No single tradition - catch-all result for non-left responses",
+        named: "No single tradition, catch-all result for non-left responses",
         blurb: "Your answers suggest you sit outside the left-wing spectrum. This quiz is designed for left-wing ideologies.",
         full: `<p>Your responses indicate views that sit outside the left-wing political spectrum this quiz is designed to measure. MarxValues specifically differentiates between left-wing ideologies from Social Democracy to MLM.</p><p>If you believe you hold left-wing views and landed here unexpectedly, try retaking the quiz with more attention to the economic and organizational questions. If you are genuinely not on the left, you may find a general political compass quiz more useful for locating your political position.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.politicalcompass.org/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Political Compass (general quiz)</a></li><li><a href="https://8values.github.io/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">8values Quiz</a></li><li><a href="https://leftvalues.github.io/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">LeftValues Quiz (what this quiz is based on)</a></li></ul></div>`,
     },
@@ -415,73 +490,73 @@ const IDEOLOGIES = [
         name: "Liberal",
         named: "John Locke (1632-1704), John Stuart Mill (1806-1873), John Rawls (1921-2002)",
         blurb: "Individual rights, democracy, and social progress within a regulated capitalist framework.",
-        full: `<p>Liberalism holds that individual rights, rule of law, and democratic governance are the foundations of a just society. Modern liberals support a mixed economy with state regulation of capitalism to correct market failures and fund social welfare.</p><p>From a Marxist perspective, liberalism represents the ideological form of the bourgeois state - it accepts the fundamental structure of capitalist property relations while seeking to humanize their outcomes. Landing here on a left-wing quiz suggests your views are transitional between liberal and social democratic politics.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/mill-john-stuart/1859/liberty/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On Liberty - Mill (1859)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1913/sep/03b.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Critique of liberalism - Lenin (1913)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1900/reform-revolution/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Reform or Revolution - Luxemburg (contra liberalism)</a></li></ul></div>`,
+        full: `<p>Liberalism holds that individual rights, rule of law, and democratic governance are the foundations of a just society. Modern liberals support a mixed economy with state regulation of capitalism to correct market failures and fund social welfare.</p><p>From a Marxist perspective, liberalism represents the ideological form of the bourgeois state, it accepts the fundamental structure of capitalist property relations while seeking to humanize their outcomes. Landing here on a left-wing quiz suggests your views are transitional between liberal and social democratic politics.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/mill-john-stuart/1859/liberty/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On Liberty, Mill (1859)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1913/sep/03b.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Critique of liberalism, Lenin (1913)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1900/reform-revolution/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Reform or Revolution, Luxemburg (contra liberalism)</a></li></ul></div>`,
     },
     {
         name: "Socialist",
         named: "Broad tradition: Robert Owen (1771-1858), Ferdinand Lassalle (1825-1864)",
-        blurb: "Social ownership, economic equality, and redistribution - achieved through democratic and electoral means.",
-        full: `<p>Democratic socialism holds that capitalism produces unjust inequality and exploitation, and should be replaced by social ownership of the means of production - through democratic, electoral, and parliamentary means rather than revolution.</p><p>This tendency includes the historical social democratic parties of Europe before they moved toward neoliberal accommodation. Contemporary democratic socialists like Bernie Sanders and Jeremy Corbyn represent a revival of this tradition within mainstream politics.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/marx/works/1880/soc-utop/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Socialism: Utopian and Scientific - Engels (1880)</a></li><li><a href="https://www.marxists.org/archive/kautsky/1909/power/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Road to Power - Kautsky (1909)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1900/reform-revolution/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Reform or Revolution - Luxemburg (1900)</a></li></ul></div>`,
+        blurb: "Social ownership, economic equality, and redistribution, achieved through democratic and electoral means.",
+        full: `<p>Democratic socialism holds that capitalism produces unjust inequality and exploitation, and should be replaced by social ownership of the means of production, through democratic, electoral, and parliamentary means rather than revolution.</p><p>This tendency includes the historical social democratic parties of Europe before they moved toward neoliberal accommodation. Contemporary democratic socialists like Bernie Sanders and Jeremy Corbyn represent a revival of this tradition within mainstream politics.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/marx/works/1880/soc-utop/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Socialism: Utopian and Scientific, Engels (1880)</a></li><li><a href="https://www.marxists.org/archive/kautsky/1909/power/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Road to Power, Kautsky (1909)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1900/reform-revolution/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Reform or Revolution, Luxemburg (1900)</a></li></ul></div>`,
     },
     {
         name: "Authoritarian",
         named: "No single founder; associated with Bonapartism, military governance, Stalinism",
         blurb: "State power, hierarchy, and order take precedence over individual freedoms and democratic participation.",
-        full: `<p>Authoritarianism prioritizes strong centralized power, order, and hierarchy over civil liberties and democratic accountability. Authoritarian governments may be of the left or right.</p><p>Within socialist discourse, the charge of authoritarianism is often leveled at Stalinist states. Defenders argue that emergency conditions of capitalist encirclement necessitated strong state measures. Critics argue these measures permanently deformed the socialist project. Landing here suggests authoritarian organizational preferences without clear ideological grounding.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/trotsky/1937/08/stalinism.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Stalinism and Bolshevism - Trotsky (1937)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1917/staterev/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The State and Revolution - Lenin (1917)</a></li><li><a href="https://www.marxists.org/reference/archive/stalin/works/1926/leninism/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Problems of Leninism - Stalin (1926)</a></li></ul></div>`,
+        full: `<p>Authoritarianism prioritizes strong centralized power, order, and hierarchy over civil liberties and democratic accountability. Authoritarian governments may be of the left or right.</p><p>Within socialist discourse, the charge of authoritarianism is often leveled at Stalinist states. Defenders argue that emergency conditions of capitalist encirclement necessitated strong state measures. Critics argue these measures permanently deformed the socialist project. Landing here suggests authoritarian organizational preferences without clear ideological grounding.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/trotsky/1937/08/stalinism.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Stalinism and Bolshevism, Trotsky (1937)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1917/staterev/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The State and Revolution, Lenin (1917)</a></li><li><a href="https://www.marxists.org/reference/archive/stalin/works/1926/leninism/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Problems of Leninism, Stalin (1926)</a></li></ul></div>`,
     },
     {
         name: "Libertarian Socialist",
         named: "Pierre-Joseph Proudhon, Mikhail Bakunin (1814-1876), Peter Kropotkin (1842-1921)",
         blurb: "Combines opposition to state power with support for economic equality and workers' self-management.",
-        full: `<p>Libertarian socialism holds that both capitalism and the authoritarian state are forms of domination that must be abolished together. It encompasses anarchism, council communism, and left communism - united by the conviction that socialism cannot be built through state power.</p><p>Key thinkers include Bakunin (who split with Marx over the role of the state), Kropotkin (mutual aid and decentralized communism), and Rosa Luxemburg (democratic mass movements over vanguard parties).</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/bakunin/works/1873/statism-anarchy.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Statism and Anarchy - Bakunin (1873)</a></li><li><a href="https://www.marxists.org/reference/archive/kropotkin-peter/1902/mutual-aid/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Mutual Aid - Kropotkin (1902)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1906/mass-strike/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Mass Strike - Luxemburg (1906)</a></li><li><a href="https://www.marxists.org/archive/pannekoe/1947/workers-councils.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Workers' Councils - Pannekoek (1941)</a></li></ul></div>`,
+        full: `<p>Libertarian socialism holds that both capitalism and the authoritarian state are forms of domination that must be abolished together. It encompasses anarchism, council communism, and left communism, united by the conviction that socialism cannot be built through state power.</p><p>Key thinkers include Bakunin (who split with Marx over the role of the state), Kropotkin (mutual aid and decentralized communism), and Rosa Luxemburg (democratic mass movements over vanguard parties).</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/bakunin/works/1873/statism-anarchy.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Statism and Anarchy, Bakunin (1873)</a></li><li><a href="https://www.marxists.org/reference/archive/kropotkin-peter/1902/mutual-aid/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Mutual Aid, Kropotkin (1902)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1906/mass-strike/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Mass Strike, Luxemburg (1906)</a></li><li><a href="https://www.marxists.org/archive/pannekoe/1947/workers-councils.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Workers' Councils, Pannekoek (1941)</a></li></ul></div>`,
     },
     {
         name: "Anarchist",
         named: "Pierre-Joseph Proudhon (1809-1865), Mikhail Bakunin (1814-1876), Emma Goldman (1869-1940)",
-        blurb: "Rejects all compulsory government and hierarchy - voluntary association and mutual aid instead.",
-        full: `<p>Anarchism holds that all forms of hierarchical authority - the state, capitalism, patriarchy - are illegitimate and must be abolished. Society should be organized through voluntary association, mutual aid, and direct democracy.</p><p>Proudhon coined the term anarchist in 1840. Bakunin developed it into a revolutionary movement opposing both capitalism and Marxist state socialism. The Spanish Civil War (1936-39) saw the most significant anarchist experiment - the CNT-FAI managed large parts of Catalonia on anarchist principles before being crushed by both Francoists and Stalinists.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/subject/economics/proudhon/what-is-property/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">What Is Property? - Proudhon (1840)</a></li><li><a href="https://www.marxists.org/reference/archive/bakunin/works/godstate/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">God and the State - Bakunin (1882)</a></li><li><a href="https://www.marxists.org/reference/archive/kropotkin-peter/1892/conquest-bread/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Conquest of Bread - Kropotkin (1892)</a></li><li><a href="https://www.marxists.org/reference/archive/goldman/works/1910s/anarchism.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Anarchism - Goldman (1910)</a></li></ul></div>`,
+        blurb: "Rejects all compulsory government and hierarchy, voluntary association and mutual aid instead.",
+        full: `<p>Anarchism holds that all forms of hierarchical authority, the state, capitalism, patriarchy, are illegitimate and must be abolished. Society should be organized through voluntary association, mutual aid, and direct democracy.</p><p>Proudhon coined the term anarchist in 1840. Bakunin developed it into a revolutionary movement opposing both capitalism and Marxist state socialism. The Spanish Civil War (1936-39) saw the most significant anarchist experiment, the CNT-FAI managed large parts of Catalonia on anarchist principles before being crushed by both Francoists and Stalinists.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/subject/economics/proudhon/what-is-property/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">What Is Property?, Proudhon (1840)</a></li><li><a href="https://www.marxists.org/reference/archive/bakunin/works/godstate/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">God and the State, Bakunin (1882)</a></li><li><a href="https://www.marxists.org/reference/archive/kropotkin-peter/1892/conquest-bread/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Conquest of Bread, Kropotkin (1892)</a></li><li><a href="https://www.marxists.org/reference/archive/goldman/works/1910s/anarchism.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Anarchism, Goldman (1910)</a></li></ul></div>`,
     },
     {
         name: "Eco-Socialist",
         named: "James O'Connor (1930-2017), Joel Kovel (1936-2018); ecosocialist tradition from the 1980s-90s",
-        blurb: "Combines socialist economics with ecological sustainability - capitalism is the root cause of environmental destruction.",
-        full: `<p>Eco-socialism holds that capitalism's drive for endless accumulation is structurally incompatible with ecological sustainability. The solution is not green capitalism but a socialist reorganization of production oriented toward human needs and ecological limits.</p><p>Key concepts include the metabolic rift (Marx's analysis of capitalism's disruption of natural cycles, drawn out by John Bellamy Foster), degrowth, and the idea that the working class and the environment share common enemies in capital.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/marx/works/1867-c1/ch15.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Marx on Metabolic Rift - Capital Ch.15</a></li><li><a href="https://www.marxists.org/archive/kovel/2002/socialism-ecology.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Socialism and Ecology - Kovel (2002)</a></li><li><a href="https://www.marxists.org/history/etol/revhist/backiss/vol7/no1/oconnor.html" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Second Contradiction of Capitalism - O'Connor</a></li></ul></div>`,
+        blurb: "Combines socialist economics with ecological sustainability, capitalism is the root cause of environmental destruction.",
+        full: `<p>Eco-socialism holds that capitalism's drive for endless accumulation is structurally incompatible with ecological sustainability. The solution is not green capitalism but a socialist reorganization of production oriented toward human needs and ecological limits.</p><p>Key concepts include the metabolic rift (Marx's analysis of capitalism's disruption of natural cycles, drawn out by John Bellamy Foster), degrowth, and the idea that the working class and the environment share common enemies in capital.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/marx/works/1867-c1/ch15.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Marx on Metabolic Rift, Capital Ch.15</a></li><li><a href="https://www.marxists.org/archive/kovel/2002/socialism-ecology.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Socialism and Ecology, Kovel (2002)</a></li><li><a href="https://www.marxists.org/history/etol/revhist/backiss/vol7/no1/oconnor.html" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Second Contradiction of Capitalism, O'Connor</a></li></ul></div>`,
     },
     {
         name: "Social Democrat",
         named: "Eduard Bernstein (1850-1932); Olof Palme, Willy Brandt, Clement Attlee",
-        blurb: "Gradual reform within capitalism - welfare state, progressive taxation, and parliamentary democracy instead of revolution.",
-        full: `<p>Social democracy holds that the injustices of capitalism can and should be corrected through democratic reform rather than revolution. Originating in Eduard Bernstein's revisionism of Marxism, it argues that workers' conditions can be improved through legislation, trade unions, and electoral politics without revolutionary rupture.</p><p>Social democrats accept the market economy as the basis of wealth creation, but insist on strong state regulation, progressive taxation, and a comprehensive welfare state. The Scandinavian model is the most celebrated expression of social democratic governance. Bernstein's Evolutionary Socialism (1899) is the foundational text.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/bernstein/works/1899/evsoc/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Evolutionary Socialism - Bernstein (1899)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1900/reform-revolution/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Reform or Revolution - Luxemburg (1900, critique)</a></li><li><a href="https://www.marxists.org/history/international/social-democracy/1891/erfurt-program.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Erfurt Program (1891)</a></li></ul></div>`,
+        blurb: "Gradual reform within capitalism, welfare state, progressive taxation, and parliamentary democracy instead of revolution.",
+        full: `<p>Social democracy holds that the injustices of capitalism can and should be corrected through democratic reform rather than revolution. Originating in Eduard Bernstein's revisionism of Marxism, it argues that workers' conditions can be improved through legislation, trade unions, and electoral politics without revolutionary rupture.</p><p>Social democrats accept the market economy as the basis of wealth creation, but insist on strong state regulation, progressive taxation, and a comprehensive welfare state. The Scandinavian model is the most celebrated expression of social democratic governance. Bernstein's Evolutionary Socialism (1899) is the foundational text.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/bernstein/works/1899/evsoc/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Evolutionary Socialism, Bernstein (1899)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1900/reform-revolution/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Reform or Revolution, Luxemburg (1900, critique)</a></li><li><a href="https://www.marxists.org/history/international/social-democracy/1891/erfurt-program.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Erfurt Program (1891)</a></li></ul></div>`,
     },
     {
         name: "Patriotic Socialism",
         named: "Associated with Caleb Maupin, Infrared/Haz Al-Din; predecessors include Ernst Niekisch (1889-1967)",
-        blurb: "Socialism organized around national identity - state ownership and workers rights combined with cultural conservatism and rejection of liberal social values.",
-        full: `<p>Patriotic Socialism holds that genuine socialism must be rooted in national culture, history, and identity rather than abstract internationalism. It rejects the liberal-progressive social values dominant in Western left politics as products of bourgeois ideology.</p><p>Proponents support strong centralized state ownership, robust social programs, and protectionist economic policy - while opposing globalism. It is deeply controversial: most Marxist tendencies consider it proto-fascist or a Red-Brown synthesis, while proponents insist it can win over the nationalist working class. The line between Patriotic Socialism and fascism is historically contested and thin.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/stalin/works/1924/foundations-leninism/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Foundations of Leninism - Stalin (1924)</a></li><li><a href="https://www.marxists.org/reference/archive/stalin/works/1913/03.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Marxism and the National Question - Stalin (1913)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1920/lwc/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Left-Wing Communism (Lenin critique of nationalism)</a></li></ul></div>`,
+        blurb: "Socialism organized around national identity, state ownership and workers rights combined with cultural conservatism and rejection of liberal social values.",
+        full: `<p>Patriotic Socialism holds that genuine socialism must be rooted in national culture, history, and identity rather than abstract internationalism. It rejects the liberal-progressive social values dominant in Western left politics as products of bourgeois ideology.</p><p>Proponents support strong centralized state ownership, robust social programs, and protectionist economic policy, while opposing globalism. It is deeply controversial: most Marxist tendencies consider it proto-fascist or a Red-Brown synthesis, while proponents insist it can win over the nationalist working class. The line between Patriotic Socialism and fascism is historically contested and thin.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/stalin/works/1924/foundations-leninism/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Foundations of Leninism, Stalin (1924)</a></li><li><a href="https://www.marxists.org/reference/archive/stalin/works/1913/03.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Marxism and the National Question, Stalin (1913)</a></li><li><a href="https://www.marxists.org/archive/lenin/works/1920/lwc/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Left-Wing Communism (Lenin critique of nationalism)</a></li></ul></div>`,
     },
     {
         name: "Left Communism",
         named: "Anton Pannekoek (1873-1960), Otto Ruhle (1874-1943), Amadeo Bordiga (1889-1970), Paul Mattick (1904-1981)",
-        blurb: "A Marxist critique of Leninism from the left - rejecting parliament, vanguard parties, and trade union bureaucracies in favor of workers councils and class autonomy.",
-        full: `<p>Left Communism emerged in the 1920s as a critique of Bolshevik methods from within the communist movement. The Dutch-German tradition (Council Communism) rejected the vanguard party entirely; the Italian Left (Bordigism) retained a party concept but condemned Stalinist and social democratic opportunism. Both currents oppose participation in bourgeois elections and collaboration with reformist trade unions. Lenin responded in Left-Wing Communism: An Infantile Disorder (1920) - a charge left communists returned with interest.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/pannekoe/1947/workers-councils.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Workers' Councils - Pannekoek (1941)</a></li><li><a href="https://www.marxists.org/archive/gorter/1920/open-letter/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Open Letter to Lenin - Gorter (1920)</a></li><li><a href="https://www.marxists.org/archive/pannekoe/1936/party-class.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Party and Class - Pannekoek (1936)</a></li><li><a href="https://www.marxists.org/subject/left-wing/index.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Left-Wing Communism Archive</a></li></ul></div>`,
+        blurb: "A Marxist critique of Leninism from the left, rejecting parliament, vanguard parties, and trade union bureaucracies in favor of workers councils and class autonomy.",
+        full: `<p>Left Communism emerged in the 1920s as a critique of Bolshevik methods from within the communist movement. The Dutch-German tradition (Council Communism) rejected the vanguard party entirely; the Italian Left (Bordigism) retained a party concept but condemned Stalinist and social democratic opportunism. Both currents oppose participation in bourgeois elections and collaboration with reformist trade unions. Lenin responded in Left-Wing Communism: An Infantile Disorder (1920), a charge left communists returned with interest.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/pannekoe/1947/workers-councils.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Workers' Councils, Pannekoek (1941)</a></li><li><a href="https://www.marxists.org/archive/gorter/1920/open-letter/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Open Letter to Lenin, Gorter (1920)</a></li><li><a href="https://www.marxists.org/archive/pannekoe/1936/party-class.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Party and Class, Pannekoek (1936)</a></li><li><a href="https://www.marxists.org/subject/left-wing/index.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Left-Wing Communism Archive</a></li></ul></div>`,
     },
     {
         name: "Luxemburgism",
         named: "Rosa Luxemburg (1871-1919), murdered leader of the German Communist Party (KPD)",
-        blurb: "Mass strike, anti-vanguardism, and the insistence that socialist democracy cannot be deferred - it must be practiced inside the revolutionary movement from the start.",
-        full: `<p>Rosa Luxemburg developed a distinctive Marxism distinct from both Kautsky's orthodoxy and Lenin's vanguardism. Her theory of the mass strike held that revolutionary consciousness emerges from the spontaneous action of workers in struggle - a direct challenge to Lenin's What Is To Be Done?</p><p>She accepted the need for a mass revolutionary party but rejected democratic centralism, arguing that the Bolsheviks' suppression of democratic freedoms would strangle the revolution itself. She was murdered by Freikorps paramilitaries in January 1919 with the complicity of the Social Democratic government. Full works archived at Marxists Internet Archive.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/luxemburg/1900/reform-revolution/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Reform or Revolution (1900)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1906/mass-strike/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Mass Strike (1906)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1918/russian-revolution/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Russian Revolution (1918)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1904/questions-rsd/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Organizational Questions of Russian Social Democracy (1904)</a></li></ul></div>`,
+        blurb: "Mass strike, anti-vanguardism, and the insistence that socialist democracy cannot be deferred, it must be practiced inside the revolutionary movement from the start.",
+        full: `<p>Rosa Luxemburg developed a distinctive Marxism distinct from both Kautsky's orthodoxy and Lenin's vanguardism. Her theory of the mass strike held that revolutionary consciousness emerges from the spontaneous action of workers in struggle, a direct challenge to Lenin's What Is To Be Done?</p><p>She accepted the need for a mass revolutionary party but rejected democratic centralism, arguing that the Bolsheviks' suppression of democratic freedoms would strangle the revolution itself. She was murdered by Freikorps paramilitaries in January 1919 with the complicity of the Social Democratic government. Full works archived at Marxists Internet Archive.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/luxemburg/1900/reform-revolution/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Reform or Revolution (1900)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1906/mass-strike/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Mass Strike (1906)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1918/russian-revolution/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">The Russian Revolution (1918)</a></li><li><a href="https://www.marxists.org/archive/luxemburg/1904/questions-rsd/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Organizational Questions of Russian Social Democracy (1904)</a></li></ul></div>`,
     },
     {
         name: "Autonomism",
         named: "Mario Tronti (1931-2023), Antonio Negri (1933-2023), Harry Cleaver; from Italian Operaismo in the 1960s-70s",
-        blurb: "Workers' self-organization, the refusal of work, and a Marxist analysis expanded to cover all value-producing labor - immaterial, affective, and reproductive.",
-        full: `<p>Autonomism developed from the Italian Operaismo movement's analysis of factory struggles in the 1960s. Mario Tronti reversed the traditional Marxist formula: workers' struggle drives capitalist restructuring, not the reverse. Antonio Negri extended this in Empire (2000, with Hardt) to argue that global capitalism has produced a 'multitude' as the revolutionary subject - encompassing immaterial, affective, and cognitive labor beyond the industrial proletariat.</p><p>The refusal of work - sabotage, absenteeism, wildcat strikes - is both tactic and political statement. Autonomism provides theoretical grounding for contemporary horizontalist, anti-globalization, and commons movements.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/tronti/1962/factory-society.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Factory and Society - Tronti (1962)</a></li><li><a href="https://www.marxists.org/archive/cleaver/1979/rcpintro.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Reading Capital Politically - Cleaver</a></li><li><a href="https://www.marxists.org/archive/tronti/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Workers and Capital - Tronti (overview)</a></li></ul></div>`,
+        blurb: "Workers' self-organization, the refusal of work, and a Marxist analysis expanded to cover all value-producing labor, immaterial, affective, and reproductive.",
+        full: `<p>Autonomism developed from the Italian Operaismo movement's analysis of factory struggles in the 1960s. Mario Tronti reversed the traditional Marxist formula: workers' struggle drives capitalist restructuring, not the reverse. Antonio Negri extended this in Empire (2000, with Hardt) to argue that global capitalism has produced a 'multitude' as the revolutionary subject, encompassing immaterial, affective, and cognitive labor beyond the industrial proletariat.</p><p>The refusal of work, sabotage, absenteeism, wildcat strikes, is both tactic and political statement. Autonomism provides theoretical grounding for contemporary horizontalist, anti-globalization, and commons movements.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/archive/tronti/1962/factory-society.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Factory and Society, Tronti (1962)</a></li><li><a href="https://www.marxists.org/archive/cleaver/1979/rcpintro.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Reading Capital Politically, Cleaver</a></li><li><a href="https://www.marxists.org/archive/tronti/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Workers and Capital, Tronti (overview)</a></li></ul></div>`,
     },
     {
         name: "Market Socialism",
         named: "Oskar Lange (1904-1965), Branko Horvat (1928-2003); Yugoslav self-management model (1950s-1980s)",
-        blurb: "Social or worker ownership of productive enterprises combined with market allocation - economic democracy without bureaucratic central planning.",
-        full: `<p>Market Socialism holds that the injustice of capitalism lies in private ownership of the means of production, not in the market mechanism itself. By transferring ownership to workers or society while retaining market allocation, it aims to eliminate exploitation while avoiding the inefficiencies of Soviet-style central planning.</p><p>The most significant historical experiment was Yugoslav self-managed socialism under Tito (1950s-1980s). Contemporary proponents include David Schweickart, whose Economic Democracy model proposes worker-managed firms and social control of investment. Critics from the left argue that market dynamics inevitably reproduce capitalist social relations even under worker ownership.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/lange-oskar/1936/economic-theory-socialism.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On the Economic Theory of Socialism - Lange (1936)</a></li><li><a href="https://www.marxists.org/archive/marx/works/1875/gotha/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Critique of the Gotha Programme - Marx (on distribution)</a></li><li><a href="https://www.marxists.org/archive/mattick-paul/1967/workers-control.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Workers' Control - Mattick (1967)</a></li></ul></div>`,
+        blurb: "Social or worker ownership of productive enterprises combined with market allocation, economic democracy without bureaucratic central planning.",
+        full: `<p>Market Socialism holds that the injustice of capitalism lies in private ownership of the means of production, not in the market mechanism itself. By transferring ownership to workers or society while retaining market allocation, it aims to eliminate exploitation while avoiding the inefficiencies of Soviet-style central planning.</p><p>The most significant historical experiment was Yugoslav self-managed socialism under Tito (1950s-1980s). Contemporary proponents include David Schweickart, whose Economic Democracy model proposes worker-managed firms and social control of investment. Critics from the left argue that market dynamics inevitably reproduce capitalist social relations even under worker ownership.</p><div class="modal-sources"><strong>Further Reading (Marxists Internet Archive):</strong><ul style="margin:8px 0 0 18px;line-height:1.9;"><li><a href="https://www.marxists.org/reference/archive/lange-oskar/1936/economic-theory-socialism.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">On the Economic Theory of Socialism, Lange (1936)</a></li><li><a href="https://www.marxists.org/archive/marx/works/1875/gotha/" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Critique of the Gotha Programme, Marx (on distribution)</a></li><li><a href="https://www.marxists.org/archive/mattick-paul/1967/workers-control.htm" target="_blank" rel="noopener noreferrer" style="color:var(--red);text-decoration:underline;">Workers' Control, Mattick (1967)</a></li></ul></div>`,
     },
 ];
 
@@ -522,6 +597,88 @@ function closeModal(e) {
     document.body.style.overflow = '';
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(null); });
+</script>
+<script>
+/* ── RETURNING USER VAULT ──────────────────────────────────────────────────
+   Decrypts a save code pasted on the homepage and redirects to results.html.
+   Uses the same AES-256-GCM decrypt logic as the vault in results.html.
+   Save code format: "MV1.{base64url key}.{base64url IV+ciphertext}"
+   The decrypted payload is written to sessionStorage then results.html reads it.
+────────────────────────────────────────────────────────────────────────── */
+function fromB64(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0));}
+
+async function loadReturnCode() {
+    const input = document.getElementById('return-code-input').value.trim();
+    const msg   = document.getElementById('return-msg');
+    msg.className = 'return-msg';
+    msg.textContent = '';
+
+    if (!input) {
+        msg.className = 'return-msg err';
+        msg.textContent = 'Please paste a save code first.';
+        return;
+    }
+    if (!input.startsWith('MV1.')) {
+        msg.className = 'return-msg err';
+        msg.textContent = 'Invalid code. Save codes start with MV1.';
+        return;
+    }
+
+    try {
+        const parts = input.slice(4).split('.');
+        if (parts.length !== 2) throw new Error('malformed');
+
+        const keyBytes   = fromB64(parts[0]);
+        const combined   = fromB64(parts[1]);
+        const iv         = combined.slice(0, 12);
+        const ciphertext = combined.slice(12);
+
+        const key = await crypto.subtle.importKey(
+            'raw', keyBytes, { name: 'AES-GCM' }, false, ['decrypt']
+        );
+        const decrypted = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv }, key, ciphertext
+        );
+        const payload = JSON.parse(new TextDecoder().decode(decrypted));
+
+        // Reconstruct result object compatible with results.html renderResults()
+        const scores = payload.scores || {};
+        const top = {
+            name:     payload.ideology || 'Unknown',
+            matchPct: payload.match    || 0,
+            desc:     payload.desc     || ''
+        };
+        const result = { top, runnerUps: [], allRanked: [], scores };
+        sessionStorage.setItem('marxvalues_result', JSON.stringify(result));
+        window.location.href = 'results.html';
+
+    } catch(e) {
+        msg.className = 'return-msg err';
+        msg.textContent = 'Could not decrypt. The code may be incomplete or corrupted.';
+    }
+}
+</script>
+
+<script>
+/* Mobile nav toggle, hamburger button shows/hides the nav on small screens */
+(function(){
+    var btn = document.getElementById('nav-toggle');
+    var nav = document.querySelector('nav');
+    if(!btn || !nav) return;
+    btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+    });
+    // Close nav when a link is clicked
+    nav.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', function(){
+            nav.classList.remove('open');
+            btn.classList.remove('open');
+            btn.setAttribute('aria-expanded', false);
+        });
+    });
+})();
 </script>
 </body>
 </html>
