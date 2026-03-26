@@ -1,7 +1,14 @@
 <!DOCTYPE html>
+<!-- ╔══════════════════════════════════════════════════════╗
+     MarxValues - index.html
+     Homepage: animated compass, ideology cards with
+     modal popups, axes explainer, and CTA banner.
+     No external dependencies - all fonts are system serif.
+╚══════════════════════════════════════════════════════╝ -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Redirect HTTP to HTTPS in production; skips localhost and file:// -->
     <script>
         // Enforce HTTPS in production (skip for local file:// development)
         if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
@@ -9,6 +16,11 @@
         }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Content Security Policy: blocks all external requests.
+         default-src none = deny everything not explicitly allowed.
+         unsafe-inline = needed for our inline style and script blocks.
+         connect-src none = no fetch/XHR (this is a fully offline static site).
+         upgrade-insecure-requests = auto-upgrade any http: subresources. -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'none';
         script-src 'self' 'unsafe-inline';
@@ -21,6 +33,13 @@
         upgrade-insecure-requests;
     ">
     <title>MarxValues - Discover Your Left-Wing Compass</title>
+
+    <!-- ── STYLES ─────────────────────────────────────────────────
+         CSS variables, layout, hero, compass, ideology cards,
+         modal overlay, axes section, CTA, and footer.
+         Color palette: --ink (near-black), --red (#c0392b),
+         --paper (warm off-white), --red (accent throughout).
+    ──────────────────────────────────────────────────────────── -->
     <style>
         :root {
             --ink:   #0a0a0a;
@@ -173,6 +192,12 @@
     <nav><a href="quiz.html">Take the Quiz</a></nav>
 </header>
 
+<!-- ── HERO SECTION ──────────────────────────────────────────────
+     Full-height landing panel. Left side: headline, CTA button,
+     and stat counters (questions / ideologies / axes).
+     Right side: animated spinning compass rings with Marx portrait
+     at center, clipped by a diagonal red panel using clip-path.
+──────────────────────────────────────────────────────────────── -->
 <section class="hero">
     <div class="hero-content">
         <div class="eyebrow">Free &amp; Anonymous Left-Wing Assessment</div>
@@ -185,6 +210,9 @@
             <div class="stat"><div class="stat-num">7</div><div class="stat-label">Axes</div></div>
         </div>
     </div>
+    <!-- Compass visual: three spinning rings + cardinal pole labels.
+         The .compass-wrap has margin:40px so pole labels don't clip.
+         Pole dots sit on the ring edge via translate() math. -->
     <div class="hero-visual">
         <div class="compass-wrap">
             <div class="axis-line-h"></div>
@@ -203,6 +231,10 @@
     </div>
 </section>
 
+<!-- ── HOW IT WORKS SECTION ──────────────────────────────────────
+     Three-step explanation: answer questions, get axis scores,
+     match to an ideology. Dark background with red left-border cards.
+──────────────────────────────────────────────────────────────── -->
 <section class="features-section">
     <div class="section-header">
         <h2>How <span>It Works</span></h2>
@@ -227,6 +259,10 @@
     </div>
 </section>
 
+<!-- ── 7 AXES SECTION ────────────────────────────────────────────
+     Explains each of the 7 scoring axes and their opposing poles.
+     Red background to break up the dark/light alternation.
+──────────────────────────────────────────────────────────────── -->
 <section class="axes-section">
     <div class="section-header">
         <h2>The <span>7 Axes</span></h2>
@@ -264,6 +300,11 @@
     </div>
 </section>
 
+<!-- ── IDEOLOGY CARDS SECTION ───────────────────────────────────
+     Grid of 21 clickable ideology cards. Each card is populated
+     from the IDEOLOGIES JS array below. Clicking opens a modal
+     with full description and Marxists Internet Archive links.
+──────────────────────────────────────────────────────────────── -->
 <section class="ideologies-section">
     <div class="section-header">
         <h2>21 Ideologies - Click to Learn More</h2>
@@ -272,6 +313,9 @@
     <div class="ideo-grid" id="ideo-grid"></div>
 </section>
 
+<!-- ── CALL TO ACTION ────────────────────────────────────────────
+     Final push to start the quiz before the footer.
+──────────────────────────────────────────────────────────────── -->
 <section class="cta-banner">
     <h2>Ready to find <em>out?</em></h2>
     <p>Takes about 8 minutes. Your answers are never stored.</p>
@@ -282,6 +326,11 @@
     <p>&copy; 2024 MarxValues. Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:rgba(255,255,255,0.4);text-decoration:underline;">CC BY-NC-SA 4.0</a>. Results are anonymous and never stored.</p>
 </footer>
 
+<!-- ── MODAL OVERLAY ────────────────────────────────────────────
+     Hidden by default. Shown when a user clicks an ideology card.
+     Clicking the backdrop (modal-overlay) or X button closes it.
+     Content is injected by openModal(i) from the IDEOLOGIES array.
+──────────────────────────────────────────────────────────────── -->
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
     <div class="modal" id="modal">
@@ -296,6 +345,15 @@
 </div>
 
 <script>
+/* ── IDEOLOGIES DATA ARRAY ─────────────────────────────────────────
+   Each object contains:
+     name    - ideology name (must match quiz.html ideologies array)
+     named   - founder / origin attribution
+     blurb   - one-sentence card description
+     full    - full HTML modal content including Further Reading links
+   This array drives both the card grid and the modal popups.
+   To add a new ideology: add an entry here AND in quiz.html.
+────────────────────────────────────────────────────────────────── */
 const IDEOLOGIES = [
     {
         name: "Marxism",
@@ -425,6 +483,9 @@ const IDEOLOGIES = [
     },
 ];
 
+/* Build ideology cards dynamically from the IDEOLOGIES array.
+   Each card shows name, founder attribution, blurb, and a hint.
+   Clicking attaches openModal(i) with the ideology's index. */
 const grid = document.getElementById('ideo-grid');
 IDEOLOGIES.forEach((ideo, i) => {
     const card = document.createElement('div');
@@ -439,6 +500,8 @@ IDEOLOGIES.forEach((ideo, i) => {
     grid.appendChild(card);
 });
 
+/* openModal: inject ideology content into the modal DOM elements
+   and make the overlay visible. Locks body scroll while open. */
 function openModal(i) {
     const ideo = IDEOLOGIES[i];
     document.getElementById('modal-eyebrow').textContent = 'Ideology';
@@ -448,6 +511,9 @@ function openModal(i) {
     document.getElementById('modal-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
+/* closeModal: hide the overlay and restore body scroll.
+   Accepts a click event (checks if backdrop was clicked)
+   or null when called directly by the X button or Escape key. */
 function closeModal(e) {
     if (e && e.target !== document.getElementById('modal-overlay')) return;
     document.getElementById('modal-overlay').classList.remove('open');

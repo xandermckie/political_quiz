@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<!-- ╔══════════════════════════════════════════════════════╗
+     MarxValues - quiz.html
+     The quiz itself: 58 questions across 7 axes.
+     Scoring, ideology matching, and sessionStorage handoff
+     to results.html are all handled here in JavaScript.
+     No server, no database - everything runs in the browser.
+╚══════════════════════════════════════════════════════╝ -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -94,16 +101,23 @@
     </a>
     <nav><a href="index.html">Home</a></nav>
 </header>
+<!-- Sticky progress bar below the header.
+     Updated by render() as the user moves through questions. -->
 <div class="progress-strip">
     <span class="progress-label" id="progress-label">Question 1 of 58</span>
     <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
     <span class="progress-pct" id="progress-pct">0%</span>
 </div>
+<!-- Main question card container - centered, max 780px wide.
+     The card re-animates on each question change via fadeSlide. -->
 <div class="quiz-wrapper">
     <div class="question-card" id="question-card">
         <div class="axis-badge" id="axis-badge"></div>
         <div class="q-counter" id="q-counter"></div>
         <div class="q-text" id="q-text"></div>
+        <!-- Five answer options: Strongly Disagree (1) to Strongly Agree (5).
+             data-val stores the numeric answer passed to selectOption().
+             Selected state is styled via CSS .option.selected rules. -->
         <div class="options" id="options-container">
             <div class="option" data-val="1" onclick="selectOption(this)"><div class="opt-dot"></div>Strongly Disagree</div>
             <div class="option" data-val="2" onclick="selectOption(this)"><div class="opt-dot"></div>Disagree</div>
@@ -120,10 +134,31 @@
         </div>
     </div>
 </div>
+<!-- Toast notification shown when user tries to advance without answering.
+     Displayed by showToast(), hidden automatically after 3 seconds. -->
 <div class="warning-toast" id="warning-toast"></div>
 <footer><p>&copy; 2024 MarxValues. Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:rgba(255,255,255,0.4);text-decoration:underline;">CC BY-NC-SA 4.0</a>. Your answers are never stored or shared.</p></footer>
 
 <script>
+/* ╔══════════════════════════════════════════════════════════════
+   MARXVALUES QUIZ ENGINE
+   
+   FLOW:
+   1. User answers 58 questions (each tagged with an axis + effect)
+   2. calculateScores() normalizes answers to axis scores 0-100
+   3. determineIdeology() finds closest match via Euclidean distance
+   4. Result is stored in sessionStorage and user is sent to results.html
+   
+   AXES (7 total):
+   Revolution, Scientific, Centralization, Internationalism,
+   Organization, Ecology, Social
+   High score = first pole, Low score = second pole.
+   
+   EFFECT:
+   +1 = agreeing pushes axis score higher (toward first pole)
+   -1 = agreeing pushes axis score lower (toward second pole)
+╚══════════════════════════════════════════════════════════════ */
+
 // ─────────────────────────────────────────────
 // AXES: Revolution, Scientific, Centralization,
 //       Internationalism, Organization, Ecology, Social
@@ -134,7 +169,10 @@
 //                National, Union, Nature, Conservative)
 // ─────────────────────────────────────────────
 
-// effect: +1 means "agree pushes axis HIGH", -1 means "agree pushes axis LOW"
+// Each question object: { axis, effect, text }
+// axis   - which of the 7 axes this question scores
+// effect - +1 pushes axis high, -1 pushes axis low
+// text   - the statement shown to the user
 const questions = [
   // REVOLUTION vs REFORM
   { axis:"Revolution", effect:1,  text:"The capitalist state cannot be reformed - it must be smashed and replaced." },
@@ -224,7 +262,9 @@ const questions = [
 ];
 
 // ─────────────────────────────────────────────
-// IDEOLOGIES: scores for each axis 0–100
+// IDEOLOGIES: axis scores 0-100 for each ideology
+// These are the target vectors used in Euclidean distance matching.
+// To add/edit an ideology: update scores here AND add a modal entry in index.html.
 // High = first pole of each axis
 // Revolution, Scientific, Centralization, Internationalism, Organization(Party), Ecology(Production), Social(Progressive)
 // ─────────────────────────────────────────────
@@ -302,6 +342,9 @@ const AXIS_COLORS = { Revolution:"var(--c-rev)", Scientific:"var(--c-sci)", Cent
 let current = 0;
 let answers = new Array(questions.length).fill(undefined);
 
+/* render(): updates the question card DOM to show the current question.
+   Called on page load and after every Previous / Next navigation.
+   Restores previously selected answer if the user went back. */
 function render() {
     const q = questions[current];
     const total = questions.length;
@@ -329,6 +372,9 @@ function render() {
     card.style.animation='none'; card.offsetHeight; card.style.animation='';
 }
 
+/* selectOption(el): called by onclick on each answer button.
+   Stores the numeric answer (1-5) in the answers array,
+   removes selected state from all options, applies it to the clicked one. */
 function selectOption(el) {
     answers[current] = parseInt(el.dataset.val);
     document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
@@ -337,10 +383,14 @@ function selectOption(el) {
     document.getElementById('skip-hint').textContent = answered+' of '+questions.length+' answered';
 }
 
+/* nextQuestion(): advances to the next question.
+   Blocks progression if the current question has no answer yet. */
 function nextQuestion() {
     if (answers[current]===undefined){showToast('Please select an answer to continue.');return;}
     if (current<questions.length-1){current++;render();}
 }
+/* prevQuestion(): goes back one question. No validation needed
+   since the user has already answered previous questions. */
 function prevQuestion() { if(current>0){current--;render();} }
 
 // ─────────────────────────────────────────────
@@ -348,6 +398,17 @@ function prevQuestion() { if(current>0){current--;render();} }
 // Convert answer 1–5 to -1..+1 range, multiply by effect (+1/-1)
 // Normalize each axis to 0–100 (50 = neutral)
 // ─────────────────────────────────────────────
+/* calculateScores(): converts raw answers (1-5) into axis scores (0-100).
+   
+   Formula per question:
+     normalized = (answer - 3) / 2     -> maps 1..5 to -1..+1 (neutral=0)
+     contribution = normalized * effect -> flips direction for -1 effect questions
+   
+   Per axis:
+     mean = sum(contributions) / count
+     score = ((mean + 1) / 2) * 100    -> maps -1..+1 to 0..100
+   
+   An axis with no answered questions defaults to 50 (neutral). */
 function calculateScores() {
     const sums = {}, count = {};
     AXES.forEach(ax => { sums[ax]=0; count[ax]=0; });
@@ -364,6 +425,15 @@ function calculateScores() {
     return scores;
 }
 
+/* determineIdeology(scores): finds the closest ideology using
+   Euclidean distance in 7-dimensional axis space.
+   
+   For each ideology, distance = sqrt( sum( (userScore - ideoScore)^2 ) )
+   The ideology with the smallest distance is the top match.
+   
+   matchPct = (1 - distance / maxPossibleDistance) * 100
+   
+   Returns: { top, runnerUps (top 3), allRanked (all 21), scores } */
 function determineIdeology(scores) {
     const maxDist = Math.sqrt(Math.pow(100,2)*AXES.length);
     const ranked = ideologies.map(ideo => {
@@ -375,6 +445,9 @@ function determineIdeology(scores) {
     return { top:ranked[0], runnerUps:ranked.slice(1,4), allRanked:ranked, scores };
 }
 
+/* submitQuiz(): validates all questions are answered, calculates scores,
+   stores the full result object in sessionStorage under "marxvalues_result",
+   then redirects to results.html which reads and displays the result. */
 function submitQuiz() {
     const unanswered = answers.filter(a=>a===undefined).length;
     if (unanswered>0){showToast(`${unanswered} question${unanswered>1?'s':''} unanswered. Please complete the quiz.`);return;}
@@ -384,6 +457,8 @@ function submitQuiz() {
     window.location.href='results.html';
 }
 
+/* showToast(msg): shows a temporary error message at the bottom of
+   the screen. Auto-hides after 3 seconds. */
 function showToast(msg) {
     const t=document.getElementById('warning-toast');
     t.textContent=msg; t.style.display='block';

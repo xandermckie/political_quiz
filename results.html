@@ -1,4 +1,15 @@
 <!DOCTYPE html>
+<!-- ╔══════════════════════════════════════════════════════╗
+     MarxValues - results.html
+     Reads quiz result from sessionStorage, renders:
+       - Hero: matched ideology + match percentage
+       - Axis score bars (7 axes, animated)
+       - Radar chart (pure canvas, no libraries)
+       - Full ideology breakdown (all 21 ranked)
+       - Runner-up ideology cards (top 3)
+       - Encrypted vault: save/load result as AES-256-GCM code
+     If sessionStorage is empty, shows a "no results" fallback.
+╚══════════════════════════════════════════════════════╝ -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -204,6 +215,9 @@ const AXIS_COLORS = {
 };
 
 // ── Load from sessionStorage ───────────────────────────────
+/* Read the result object stored by quiz.html's submitQuiz().
+   Format: { top, runnerUps, allRanked, scores }
+   If missing or malformed, show the no-data fallback. */
 const raw = sessionStorage.getItem('marxvalues_result');
 
 if (!raw) {
@@ -229,6 +243,9 @@ if (!raw) {
 }
 
 // ── Render ─────────────────────────────────────────────────
+/* renderResults(): main render function.
+   Builds all HTML sections and injects them into #app,
+   then triggers the staggered animations after the DOM settles. */
 function renderResults(scores, top, runnerUps, allRanked) {
     document.title = 'MarxValues - ' + top.name;
 
@@ -252,7 +269,9 @@ function renderResults(scores, top, runnerUps, allRanked) {
             </div>
         </section>`;
 
-    // ── Axis bars
+    // ── Axis score bars ─────────────────────────────────────────
+    // One row per axis showing name, description, animated fill bar,
+    // and percentage counter. Bars animate via JS after DOM insertion.
     const axesHTML = AXES.map(ax => {
         const pct = Math.round(scores[ax]);
         const m = AXIS_META[ax];
@@ -276,7 +295,9 @@ function renderResults(scores, top, runnerUps, allRanked) {
         </div>`;
     }).join('');
 
-    // ── Runner-ups
+    // ── Runner-up cards ──────────────────────────────────────────
+    // Top 3 non-winning ideologies shown as cards with match %,
+    // animated fill bar, and ideology description.
     const runnerHTML = runnerUps.slice(0,3).map((r, i) => `
         <div class="runner-card">
             <div class="runner-rank">#${i + 2} Match</div>
@@ -288,7 +309,10 @@ function renderResults(scores, top, runnerUps, allRanked) {
             <div class="runner-desc">${r.desc || ''}</div>
         </div>`).join('');
 
-    // ── Full ideology breakdown
+    // ── Full ideology breakdown table ───────────────────────────
+    // All 21 ideologies ranked by match %, with animated bars.
+    // Top result gets a red left border and highlighted background.
+    // Falls back gracefully if allRanked is missing (old saved results).
     const breakdownHTML = (allRanked && allRanked.length > 0) ? allRanked.map((r, i) => {
         const pct = Math.round(r.matchPct || 0);
         const isTop = i === 0;
@@ -346,7 +370,10 @@ function renderResults(scores, top, runnerUps, allRanked) {
             </div>
         </div>`;
 
-    // ── Animate after DOM is ready
+    // ── Staggered animations ─────────────────────────────────────
+    // Wait one rAF + 80ms for the DOM to fully paint before animating.
+    // Axis bars stagger 120ms apart. Breakdown bars stagger 60ms apart.
+    // Radar chart draws itself via its own rAF loop.
     requestAnimationFrame(() => {
         setTimeout(() => {
             // Match counter
@@ -387,6 +414,9 @@ function renderResults(scores, top, runnerUps, allRanked) {
 }
 
 // ── Animated number counter ────────────────────────────────
+/* animateCounter(): counts a number from 0 to target over ~1.2s.
+   Uses an ease-out quartic curve for a natural deceleration.
+   isMatch=true renders the match percentage with a % span suffix. */
 function animateCounter(id, target, isMatch) {
     const el = document.getElementById(id);
     if (!el || isNaN(target)) return;
@@ -408,6 +438,10 @@ function animateCounter(id, target, isMatch) {
 }
 
 // ── Radar chart (pure canvas) ──────────────────────────────
+/* drawRadar(): draws an animated 7-axis radar chart on a <canvas>.
+   Pure canvas - no charting library needed.
+   Renders: grid rings, spokes, animated data polygon, axis dots, labels.
+   Animation runs via requestAnimationFrame until progress reaches 1. */
 function drawRadar(scores) {
     const canvas = document.getElementById('radar-canvas');
     if (!canvas) return;
@@ -509,7 +543,21 @@ function drawRadar(scores) {
     requestAnimationFrame(drawFrame);
 }
 
-// ── ENCRYPTED VAULT SYSTEM ─────────────────────────────────
+// ── ENCRYPTED VAULT SYSTEM ─────────────────────────────────────
+// Allows users to save and reload their results as an encrypted code.
+// Uses the browser's native Web Crypto API (AES-256-GCM).
+//
+// SECURITY MODEL:
+//   - Key is generated fresh each time and embedded IN the save code
+//   - Nothing is sent to any server - all crypto runs in the browser
+//   - Stored payload: { ideology, match%, scores } only
+//   - No timestamps, no IP, no session ID, no fingerprints
+//
+// SAVE CODE FORMAT:
+//   "MV1." + base64url(32-byte AES key) + "." + base64url(12-byte IV + ciphertext)
+//
+// The code is the only way to decrypt - we cannot read saved results.
+// ──────────────────────────────────────────────────────────────── ─────────────────────────────────
 // Uses Web Crypto API (AES-256-GCM) - all browser-native, no libraries.
 // Stored payload: { ideology, matchPct, scores } - no timestamps, no IDs.
 // Key is embedded in the save code itself (base64url) so we never store it.
@@ -518,12 +566,15 @@ function drawRadar(scores) {
 const VAULT_PREFIX = 'MV1.';
 
 // Encode bytes to base64url (URL-safe, no padding)
+/* toB64(): encode a buffer to URL-safe base64 (no padding).
+   Uses - and _ instead of + and / so codes are safe in URLs and emails. */
 function toB64(buf) {
     return btoa(String.fromCharCode(...new Uint8Array(buf)))
         .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 
 // Decode base64url back to Uint8Array
+/* fromB64(): decode URL-safe base64 back to a Uint8Array. */
 function fromB64(str) {
     const b64 = str.replace(/-/g,'+').replace(/_/g,'/');
     const pad = b64.length % 4 ? '='.repeat(4 - b64.length % 4) : '';
@@ -531,6 +582,8 @@ function fromB64(str) {
 }
 
 // Generate a fresh AES-256-GCM key
+/* generateKey(): create a fresh AES-256-GCM key.
+   extractable:true so we can export it into the save code. */
 async function generateKey() {
     return crypto.subtle.generateKey(
         { name:'AES-GCM', length:256 },
@@ -555,6 +608,9 @@ async function importKey(rawBytes) {
 }
 
 // Encrypt plaintext string → Uint8Array of (iv[12] || ciphertext)
+/* encrypt(): AES-256-GCM encrypt a string.
+   Generates a random 12-byte IV, prepends it to the ciphertext,
+   returns the combined buffer (IV + ciphertext) as Uint8Array. */
 async function encrypt(key, plaintext) {
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const encoded = new TextEncoder().encode(plaintext);
@@ -570,6 +626,8 @@ async function encrypt(key, plaintext) {
 }
 
 // Decrypt (iv[12] || ciphertext) back to plaintext string
+/* decrypt(): reverse of encrypt().
+   Splits the first 12 bytes as IV, decrypts the rest. */
 async function decrypt(key, combined) {
     const iv = combined.slice(0, 12);
     const ciphertext = combined.slice(12);
@@ -581,6 +639,9 @@ async function decrypt(key, combined) {
 }
 
 // Build the minimal payload - NO timestamps, NO IDs, NO fingerprints
+/* buildPayload(): construct the minimal JSON to encrypt and store.
+   ONLY includes ideology name, match %, and 7 rounded axis scores.
+   Deliberately excludes: timestamp, session ID, browser info, IP. */
 function buildPayload(scoresObj, topObj) {
     return JSON.stringify({
         ideology: topObj.name,
@@ -592,6 +653,12 @@ function buildPayload(scoresObj, topObj) {
 }
 
 // ── SAVE ──────────────────────────────────────────────────
+/* saveResult(): encrypts the current quiz result and displays
+   the encoded save code for the user to copy. Steps:
+   1. Read result from sessionStorage
+   2. Generate fresh AES-256-GCM key
+   3. Encrypt the minimal payload
+   4. Encode as "MV1.{key}.{iv+ciphertext}" and show in textarea */
 async function saveResult() {
     const btn = document.getElementById('btn-save');
     const box = document.getElementById('vault-code-box');
@@ -633,6 +700,12 @@ async function saveResult() {
 }
 
 // ── LOAD ──────────────────────────────────────────────────
+/* loadResult(): decrypts a pasted save code and reloads results.
+   Steps:
+   1. Validate the "MV1." prefix and split into key + ciphertext parts
+   2. Import the key bytes and decrypt
+   3. Reconstruct a result object compatible with renderResults()
+   4. Store back in sessionStorage and reload the page */
 async function loadResult() {
     const input = document.getElementById('load-code-input');
     const msg = document.getElementById('vault-msg');
@@ -679,6 +752,8 @@ async function loadResult() {
 }
 
 // ── COPY ──────────────────────────────────────────────────
+/* copyCode(): copy the generated save code to the clipboard.
+   Falls back to document.execCommand for older browsers. */
 async function copyCode() {
     const text = document.getElementById('vault-code-text').value;
     const btn = document.getElementById('btn-copy');
@@ -697,6 +772,9 @@ async function copyCode() {
 }
 
 // Lookup ideology description for reconstructed results
+/* getDesc(): returns the short description for a named ideology.
+   Used when reconstructing a result from a saved code, since the
+   saved payload only stores the ideology name, not its description. */
 function getDesc(name) {
     const map = {
         'Marxism':'The foundational framework of scientific socialism: class struggle, historical materialism, and the revolutionary overthrow of capitalism.',
