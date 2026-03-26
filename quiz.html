@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        // Enforce HTTPS in production (skip for local file:// development)
+        if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            location.replace('https:' + location.href.slice(5));
+        }
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'none';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        font-src 'self';
+        connect-src 'none';
+        form-action 'none';
+        base-uri 'self';
+        upgrade-insecure-requests;
+    ">
+    <title>MarxValues - Take the Quiz</title>
+    <style>
+        :root{--ink:#0a0a0a;--paper:#f2ede6;--red:#c0392b;--red2:#96281b;--muted:#7a7060;--border:#d8cfc4;--card:#fff;
+          --c-rev:#c0392b;--c-sci:#2c7bb6;--c-cen:#8e44ad;--c-int:#27ae60;--c-par:#d35400;--c-pro:#16a085;--c-soc:#c0392b;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Georgia','Times New Roman',Times,serif;background:var(--paper);color:var(--ink);min-height:100vh;}
+        body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+          background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+        header{position:sticky;top:0;z-index:100;background:var(--ink);border-bottom:4px solid var(--red);padding:0 48px;height:68px;display:flex;align-items:center;justify-content:space-between;}
+        .logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+        .logo-img{width:44px;height:44px;border-radius:50%;object-fit:cover;}
+        .logo-text{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-0.5px;}
+        .logo-text span{color:var(--red);}
+        nav a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:2px solid rgba(255,255,255,0.2);padding:9px 22px;transition:all 0.2s;}
+        nav a:hover{background:var(--red);border-color:var(--red);color:#fff;}
+
+        .progress-strip{position:sticky;top:68px;z-index:99;background:#fff;border-bottom:1px solid var(--border);padding:14px 48px;display:flex;align-items:center;gap:20px;}
+        .progress-label{font-size:0.78rem;font-weight:600;color:var(--muted);white-space:nowrap;min-width:130px;text-transform:uppercase;letter-spacing:0.08em;}
+        .progress-track{flex:1;height:5px;background:var(--border);overflow:hidden;}
+        .progress-fill{height:100%;background:var(--red);width:0%;transition:width 0.4s ease;}
+        .progress-pct{font-family:'Georgia','Times New Roman',Times,serif;font-size:1rem;font-weight:700;color:var(--red);min-width:40px;text-align:right;}
+
+        .quiz-wrapper{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:56px 24px 120px;}
+        .question-card{background:var(--card);border:1px solid var(--border);border-top:5px solid var(--red);padding:48px;animation:fadeSlide 0.3s ease;}
+        @keyframes fadeSlide{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+        .axis-badge{display:inline-block;padding:4px 12px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;color:#fff;}
+        .badge-Revolution{background:var(--c-rev);}
+        .badge-Scientific{background:var(--c-sci);}
+        .badge-Centralization{background:var(--c-cen);}
+        .badge-Internationalism{background:var(--c-int);}
+        .badge-Organization{background:var(--c-par);}
+        .badge-Ecology{background:var(--c-pro);}
+        .badge-Social{background:#555;}
+
+        .q-counter{font-size:0.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;}
+        .q-text{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(1.15rem,2.5vw,1.5rem);font-weight:700;line-height:1.35;color:var(--ink);margin-bottom:40px;}
+
+        .options{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+        .option{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 8px;border:2px solid var(--border);background:var(--paper);cursor:pointer;transition:all 0.18s;text-align:center;font-size:0.78rem;font-weight:600;line-height:1.3;color:var(--muted);user-select:none;text-transform:uppercase;letter-spacing:0.05em;}
+        .option:hover{border-color:var(--ink);color:var(--ink);transform:translateY(-2px);}
+        .opt-dot{width:14px;height:14px;border-radius:50%;border:2px solid currentColor;flex-shrink:0;transition:background 0.15s;}
+        .option[data-val="1"].selected{border-color:#c0392b;background:#c0392b;color:#fff;}
+        .option[data-val="2"].selected{border-color:#e67e22;background:#e67e22;color:#fff;}
+        .option[data-val="3"].selected{border-color:#7f8c8d;background:#7f8c8d;color:#fff;}
+        .option[data-val="4"].selected{border-color:#27ae60;background:#27ae60;color:#fff;}
+        .option[data-val="5"].selected{border-color:#2c7bb6;background:#2c7bb6;color:#fff;}
+        .option.selected{transform:translateY(-3px);box-shadow:0 4px 12px rgba(0,0,0,0.12);}
+        .option.selected .opt-dot{background:#fff;border-color:#fff;}
+
+        .spectrum-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+        .nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:48px;gap:16px;}
+        .btn-nav{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-family:'Georgia','Times New Roman',Times,serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+        .btn-nav:hover:not(:disabled){background:var(--ink);color:#fff;}
+        .btn-nav:disabled{opacity:0.3;cursor:not-allowed;}
+        .btn-submit{display:none;padding:14px 36px;background:var(--red);color:#fff;border:2px solid var(--red);font-family:'Georgia','Times New Roman',Times,serif;font-size:0.82rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+        .btn-submit:hover{background:var(--ink);border-color:var(--ink);}
+        .skip-hint{font-size:0.76rem;color:var(--muted);text-align:center;letter-spacing:0.04em;}
+
+        .warning-toast{display:none;position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;padding:12px 28px;font-size:0.88rem;font-weight:600;z-index:200;letter-spacing:0.05em;animation:toastIn 0.3s ease;}
+        @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(16px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+
+        footer{background:#060a0f;color:rgba(255,255,255,0.25);padding:24px 48px;text-align:center;font-size:0.8rem;position:relative;z-index:1;letter-spacing:0.06em;}
+        @media(max-width:640px){header{padding:0 20px;}.progress-strip{padding:12px 20px;}.question-card{padding:28px 20px;}.options{grid-template-columns:1fr 1fr;}.option:nth-child(5){grid-column:span 2;}.quiz-wrapper{padding:32px 16px 100px;}}
+    </style>
+</head>
+<body>
+<header>
+    <a class="logo" href="index.html">
+        <img class="logo-img" src="marx.png" alt="Marx">
+        <span class="logo-text">Marx<span>Values</span></span>
+    </a>
+    <nav><a href="index.html">Home</a></nav>
+</header>
+<div class="progress-strip">
+    <span class="progress-label" id="progress-label">Question 1 of 40</span>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-pct" id="progress-pct">0%</span>
+</div>
+<div class="quiz-wrapper">
+    <div class="question-card" id="question-card">
+        <div class="axis-badge" id="axis-badge"></div>
+        <div class="q-counter" id="q-counter"></div>
+        <div class="q-text" id="q-text"></div>
+        <div class="options" id="options-container">
+            <div class="option" data-val="1" onclick="selectOption(this)"><div class="opt-dot"></div>Strongly Disagree</div>
+            <div class="option" data-val="2" onclick="selectOption(this)"><div class="opt-dot"></div>Disagree</div>
+            <div class="option" data-val="3" onclick="selectOption(this)"><div class="opt-dot"></div>Neutral</div>
+            <div class="option" data-val="4" onclick="selectOption(this)"><div class="opt-dot"></div>Agree</div>
+            <div class="option" data-val="5" onclick="selectOption(this)"><div class="opt-dot"></div>Strongly Agree</div>
+        </div>
+        <div class="spectrum-labels"><span>Strongly Disagree</span><span>Strongly Agree</span></div>
+        <div class="nav-row">
+            <button class="btn-nav" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+            <span class="skip-hint" id="skip-hint"></span>
+            <button class="btn-nav" id="next-btn" onclick="nextQuestion()">Next</button>
+            <button class="btn-submit" id="submit-btn" onclick="submitQuiz()">See My Results</button>
+        </div>
+    </div>
+</div>
+<div class="warning-toast" id="warning-toast"></div>
+<footer><p>&copy; 2024 MarxValues. Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:rgba(255,255,255,0.4);text-decoration:underline;">CC BY-NC-SA 4.0</a>. Your answers are never stored or shared.</p></footer>
+
+<script>
+// ─────────────────────────────────────────────
+// AXES: Revolution, Scientific, Centralization,
+//       Internationalism, Organization, Ecology, Social
+// Scoring: each axis 0–100
+//   High score = first pole (Revolution, Scientific, Central,
+//                International, Party, Production, Progressive)
+//   Low score  = second pole (Reform, Utopian, Decentral,
+//                National, Union, Nature, Conservative)
+// ─────────────────────────────────────────────
+
+// effect: +1 means "agree pushes axis HIGH", -1 means "agree pushes axis LOW"
+const questions = [
+  // REVOLUTION vs REFORM
+  { axis:"Revolution", effect:1,  text:"The capitalist state cannot be reformed - it must be smashed and replaced." },
+  { axis:"Revolution", effect:1,  text:"A mass revolutionary uprising is the only path to genuine socialism." },
+  { axis:"Revolution", effect:-1, text:"Gradual reforms through electoral politics can meaningfully move society toward socialism." },
+  { axis:"Revolution", effect:-1, text:"Working within existing liberal democratic institutions is a valid socialist strategy." },
+  { axis:"Revolution", effect:1,  text:"Any socialist government that does not break decisively with capitalist property relations will be sabotaged and crushed." },
+
+  // SCIENTIFIC vs UTOPIAN
+  { axis:"Scientific", effect:1,  text:"Historical materialism - that material conditions drive history - is the correct framework for understanding society." },
+  { axis:"Scientific", effect:1,  text:"The class struggle between the proletariat and bourgeoisie is the central driver of political change today." },
+  { axis:"Scientific", effect:-1, text:"Socialism can be built by appealing to shared moral values of fairness and cooperation, without a class-struggle framework." },
+  { axis:"Scientific", effect:1,  text:"Dialectical materialism provides a scientifically superior analysis to liberal or idealist political theory." },
+  { axis:"Scientific", effect:-1, text:"Prefigurative politics - building the world we want in the present - is more important than historical-materialist analysis." },
+
+  // CENTRALIZATION vs DECENTRALIZATION
+  { axis:"Centralization", effect:1,  text:"A centralized planned economy is necessary to rationally allocate resources under socialism." },
+  { axis:"Centralization", effect:1,  text:"A strong socialist state is essential during the transition period to defend against capitalist restoration." },
+  { axis:"Centralization", effect:-1, text:"Economic planning should be decentralized to communities, workplaces, and localities." },
+  { axis:"Centralization", effect:-1, text:"The socialist state should immediately begin to wither away as soon as the revolution succeeds." },
+  { axis:"Centralization", effect:1,  text:"Democratic centralism - unified action after internal debate - is the correct organizational principle for a revolutionary party." },
+
+  // INTERNATIONALISM vs NATIONALISM
+  { axis:"Internationalism", effect:1,  text:"Socialism in one country is impossible - international revolution is necessary for any socialist state to survive." },
+  { axis:"Internationalism", effect:1,  text:"The workers of all countries share more in common with each other than with their national ruling classes." },
+  { axis:"Internationalism", effect:-1, text:"Building a strong socialist nation is a valid first step, even if it means prioritizing national development over global revolution." },
+  { axis:"Internationalism", effect:-1, text:"Third World nations have the right to pursue national liberation on their own terms, even through alliances with non-socialist forces." },
+  { axis:"Internationalism", effect:1,  text:"The ultimate goal of socialism is the abolition of all national borders and a world socialist republic." },
+
+  // ORGANIZATION: PARTY vs UNION
+  { axis:"Organization", effect:1,  text:"A disciplined vanguard party is necessary to lead the working class to revolution." },
+  { axis:"Organization", effect:1,  text:"Without a revolutionary party, the working class will not move beyond trade union consciousness." },
+  { axis:"Organization", effect:-1, text:"Revolutionary industrial unions - not political parties - should be the primary vehicle of socialist transformation." },
+  { axis:"Organization", effect:-1, text:"The general strike is a more powerful tool for socialist change than electoral campaigns." },
+  { axis:"Organization", effect:1,  text:"The party must maintain political leadership over trade unions and mass organizations." },
+
+  // ECOLOGY: PRODUCTION vs NATURE
+  { axis:"Ecology", effect:1,  text:"Rapid industrialization is essential for any socialist country to build the material basis for communism." },
+  { axis:"Ecology", effect:-1, text:"Ecological sustainability must be a central goal of any socialist project, not an afterthought." },
+  { axis:"Ecology", effect:-1, text:"Capitalism's drive for profit is the root cause of the ecological crisis, and only socialism can solve it." },
+  { axis:"Ecology", effect:1,  text:"Prioritizing the environment over industrial output is a luxury that developing socialist nations cannot afford." },
+  { axis:"Ecology", effect:-1, text:"A degrowth or eco-socialist model is compatible with, and necessary for, a genuinely emancipatory socialism." },
+
+  // SOCIAL: PROGRESSIVE vs CONSERVATIVE
+  { axis:"Social", effect:1,  text:"The liberation of women, LGBTQ+ people, and racially oppressed groups is inseparable from socialist struggle." },
+  { axis:"Social", effect:1,  text:"Social conservatism among the working class is a product of ruling-class ideology and must be combated." },
+  { axis:"Social", effect:-1, text:"Cultural and social stability should be preserved during socialist transition to maintain working-class unity." },
+  { axis:"Social", effect:-1, text:"Socialist movements should not impose Western social values on cultures with different traditions." },
+  { axis:"Social", effect:1,  text:"Proletarian internationalism requires solidarity with all oppressed groups, regardless of national or cultural boundaries." },
+
+  // BONUS - strongly differentiating questions
+  { axis:"Revolution",      effect:1,  text:"The state is always an instrument of class rule - there is no neutral state." },
+  { axis:"Internationalism",effect:-1, text:"The workers of wealthy imperialist nations are a labor aristocracy and cannot be relied upon as a revolutionary force." },
+  { axis:"Centralization",  effect:-1, text:"Workers' councils and soviets - not a vanguard party - should directly govern a socialist society." },
+  { axis:"Scientific",      effect:1,  text:"Marxism is a science, not a moral philosophy." },
+  { axis:"Organization",    effect:-1, text:"Direct action by organized workers is more effective than waiting for a revolutionary party to lead." },
+
+  // SOCIAL DEMOCRACY differentiating questions
+  { axis:"Revolution",      effect:-1, text:"Capitalism can be humanized through strong regulation, progressive taxation, and a robust welfare state - revolution is unnecessary." },
+  { axis:"Scientific",      effect:-1, text:"Socialism is better understood as an ethical ideal of equality and solidarity than as a scientific theory of history." },
+  { axis:"Organization",    effect:-1, text:"Parliamentary elections and trade union pressure are the most realistic tools for advancing workers' interests today." },
+
+  // PATRIOTIC SOCIALISM differentiating questions
+  { axis:"Internationalism", effect:-1, text:"Socialism must be rooted in national culture and identity - an internationalist socialism that ignores the nation is doomed to fail." },
+  { axis:"Social",           effect:-1, text:"Traditional values and national culture are worth preserving within a socialist framework." },
+  { axis:"Centralization",   effect:1,  text:"A strong centralized socialist state is necessary to protect both workers and national sovereignty from foreign capital." },
+
+  // LEFT COMMUNISM / COUNCIL COMMUNISM differentiating questions
+  { axis:"Organization",     effect:-1, text:"Workers' councils formed organically in struggle are more legitimate than any political party, including a revolutionary one." },
+  { axis:"Centralization",   effect:-1, text:"A party that seizes state power on behalf of the working class will inevitably become a new ruling class." },
+  { axis:"Scientific",       effect:1,  text:"Leninism was a historical distortion of Marxism that must be overcome, not built upon." },
+
+  // LUXEMBURGISM differentiating questions
+  { axis:"Organization",     effect:-1, text:"Revolutionary initiative must come from spontaneous mass action, not from a centralized party directing the class from above." },
+  { axis:"Social",           effect:1,  text:"Socialist democracy cannot be deferred until after the revolution - it must be practiced inside the movement from the start." },
+  { axis:"Centralization",   effect:-1, text:"Democratic centralism as practiced by the Bolsheviks suppresses the creative energy of the working class." },
+
+  // AUTONOMISM differentiating questions
+  { axis:"Organization",     effect:-1, text:"The refusal of work and sabotage of capitalist production are legitimate and important revolutionary tactics." },
+  { axis:"Social",           effect:1,  text:"The revolutionary subject today extends far beyond the industrial proletariat to include all those who produce value in society." },
+  { axis:"Scientific",       effect:-1, text:"Marx's value theory must be updated to account for immaterial labor, affective labor, and biopolitical production." },
+
+  // MARKET SOCIALISM differentiating questions
+  { axis:"Centralization",   effect:-1, text:"Worker-owned cooperatives competing in regulated markets are a viable and desirable model for a socialist economy." },
+  { axis:"Revolution",       effect:-1, text:"Transforming ownership structures through legislation and economic policy is more practical than revolutionary seizure of the state." },
+  { axis:"Organization",     effect:-1, text:"Workplace democracy - workers electing management and sharing profits - is more important than party control of the economy." },
+];
+
+// ─────────────────────────────────────────────
+// IDEOLOGIES: scores for each axis 0–100
+// High = first pole of each axis
+// Revolution, Scientific, Centralization, Internationalism, Organization(Party), Ecology(Production), Social(Progressive)
+// ─────────────────────────────────────────────
+const ideologies = [
+    // ── NEW: Marxist tendency ideologies ──
+    { name:"Marxism",
+      desc:"The foundational framework of scientific socialism: class struggle, historical materialism, and the revolutionary overthrow of capitalism.",
+      scores:{ Revolution:75, Scientific:90, Centralization:55, Internationalism:80, Organization:50, Ecology:55, Social:70 }},
+    { name:"Marxism-Leninism",
+      desc:"Vanguard party, democratic centralism, and the dictatorship of the proletariat - the ideology of the Soviet state.",
+      scores:{ Revolution:85, Scientific:90, Centralization:90, Internationalism:60, Organization:90, Ecology:60, Social:55 }},
+    { name:"Trotskyism",
+      desc:"Permanent revolution, anti-Stalinist workers' democracy, and uncompromising internationalism.",
+      scores:{ Revolution:90, Scientific:90, Centralization:55, Internationalism:95, Organization:80, Ecology:55, Social:80 }},
+    { name:"MLM",
+      desc:"Marxism-Leninism-Maoism: mass line, people's war, cultural revolution, and continuing class struggle under socialism.",
+      scores:{ Revolution:95, Scientific:85, Centralization:75, Internationalism:70, Organization:85, Ecology:50, Social:75 }},
+    { name:"Third Worldism",
+      desc:"The Global South as the primary revolutionary subject; the first-world proletariat as a co-opted labor aristocracy.",
+      scores:{ Revolution:90, Scientific:80, Centralization:60, Internationalism:55, Organization:65, Ecology:60, Social:65 }},
+    { name:"Dengism",
+      desc:"Socialism with Chinese characteristics: market mechanisms, CPC leadership, and the primary stage of socialism.",
+      scores:{ Revolution:30, Scientific:75, Centralization:85, Internationalism:45, Organization:90, Ecology:40, Social:40 }},
+    { name:"Hoxhaism",
+      desc:"Anti-revisionist Marxism-Leninism: strict defense of Stalin, opposition to Maoism and Soviet revisionism alike.",
+      scores:{ Revolution:80, Scientific:95, Centralization:95, Internationalism:55, Organization:95, Ecology:45, Social:45 }},
+    { name:"Syndicalism",
+      desc:"Revolutionary trade unionism - the union, not the party, is the vehicle of socialist transformation.",
+      scores:{ Revolution:80, Scientific:50, Centralization:15, Internationalism:75, Organization:5, Ecology:55, Social:70 }},
+    // ── ORIGINAL: Broader left/political spectrum ideologies ──
+    { name:"Libertarian",
+      desc:"Emphasizes individual liberty, limited government, and free markets above all else.",
+      scores:{ Revolution:40, Scientific:45, Centralization:10, Internationalism:65, Organization:15, Ecology:45, Social:80 }},
+    { name:"Conservative",
+      desc:"Values tradition, authority, and social stability; cautious of rapid change in any direction.",
+      scores:{ Revolution:10, Scientific:30, Centralization:45, Internationalism:25, Organization:50, Ecology:30, Social:15 }},
+    { name:"Liberal",
+      desc:"Supports individual rights, democracy, and social progress alongside regulated capitalism.",
+      scores:{ Revolution:15, Scientific:55, Centralization:40, Internationalism:70, Organization:40, Ecology:65, Social:85 }},
+    { name:"Socialist",
+      desc:"Advocates for social ownership, economic equality, and redistribution of wealth through democratic means.",
+      scores:{ Revolution:50, Scientific:70, Centralization:55, Internationalism:75, Organization:55, Ecology:65, Social:75 }},
+    { name:"Centrist",
+      desc:"Takes a balanced approach, incorporating ideas from multiple political traditions without firm commitments.",
+      scores:{ Revolution:25, Scientific:50, Centralization:50, Internationalism:50, Organization:50, Ecology:50, Social:55 }},
+    { name:"Authoritarian",
+      desc:"Prioritizes order, hierarchy, and state power over individual freedoms and democratic participation.",
+      scores:{ Revolution:35, Scientific:40, Centralization:90, Internationalism:30, Organization:85, Ecology:35, Social:20 }},
+    { name:"Libertarian Socialist",
+      desc:"Combines opposition to state power with support for economic equality and workers' self-management.",
+      scores:{ Revolution:75, Scientific:65, Centralization:10, Internationalism:85, Organization:10, Ecology:65, Social:90 }},
+    { name:"Anarchist",
+      desc:"Rejects all compulsory government and hierarchy; advocates voluntary association and mutual aid.",
+      scores:{ Revolution:85, Scientific:55, Centralization:5, Internationalism:90, Organization:5, Ecology:70, Social:90 }},
+    { name:"Eco-Socialist",
+      desc:"Combines socialist principles with environmental conservation; capitalism is the root of the ecological crisis.",
+      scores:{ Revolution:60, Scientific:70, Centralization:45, Internationalism:75, Organization:40, Ecology:10, Social:85 }},
+    { name:"Social Democrat",
+      desc:"Gradual reform within capitalism - a strong welfare state, progressive taxation, and parliamentary democracy over revolution.",
+      scores:{ Revolution:10, Scientific:35, Centralization:45, Internationalism:65, Organization:30, Ecology:60, Social:80 }},
+    { name:"Patriotic Socialism",
+      desc:"Socialism organized around the nation - state ownership, workers rights, and strong central authority combined with cultural conservatism and national identity.",
+      scores:{ Revolution:50, Scientific:55, Centralization:85, Internationalism:20, Organization:80, Ecology:40, Social:15 }},
+    { name:"Left Communism",
+      desc:"A Marxist critique of Leninism from the left - rejecting parliament, trade union bureaucracies, and the vanguard party in favor of workers' councils and class autonomy.",
+      scores:{ Revolution:85, Scientific:80, Centralization:10, Internationalism:85, Organization:5, Ecology:55, Social:75 }},
+    { name:"Luxemburgism",
+      desc:"Mass strike, anti-vanguardism, and the insistence that socialist democracy must be practiced inside the movement now, not deferred until after the revolution.",
+      scores:{ Revolution:85, Scientific:85, Centralization:30, Internationalism:90, Organization:35, Ecology:55, Social:85 }},
+    { name:"Autonomism",
+      desc:"Workers' self-organization, the refusal of work, and a Marxist analysis expanded to include all value-producing labor beyond the industrial proletariat.",
+      scores:{ Revolution:75, Scientific:60, Centralization:10, Internationalism:85, Organization:10, Ecology:65, Social:90 }},
+    { name:"Market Socialism",
+      desc:"Social or worker ownership of productive enterprises combined with market allocation - economic democracy without bureaucratic central planning.",
+      scores:{ Revolution:40, Scientific:60, Centralization:20, Internationalism:60, Organization:40, Ecology:55, Social:65 }},
+];
+
+const AXES = ["Revolution","Scientific","Centralization","Internationalism","Organization","Ecology","Social"];
+const AXIS_COLORS = { Revolution:"var(--c-rev)", Scientific:"var(--c-sci)", Centralization:"var(--c-cen)", Internationalism:"var(--c-int)", Organization:"var(--c-par)", Ecology:"var(--c-pro)", Social:"#555" };
+
+let current = 0;
+let answers = new Array(questions.length).fill(undefined);
+
+function render() {
+    const q = questions[current];
+    const total = questions.length;
+    const badge = document.getElementById('axis-badge');
+    badge.className = 'axis-badge badge-' + q.axis;
+    badge.style.background = AXIS_COLORS[q.axis];
+    badge.textContent = q.axis;
+    document.getElementById('q-counter').textContent = `Question ${current+1} of ${total}`;
+    document.getElementById('q-text').textContent = q.text;
+    const pct = Math.round(((current+1)/total)*100);
+    document.getElementById('progress-fill').style.width = pct+'%';
+    document.getElementById('progress-label').textContent = `Question ${current+1} of ${total}`;
+    document.getElementById('progress-pct').textContent = pct+'%';
+    document.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('selected');
+        if (answers[current] === parseInt(opt.dataset.val)) opt.classList.add('selected');
+    });
+    document.getElementById('prev-btn').disabled = current === 0;
+    const isLast = current === total-1;
+    document.getElementById('next-btn').style.display = isLast ? 'none' : 'inline-flex';
+    document.getElementById('submit-btn').style.display = isLast ? 'inline-flex' : 'none';
+    const answered = answers.filter(a=>a!==undefined).length;
+    document.getElementById('skip-hint').textContent = answered+' of '+total+' answered';
+    const card = document.getElementById('question-card');
+    card.style.animation='none'; card.offsetHeight; card.style.animation='';
+}
+
+function selectOption(el) {
+    answers[current] = parseInt(el.dataset.val);
+    document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+    el.classList.add('selected');
+    const answered = answers.filter(a=>a!==undefined).length;
+    document.getElementById('skip-hint').textContent = answered+' of '+questions.length+' answered';
+}
+
+function nextQuestion() {
+    if (answers[current]===undefined){showToast('Please select an answer to continue.');return;}
+    if (current<questions.length-1){current++;render();}
+}
+function prevQuestion() { if(current>0){current--;render();} }
+
+// ─────────────────────────────────────────────
+// SCORING
+// Convert answer 1–5 to -1..+1 range, multiply by effect (+1/-1)
+// Normalize each axis to 0–100 (50 = neutral)
+// ─────────────────────────────────────────────
+function calculateScores() {
+    const sums = {}, count = {};
+    AXES.forEach(ax => { sums[ax]=0; count[ax]=0; });
+    questions.forEach((q,i) => {
+        if (answers[i]===undefined) return;
+        const val = (answers[i]-3) / 2.0; // -1..1 (3=neutral=0)
+        sums[q.axis] += val * q.effect;
+        count[q.axis]++;
+    });
+    const scores = {};
+    AXES.forEach(ax => {
+        scores[ax] = count[ax]>0 ? ((sums[ax]/count[ax])+1)/2*100 : 50;
+    });
+    return scores;
+}
+
+function determineIdeology(scores) {
+    const maxDist = Math.sqrt(Math.pow(100,2)*AXES.length);
+    const ranked = ideologies.map(ideo => {
+        let d = 0;
+        AXES.forEach(ax => { d += Math.pow(scores[ax]-ideo.scores[ax],2); });
+        d = Math.sqrt(d);
+        return {...ideo, matchPct:(1-d/maxDist)*100};
+    }).sort((a,b)=>b.matchPct-a.matchPct);
+    return { top:ranked[0], runnerUps:ranked.slice(1,4), allRanked:ranked, scores };
+}
+
+function submitQuiz() {
+    const unanswered = answers.filter(a=>a===undefined).length;
+    if (unanswered>0){showToast(`${unanswered} question${unanswered>1?'s':''} unanswered. Please complete the quiz.`);return;}
+    const scores = calculateScores();
+    const result = determineIdeology(scores);
+    sessionStorage.setItem('marxvalues_result', JSON.stringify(result));
+    window.location.href='results.html';
+}
+
+function showToast(msg) {
+    const t=document.getElementById('warning-toast');
+    t.textContent=msg; t.style.display='block';
+    clearTimeout(t._timer);
+    t._timer=setTimeout(()=>{t.style.display='none';},3000);
+}
+
+render();
+</script>
+</body>
+</html>

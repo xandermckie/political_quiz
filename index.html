@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        // Enforce HTTPS in production (skip for local file:// development)
+        if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            location.replace('https:' + location.href.slice(5));
+        }
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'none';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        font-src 'self';
+        connect-src 'none';
+        form-action 'none';
+        base-uri 'self';
+        upgrade-insecure-requests;
+    ">
+    <title>MarxValues - Discover Your Left-Wing Compass</title>
+    <style>
+        :root {
+            --ink:   #0a0a0a;
+            --paper: #f2ede6;
+            --red:   #c0392b;
+            --red2:  #96281b;
+            --muted: #7a7060;
+            --border:#d8cfc4;
+            --card:  #ffffff;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Georgia','Times New Roman',Times,serif;background:var(--paper);color:var(--ink);overflow-x:hidden;}
+        body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+          background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");}
+
+        /* HEADER */
+        header{position:sticky;top:0;z-index:100;background:var(--ink);border-bottom:4px solid var(--red);padding:0 48px;height:68px;display:flex;align-items:center;justify-content:space-between;}
+        .logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+        .logo-img{width:44px;height:44px;border-radius:50%;object-fit:cover;display:block;}
+        .logo-text{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-0.5px;}
+        .logo-text span{color:var(--red);}
+        nav a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:2px solid rgba(255,255,255,0.2);padding:9px 22px;transition:all 0.2s;}
+        nav a:hover{background:var(--red);border-color:var(--red);color:#fff;}
+
+        /* HERO */
+        .hero{position:relative;z-index:1;min-height:calc(100vh - 68px);display:flex;align-items:center;padding:80px 48px;overflow:hidden;background:var(--paper);}
+        .hero::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(0,0,0,0.042) 48px);}
+        .hero::after{content:'';position:absolute;top:0;right:0;width:44%;height:100%;background:var(--red);clip-path:polygon(14% 0%,100% 0%,100% 100%,0% 100%);z-index:0;}
+        .hero-content{position:relative;z-index:2;max-width:560px;}
+        .eyebrow{display:inline-block;background:var(--red);color:#fff;padding:5px 14px;font-size:0.7rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:28px;}
+        .hero h1{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(3rem,6vw,5.2rem);line-height:1.04;font-weight:900;color:var(--ink);margin-bottom:24px;}
+        .hero h1 em{font-style:italic;color:var(--red);}
+        .hero p{font-size:1.05rem;line-height:1.78;color:#444;max-width:460px;margin-bottom:40px;}
+        .hero-cta{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;padding:17px 48px;font-size:0.82rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:3px solid var(--ink);transition:all 0.22s;position:relative;overflow:hidden;}
+        .hero-cta::before{content:'';position:absolute;left:0;top:0;width:0;height:100%;background:var(--red);transition:width 0.28s ease;z-index:0;}
+        .hero-cta:hover::before{width:100%;}
+        .hero-cta:hover{border-color:var(--red);}
+        .hero-cta-text{position:relative;z-index:1;}
+        .hero-stats{display:flex;gap:48px;margin-top:56px;border-top:2px solid var(--border);padding-top:32px;}
+        .stat-num{font-family:'Georgia','Times New Roman',Times,serif;font-size:2.4rem;font-weight:900;color:var(--red);line-height:1;}
+        .stat-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-top:4px;}
+
+        /* COMPASS VISUAL on red panel */
+        .hero-visual{position:absolute;right:0;top:0;width:44%;height:100%;clip-path:polygon(14% 0%,100% 0%,100% 100%,0% 100%);z-index:1;display:flex;align-items:center;justify-content:center;}
+        .compass-wrap{position:relative;width:clamp(240px,26vw,340px);aspect-ratio:1;}
+        .compass-ring{position:absolute;inset:0;border:1.5px solid rgba(255,255,255,0.18);border-radius:50%;animation:spin 40s linear infinite;}
+        .compass-ring:nth-child(2){inset:12%;border-style:dashed;border-color:rgba(255,255,255,0.25);animation-duration:26s;animation-direction:reverse;}
+        .compass-ring:nth-child(3){inset:26%;border-color:rgba(255,255,255,0.3);animation-duration:16s;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        .compass-center{position:absolute;inset:36%;background:rgba(0,0,0,0.55);border-radius:50%;display:grid;place-items:center;border:2px solid rgba(255,255,255,0.3);}
+        .compass-marx{width:100%;height:100%;border-radius:50%;object-fit:cover;padding:4px;}
+        /* axis poles */
+        .pole{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;}
+        .pole-dot{width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(255,255,255,0.6);}
+        .pole-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.85);white-space:nowrap;}
+        .pole.top{top:-28px;left:50%;transform:translateX(-50%);flex-direction:column;}
+        .pole.bottom{bottom:-28px;left:50%;transform:translateX(-50%);flex-direction:column-reverse;}
+        .pole.left{left:-52px;top:50%;transform:translateY(-50%);flex-direction:row-reverse;}
+        .pole.right{right:-52px;top:50%;transform:translateY(-50%);flex-direction:row;}
+        /* axis lines */
+        .axis-line-h,.axis-line-v{position:absolute;background:rgba(255,255,255,0.12);}
+        .axis-line-h{height:1px;width:100%;top:50%;left:0;}
+        .axis-line-v{width:1px;height:100%;left:50%;top:0;}
+
+        /* HOW IT WORKS */
+        .features-section{position:relative;z-index:1;background:var(--ink);padding:100px 48px;}
+        .section-header{text-align:center;margin-bottom:64px;}
+        .section-header h2{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2rem,4vw,3rem);color:#fff;font-weight:900;}
+        .section-header h2 span{color:var(--red);}
+        .section-header p{color:rgba(255,255,255,0.38);margin-top:10px;font-size:0.9rem;letter-spacing:0.07em;text-transform:uppercase;}
+        .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:3px;max-width:1100px;margin:0 auto;}
+        .feature-card{background:rgba(255,255,255,0.03);border-left:4px solid var(--red);padding:40px 32px;transition:background 0.25s;}
+        .feature-card:hover{background:rgba(192,57,43,0.1);}
+        .feature-num{font-family:'Georgia','Times New Roman',Times,serif;font-size:3.5rem;font-weight:900;color:var(--red);opacity:0.3;line-height:1;margin-bottom:20px;}
+        .feature-card h3{font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.1em;}
+        .feature-card p{font-size:0.9rem;line-height:1.78;color:rgba(255,255,255,0.42);}
+
+        /* AXES */
+        .axes-section{position:relative;z-index:1;background:var(--red);padding:100px 48px;}
+        .axes-section .section-header h2{color:#fff;}
+        .axes-section .section-header h2 span{color:var(--ink);}
+        .axes-section .section-header p{color:rgba(255,255,255,0.55);}
+        .axes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2px;max-width:1100px;margin:0 auto;}
+        .axis-card{background:rgba(0,0,0,0.15);padding:28px 24px;border-top:3px solid rgba(255,255,255,0.25);}
+        .axis-vs{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+        .axis-a{font-family:'Georgia','Times New Roman',Times,serif;font-weight:700;font-size:1rem;color:#fff;}
+        .axis-sep{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.4);}
+        .axis-b{font-family:'Georgia','Times New Roman',Times,serif;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.6);}
+        .axis-desc{font-size:0.82rem;line-height:1.6;color:rgba(255,255,255,0.55);}
+
+        /* IDEOLOGIES */
+        .ideologies-section{position:relative;z-index:1;background:var(--paper);padding:100px 48px;}
+        .ideologies-section .section-header h2{color:var(--ink);}
+        .ideologies-section .section-header p{color:var(--muted);}
+        .ideo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;max-width:1100px;margin:0 auto;}
+        .ideo-card{background:var(--card);border:2px solid var(--border);border-top:4px solid var(--red);padding:24px 20px;cursor:pointer;transition:all 0.22s;user-select:none;}
+        .ideo-card:hover{border-color:var(--red);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.1);}
+        .ideo-card-name{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:6px;}
+        .ideo-card-named{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;}
+        .ideo-card-blurb{font-size:0.82rem;line-height:1.55;color:#555;}
+        .ideo-card-hint{font-size:0.7rem;color:var(--red);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-top:12px;}
+
+        /* MODAL */
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;align-items:center;justify-content:center;padding:20px;}
+        .modal-overlay.open{display:flex;}
+        .modal{background:var(--card);max-width:640px;width:100%;position:relative;border-top:6px solid var(--red);animation:modalIn 0.25s ease;}
+        @keyframes modalIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+        .modal-inner{padding:48px;}
+        .modal-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:1.6rem;cursor:pointer;color:var(--muted);line-height:1;transition:color 0.2s;}
+        .modal-close:hover{color:var(--red);}
+        .modal-eyebrow{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--red);margin-bottom:12px;}
+        .modal-title{font-family:'Georgia','Times New Roman',Times,serif;font-size:2rem;font-weight:900;color:var(--ink);margin-bottom:8px;}
+        .modal-named{font-size:0.85rem;color:var(--muted);margin-bottom:24px;font-style:italic;}
+        .modal-body{font-size:0.95rem;line-height:1.8;color:#333;}
+        .modal-body p{margin-bottom:14px;}
+
+        /* CTA */
+        .cta-banner{position:relative;z-index:1;background:var(--ink);padding:100px 48px;text-align:center;border-top:6px solid var(--red);}
+        .cta-banner h2{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2.2rem,5vw,3.5rem);color:#fff;font-weight:900;margin-bottom:14px;}
+        .cta-banner h2 em{font-style:italic;color:var(--red);}
+        .cta-banner p{color:rgba(255,255,255,0.4);font-size:0.95rem;margin-bottom:40px;letter-spacing:0.05em;}
+        .btn-cta{display:inline-block;background:var(--red);color:#fff;text-decoration:none;padding:18px 60px;font-size:0.85rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;border:3px solid var(--red);transition:all 0.22s;}
+        .btn-cta:hover{background:transparent;color:var(--red);}
+
+        footer{background:#050505;color:rgba(255,255,255,0.22);padding:28px 48px;text-align:center;font-size:0.8rem;position:relative;z-index:1;letter-spacing:0.07em;}
+
+        @media(max-width:900px){
+            .hero::after,.hero-visual{display:none;}
+            header{padding:0 20px;}
+            .hero{padding:56px 20px;min-height:auto;}
+            .features-section,.axes-section,.ideologies-section,.cta-banner{padding:60px 20px;}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a class="logo" href="index.html">
+        <img class="logo-img" src="marx.png" alt="Marx">
+        <span class="logo-text">Marx<span>Values</span></span>
+    </a>
+    <nav><a href="quiz.html">Take the Quiz</a></nav>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="eyebrow">Free &amp; Anonymous Left-Wing Assessment</div>
+        <h1>Where do you <em>really</em> stand?</h1>
+        <p>Answer 40 questions across 7 axes. We'll map your beliefs across the left-wing spectrum - from Orthodox Marxism to Syndicalism, Dengism to Third Worldism.</p>
+        <a href="quiz.html" class="hero-cta"><span class="hero-cta-text">Begin the Quiz</span></a>
+        <div class="hero-stats">
+            <div class="stat"><div class="stat-num">58</div><div class="stat-label">Questions</div></div>
+            <div class="stat"><div class="stat-num">23</div><div class="stat-label">Ideologies</div></div>
+            <div class="stat"><div class="stat-num">7</div><div class="stat-label">Axes</div></div>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="compass-wrap">
+            <div class="axis-line-h"></div>
+            <div class="axis-line-v"></div>
+            <div class="compass-ring"></div>
+            <div class="compass-ring"></div>
+            <div class="compass-ring"></div>
+            <div class="pole top"><div class="pole-dot"></div><div class="pole-label">Revolution</div></div>
+            <div class="pole bottom"><div class="pole-dot"></div><div class="pole-label">Reform</div></div>
+            <div class="pole left"><div class="pole-dot"></div><div class="pole-label">Decentral</div></div>
+            <div class="pole right"><div class="pole-dot"></div><div class="pole-label">Central</div></div>
+            <div class="compass-center">
+                <img class="compass-marx" src="marx.png" alt="Marx">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features-section">
+    <div class="section-header">
+        <h2>How <span>It Works</span></h2>
+        <p>A rigorous methodology in three steps</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-num">01</div>
+            <h3>Answer 40 Questions</h3>
+            <p>Rate your agreement with statements on revolution, internationalism, the role of the party, ecology, social values and more.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-num">02</div>
+            <h3>Scored Across 7 Axes</h3>
+            <p>Your answers are normalized across seven ideological axes drawn from the left-values framework, producing a multi-dimensional political profile.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-num">03</div>
+            <h3>Matched to an Ideology</h3>
+            <p>Euclidean distance is calculated between your scores and 8 left-wing ideologies. Your closest match is returned with a percentage and runner-ups.</p>
+        </div>
+    </div>
+</section>
+
+<section class="axes-section">
+    <div class="section-header">
+        <h2>The <span>7 Axes</span></h2>
+        <p>Each axis has two opposing poles</p>
+    </div>
+    <div class="axes-grid">
+        <div class="axis-card">
+            <div class="axis-vs"><span class="axis-a">Revolution</span><span class="axis-sep">vs</span><span class="axis-b">Reform</span></div>
+            <div class="axis-desc">Do you favor rapid, radical overthrow of capitalism or gradual change within existing structures?</div>
+        </div>
+        <div class="axis-card">
+            <div class="axis-vs"><span class="axis-a">Scientific</span><span class="axis-sep">vs</span><span class="axis-b">Utopian</span></div>
+            <div class="axis-desc">Do you ground your politics in dialectical materialism, or a more idealistic moral vision?</div>
+        </div>
+        <div class="axis-card">
+            <div class="axis-vs"><span class="axis-a">Central</span><span class="axis-sep">vs</span><span class="axis-b">Decentral</span></div>
+            <div class="axis-desc">Do you favor centralized national planning or decentralized, localized economic structures?</div>
+        </div>
+        <div class="axis-card">
+            <div class="axis-vs"><span class="axis-a">International</span><span class="axis-sep">vs</span><span class="axis-b">National</span></div>
+            <div class="axis-desc">Do you prioritize a global socialist movement, or building socialism within national borders first?</div>
+        </div>
+        <div class="axis-card">
+            <div class="axis-vs"><span class="axis-a">Party</span><span class="axis-sep">vs</span><span class="axis-b">Union</span></div>
+            <div class="axis-desc">Is the vanguard party or the trade union/mass organization the primary vehicle for socialist change?</div>
+        </div>
+        <div class="axis-card">
+            <div class="axis-vs"><span class="axis-a">Production</span><span class="axis-sep">vs</span><span class="axis-b">Nature</span></div>
+            <div class="axis-desc">Do you prioritize industrial output and development, or ecological sustainability and conservation?</div>
+        </div>
+        <div class="axis-card">
+            <div class="axis-vs"><span class="axis-a">Progressive</span><span class="axis-sep">vs</span><span class="axis-b">Conservative</span></div>
+            <div class="axis-desc">Do you support social progressivism, or prioritize cultural conservatism alongside economic radicalism?</div>
+        </div>
+    </div>
+</section>
+
+<section class="ideologies-section">
+    <div class="section-header">
+        <h2>23 Ideologies - Click to Learn More</h2>
+        <p>Which one will you match?</p>
+    </div>
+    <div class="ideo-grid" id="ideo-grid"></div>
+</section>
+
+<section class="cta-banner">
+    <h2>Ready to find <em>out?</em></h2>
+    <p>Takes about 8 minutes. Your answers are never stored.</p>
+    <a href="quiz.html" class="btn-cta">Start the Quiz</a>
+</section>
+
+<footer>
+    <p>&copy; 2024 MarxValues. Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:rgba(255,255,255,0.4);text-decoration:underline;">CC BY-NC-SA 4.0</a>. Results are anonymous and never stored.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal" id="modal">
+        <button class="modal-close" onclick="closeModal(null)">&times;</button>
+        <div class="modal-inner">
+            <div class="modal-eyebrow" id="modal-eyebrow">Ideology</div>
+            <div class="modal-title" id="modal-title"></div>
+            <div class="modal-named" id="modal-named"></div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+const IDEOLOGIES = [
+    // ── MARXIST TENDENCY ──
+    {
+        name: "Marxism",
+        named: "Named after Karl Marx (1818–1883) & Friedrich Engels (1820–1895)",
+        blurb: "The foundational framework of scientific socialism based on historical materialism and class struggle.",
+        full: `<p>Marxism is the political and economic theory developed by Karl Marx and Friedrich Engels. It holds that human history is the history of class struggle - that the material conditions of production shape all social, political, and intellectual life.</p><p>Marx argued that capitalism necessarily produces contradictions: it concentrates wealth while immiserating the proletariat, and will eventually be overthrown by a working-class revolution. The end goal is a classless, stateless communist society, reached through an intermediate socialist stage.</p><p>Core texts include <em>The Communist Manifesto</em> (1848) and <em>Capital</em> (1867), both archived at the Marxists Internet Archive.</p>`
+    },
+    {
+        name: "Marxism-Leninism",
+        named: "Synthesized by Vladimir Lenin (1870–1924), building on Marx",
+        blurb: "Vanguard party, democratic centralism, and the dictatorship of the proletariat - the ideology of the Soviet state.",
+        full: `<p>Marxism-Leninism developed Lenin's theoretical contributions to Marxism - particularly the concept of a disciplined vanguard party to lead the working class, developed in response to Tsarist repression.</p><p>Key tenets include <em>democratic centralism</em>, the <em>dictatorship of the proletariat</em> as a transitional state form, and Lenin's theory of imperialism as capitalism's highest stage. The USSR under Stalin institutionalized this as official state ideology.</p><p>ML remains the dominant tendency in existing socialist states including China, Cuba, Vietnam, and Laos.</p>`
+    },
+    {
+        name: "Trotskyism",
+        named: "Named after Leon Trotsky (1879–1940)",
+        blurb: "Permanent revolution, internationalism, and fierce opposition to Stalinist bureaucracy.",
+        full: `<p>Trotskyism is the variant of Marxism developed by Leon Trotsky, co-leader of the October Revolution and founder of the Red Army. His theory of <em>Permanent Revolution</em> argued the socialist revolution must be international to survive.</p><p>Trotsky characterized the USSR under Stalin as a <em>degenerated workers' state</em> - bureaucratically deformed but resting on socialist property relations. He called for a political revolution to restore workers' democracy. His <em>Fourth International</em> was founded in 1938 to oppose both capitalism and Stalinism.</p>`
+    },
+    {
+        name: "MLM",
+        named: "Synthesized from Mao Zedong (1893–1976), formalized by the Shining Path (1988)",
+        blurb: "Marxism-Leninism-Maoism: mass line, people's war, and the Cultural Revolution as advances in Marxist theory.",
+        full: `<p>MLM synthesizes Marxism-Leninism with Mao's theoretical contributions, which MLMists argue represent a qualitative advance - not merely an application to China. Key contributions include the <em>Mass Line</em>, <em>People's War</em> as universal military strategy, and the theory that class struggle continues under socialism.</p><p>MLM was first formally systematized by the Communist Party of Peru (Sendero Luminoso) in 1988. Contemporary MLM parties include the Communist Party of India (Maoist) and the Communist Party of the Philippines.</p>`
+    },
+    {
+        name: "Third Worldism",
+        named: "Developed by Frantz Fanon, Lin Biao, and the MIM",
+        blurb: "The Global South is the primary revolutionary subject; the first-world proletariat is a co-opted labor aristocracy.",
+        full: `<p>Third Worldism holds that the primary revolutionary contradiction is between imperialism and the oppressed nations of the Global South. Drawing on Lin Biao's <em>Long Live the Victory of People's War</em> and the labor aristocracy theory, Third Worldists argue that high wages in imperialist countries have bought off the first-world working class.</p><p>The Maoist Internationalist Movement (MIM) is the most prominent contemporary Third Worldist organization. The tendency has significant overlap with anti-imperialist national liberation movements worldwide.</p>`
+    },
+    {
+        name: "Dengism",
+        named: "Named after Deng Xiaoping (1904–1997)",
+        blurb: "Socialism with Chinese characteristics: market mechanisms within a socialist state under Communist Party leadership.",
+        full: `<p>Dengism guides China's economic reforms from 1978 onward. Deng argued China was in the <em>primary stage of socialism</em> and needed to develop productive forces before advancing further - justifying market mechanisms and foreign investment under CPC leadership.</p><p>Deeply controversial among Marxists: Maoists argue it represents capitalist restoration, while Dengists maintain China remains on a longer road to communism. China's extraordinary development record is central to Dengist arguments.</p>`
+    },
+    {
+        name: "Hoxhaism",
+        named: "Named after Enver Hoxha (1908–1985), leader of socialist Albania",
+        blurb: "Anti-revisionist Marxism-Leninism: defense of Stalin, against both Soviet revisionism and Maoism.",
+        full: `<p>Hoxhaism emerged after Enver Hoxha broke with both the USSR (denouncing Khrushchev's de-Stalinization as revisionism) and China (condemning Mao's Three Worlds Theory as anti-Marxist). He declared Albania the only genuinely Marxist-Leninist state in the world.</p><p>Hoxhaism opposes any market reforms, peaceful coexistence with imperialism, and any deviation from strict ML orthodoxy. After Albania's socialist government fell in 1991–92, Hoxhaist parties continued internationally, characterized by fierce polemics against all other communist tendencies.</p>`
+    },
+    {
+        name: "Syndicalism",
+        named: "Developed from the French syndicalist movement; theorized by Georges Sorel and Daniel De Leon",
+        blurb: "Revolutionary trade unionism - the union, not the party, is the vehicle of socialist transformation.",
+        full: `<p>Syndicalism holds that workers should organize in revolutionary industrial unions, which will both fight capitalism and form the administrative structure of a future socialist society. The general strike - not the vanguard party or electoral campaign - is the chief weapon.</p><p>Key variants include Anarcho-Syndicalism and De Leonism. The IWW (Industrial Workers of the World), founded 1905, remains the most famous syndicalist organization. Syndicalism is fundamentally skeptical of state-centric Marxism.</p>`
+    },
+    // ── ORIGINAL BROADER SPECTRUM ──
+    {
+        name: "Libertarian",
+        named: "Rooted in classical liberal philosophy; Murray Rothbard, Friedrich Hayek",
+        blurb: "Maximum individual liberty, minimal government, and free markets as the foundation of a just society.",
+        full: `<p>Libertarianism holds that individual liberty is the supreme political value. It opposes state intervention in both economic and personal life - government should be limited to protecting individual rights and enforcing contracts.</p><p>On the left-wing of this tendency, left-libertarians like Noam Chomsky argue that capitalism itself is a form of authoritarianism incompatible with genuine freedom. Right-libertarians defend free markets as the most efficient and free system. Both share skepticism of concentrated state power.</p>`
+    },
+    {
+        name: "Conservative",
+        named: "Edmund Burke (1729–1797) is considered the father of modern conservatism",
+        blurb: "Values tradition, authority, and social stability; suspicious of rapid change from any direction.",
+        full: `<p>Conservatism holds that existing institutions embody accumulated wisdom and should be changed only cautiously. Burke argued against the French Revolution that abstract rationalist schemes inevitably produce chaos - genuine reform must be rooted in existing traditions and institutions.</p><p>Contemporary conservatism varies widely - from social traditionalism to free-market economics - but is united by skepticism of revolutionary change and respect for established social order.</p>`
+    },
+    {
+        name: "Liberal",
+        named: "John Locke (1632–1704), John Stuart Mill (1806–1873)",
+        blurb: "Individual rights, democracy, and social progress within a regulated capitalist framework.",
+        full: `<p>Liberalism holds that individual rights, rule of law, and democratic governance are the foundations of a just society. Modern liberals support a mixed economy with state regulation of capitalism to correct market failures and fund social welfare.</p><p>Liberals distinguish themselves from socialists by accepting private property and markets as the economic base, and from conservatives by embracing social progress and civil rights expansion. Social democracy is a left tendency within this tradition.</p>`
+    },
+    {
+        name: "Socialist",
+        named: "Broad tradition; Robert Owen, Ferdinand Lassalle, Eduard Bernstein",
+        blurb: "Social ownership, economic equality, and redistribution - achieved through democratic and electoral means.",
+        full: `<p>Democratic socialism holds that capitalism produces unjust inequality and exploitation, and should be replaced by social ownership of the means of production - but through democratic, electoral, and parliamentary means rather than revolution.</p><p>This tendency includes the historical social democratic parties of Europe before they moved toward neoliberal accommodation. Contemporary democratic socialists like Bernie Sanders and Jeremy Corbyn represent a revival of this tradition.</p>`
+    },
+    {
+        name: "Centrist",
+        named: "No single founder; a descriptive political position",
+        blurb: "A balanced approach drawing from multiple traditions, rejecting ideological extremes.",
+        full: `<p>Centrism describes a political orientation that seeks pragmatic middle ground between left and right. Centrists typically support regulated capitalism, welfare states, and incremental reform - accepting the basic framework of liberal democracy while seeking to moderate its excesses.</p><p>Critics from both left and right argue that centrism is not a genuine ideology but an unprincipled accommodation to the status quo. Centrists counter that pragmatic compromise is essential for stable, functional governance.</p>`
+    },
+    {
+        name: "Authoritarian",
+        named: "Various traditions; associated with fascism, Bonapartism, military governance",
+        blurb: "State power, hierarchy, and order take precedence over individual freedoms and democratic participation.",
+        full: `<p>Authoritarianism prioritizes strong centralized power, order, and hierarchy over civil liberties and democratic accountability. Authoritarian governments may be of the left or right - what unites them is concentration of power and suppression of opposition.</p><p>Within socialist discourse, the charge of "authoritarianism" is often leveled at Stalinist states. Defenders argue that emergency conditions of capitalist encirclement necessitated strong state measures. Critics argue these measures permanently deformed the socialist project.</p>`
+    },
+    {
+        name: "Libertarian Socialist",
+        named: "Pierre-Joseph Proudhon, Mikhail Bakunin, Peter Kropotkin",
+        blurb: "Combines opposition to state power with support for economic equality and workers' self-management.",
+        full: `<p>Libertarian socialism holds that both capitalism and the authoritarian state are forms of domination that must be abolished together. It encompasses anarchism, council communism, and left communism - united by the conviction that socialism cannot be built through state power.</p><p>Key thinkers include Bakunin (who famously split with Marx over the role of the state), Kropotkin (mutual aid), and Rosa Luxemburg (democratic mass movements over vanguard parties). Contemporary expressions include participatory economics and prefigurative politics.</p>`
+    },
+    {
+        name: "Anarchist",
+        named: "Pierre-Joseph Proudhon (1809–1865), Mikhail Bakunin (1814–1876)",
+        blurb: "Rejects all compulsory government and hierarchy - voluntary association and mutual aid instead.",
+        full: `<p>Anarchism holds that all forms of hierarchical authority - the state, capitalism, patriarchy - are illegitimate and must be abolished. Society should be organized through voluntary association, mutual aid, and direct democracy.</p><p>Proudhon coined the term "anarchist" in 1840. Bakunin developed it into a revolutionary movement opposing both capitalism and Marxist state socialism. The Spanish Civil War (1936–39) saw the most significant anarchist experiment - the CNT-FAI managed large parts of Catalonia on anarchist principles.</p>`
+    },
+    {
+        name: "Eco-Socialist",
+        named: "James O'Connor, Joel Kovel; the ecosocialist tradition emerged in the 1980s–90s",
+        blurb: "Combines socialist economics with ecological sustainability - capitalism is the root cause of environmental destruction.",
+        full: `<p>Eco-socialism holds that capitalism's drive for endless accumulation is structurally incompatible with ecological sustainability. The solution is not green capitalism but a socialist reorganization of production oriented toward human needs and ecological limits.</p><p>Key concepts include the "metabolic rift" (Marx's analysis of capitalism's disruption of natural cycles), degrowth, and the idea that the working class and the environment share common enemies. The Green New Deal represents a mainstream adjacent expression of eco-socialist demands.</p>`
+    },
+    {
+        name: "Social Democrat",
+        named: "Eduard Bernstein (1850-1932); later Olof Palme, Willy Brandt, Clement Attlee",
+        blurb: "Gradual reform within capitalism - welfare state, progressive taxation, and parliamentary democracy instead of revolution.",
+        full: `<p>Social democracy holds that the injustices of capitalism can and should be corrected through democratic reform rather than revolution. Originating in Eduard Bernstein's revisionism of Marxism, it argues that capitalism has proven more resilient than Marx predicted, and that workers' conditions can be improved through legislation, trade unions, and electoral politics.</p><p>Social democrats accept the market economy as the basis of wealth creation, but insist on strong state regulation, progressive taxation, and a comprehensive welfare state - universal healthcare, education, housing, and social insurance - to redistribute its gains fairly. The state is seen as a neutral instrument that can be wielded by elected governments for social ends, not an inherently capitalist apparatus that must be smashed.</p><p>The Scandinavian model - Sweden, Denmark, Norway - is the most celebrated expression of social democratic governance. Key figures include Olof Palme (Sweden), Willy Brandt (Germany), and Clement Attlee (UK), whose post-war Labour government created the NHS.</p>`
+    },
+    {
+        name: "Patriotic Socialism",
+        named: "Associated with Caleb Maupin, Infrared/Haz Al-Din, and various national-left tendencies",
+        blurb: "Socialism organized around national identity - state ownership and workers rights combined with cultural conservatism and rejection of liberal social values.",
+        full: `<p>Patriotic Socialism holds that genuine socialism must be rooted in national culture, history, and identity rather than abstract internationalism. It rejects the liberal-progressive social values dominant in Western left politics as products of bourgeois ideology or foreign imposition.</p><p>Proponents argue that the working class is primarily organized along national lines, and that a socialism disconnected from national identity cannot build a mass movement. They typically support strong centralized state ownership of key industries, robust social programs, and protectionist economic policy - while opposing globalism and what they term cultural Marxism.</p><p>The tendency draws on National Bolshevism, Ernst Niekisch, and contemporary figures like Caleb Maupin and the Infrared collective. It is deeply controversial - most Marxist tendencies consider it a right-wing deviation or proto-fascist tendency, while proponents insist it represents a synthesis capable of winning over the nationalist working class. The line between Patriotic Socialism and fascism is historically contested and thin.</p>`
+    },
+    {
+        name: "Left Communism",
+        named: "Anton Pannekoek (1873-1960), Otto Ruhle (1874-1943), Amadeo Bordiga (1889-1970), Paul Mattick (1904-1981)",
+        blurb: "A Marxist critique of Leninism from the left - rejecting parliament, vanguard parties, and trade union bureaucracies in favor of workers' councils and class autonomy.",
+        full: `<p>Left Communism emerged in the 1920s as a critique of Bolshevik methods from within the communist movement. It has two main currents: the Dutch-German tradition (Council Communism), led by Pannekoek and Ruhle, which rejected the vanguard party entirely and held that workers' councils formed in struggle must directly govern socialist society; and the Italian Left (Bordigism), associated with Amadeo Bordiga, which retained the need for an international revolutionary party but condemned Stalinist and social democratic opportunism alike.</p><p>Both currents oppose participation in bourgeois elections, collaboration with reformist trade unions, and any form of national liberation politics that temporarily allies with non-proletarian classes. Lenin responded directly in Left-Wing Communism: An Infantile Disorder (1920), dismissing them as immature - a charge left communists returned with interest. Key texts: Pannekoek, Workers' Councils (1941); Gorter, Open Letter to Lenin (1920) - Marxists Internet Archive.</p>`
+    },
+    {
+        name: "Luxemburgism",
+        named: "Rosa Luxemburg (1871-1919), murdered leader of the German Communist Party (KPD)",
+        blurb: "Mass strike, anti-vanguardism, and the insistence that socialist democracy cannot be deferred - it must be practiced inside the revolutionary movement from the start.",
+        full: `<p>Rosa Luxemburg developed a distinctive Marxism distinct from both Kautsky's orthodoxy and Lenin's vanguardism. Her theory of the mass strike held that revolutionary consciousness emerges from the spontaneous action of workers in struggle - a direct challenge to Lenin's What Is To Be Done?</p><p>Luxemburg accepted the need for a mass revolutionary party but rejected democratic centralism, arguing in her 1918 essay on the Russian Revolution that the Bolsheviks' suppression of democratic freedoms would strangle the revolution itself: "Freedom only for supporters of the government... is no freedom at all." She was murdered by Freikorps paramilitaries in January 1919 with the complicity of the Social Democratic government.</p><p>Her full works are archived at the Marxists Internet Archive.</p>`
+    },
+    {
+        name: "Autonomism",
+        named: "Mario Tronti (1931-2023), Antonio Negri (1933-2023), Harry Cleaver; emerged from Italian Operaismo in the 1960s-70s",
+        blurb: "Workers' self-organization, the refusal of work, and a Marxist analysis expanded to cover all value-producing labor including immaterial, affective, and reproductive work.",
+        full: `<p>Autonomism developed from the Italian Operaismo movement's analysis of factory struggles in the 1960s. Mario Tronti's Workers and Capital (1966) reversed the traditional Marxist formula: workers' struggle drives capitalist restructuring, not the reverse. The factory was a site of active class composition and resistance, not just exploitation.</p><p>Antonio Negri extended this in Empire (2000, with Hardt) to argue that global capitalism has produced a "multitude" as the revolutionary subject - encompassing immaterial, affective, and cognitive labor beyond the industrial proletariat. The refusal of work - sabotage, absenteeism, wildcat strikes - is both tactic and political statement.</p><p>Autonomism provided theoretical grounding for the alter-globalization movement, the Zapatistas, and many contemporary horizontalist and commons movements.</p>`
+    },
+    {
+        name: "Market Socialism",
+        named: "Oskar Lange (1904-1965), Branko Horvat (1928-2003); Yugoslav self-management model (1950s-1980s)",
+        blurb: "Social or worker ownership of productive enterprises combined with market allocation - economic democracy without bureaucratic central planning.",
+        full: `<p>Market Socialism holds that the injustice of capitalism lies in private ownership of the means of production, not in the market mechanism itself. By transferring ownership to workers or society while retaining market allocation of goods and prices, it aims to eliminate exploitation while avoiding the inefficiencies of Soviet-style central planning.</p><p>The most significant historical experiment was Yugoslav self-managed socialism under Tito (1950s-1980s), where worker councils elected management and enterprises competed in markets under state ownership. Oskar Lange developed the theoretical framework in the socialist calculation debate with Hayek and Mises in the 1930s. Contemporary proponents include David Schweickart, whose Economic Democracy model proposes worker-managed firms, social control of investment, and a market in goods.</p><p>Critics from the left argue that market dynamics inevitably reproduce capitalist social relations even under worker ownership.</p>`
+    },
+];
+
+const grid = document.getElementById('ideo-grid');
+IDEOLOGIES.forEach((ideo, i) => {
+    const card = document.createElement('div');
+    card.className = 'ideo-card';
+    card.innerHTML = `
+        <div class="ideo-card-name">${ideo.name}</div>
+        <div class="ideo-card-named">${ideo.named}</div>
+        <div class="ideo-card-blurb">${ideo.blurb}</div>
+        <div class="ideo-card-hint">Click to learn more</div>
+    `;
+    card.addEventListener('click', () => openModal(i));
+    grid.appendChild(card);
+});
+
+function openModal(i) {
+    const ideo = IDEOLOGIES[i];
+    document.getElementById('modal-eyebrow').textContent = 'Ideology';
+    document.getElementById('modal-title').textContent = ideo.name;
+    document.getElementById('modal-named').textContent = ideo.named;
+    document.getElementById('modal-body').innerHTML = ideo.full;
+    document.getElementById('modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeModal(e) {
+    if (e && e.target !== document.getElementById('modal-overlay')) return;
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(null); });
+</script>
+</body>
+</html>

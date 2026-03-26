@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        // Enforce HTTPS in production (skip for local file:// development)
+        if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            location.replace('https:' + location.href.slice(5));
+        }
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'none';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        font-src 'self';
+        connect-src 'none';
+        form-action 'none';
+        base-uri 'self';
+        upgrade-insecure-requests;
+    ">
+    <title>MarxValues - Your Results</title>
+    <style>
+        :root{
+            --ink:#0a0a0a; --paper:#f2ede6; --red:#c0392b;
+            --muted:#7a7060; --border:#d8cfc4; --card:#fff;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Georgia','Times New Roman',Times,serif;background:var(--paper);color:var(--ink);min-height:100vh;}
+        body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+
+        /* HEADER */
+        header{position:sticky;top:0;z-index:100;background:var(--ink);border-bottom:4px solid var(--red);padding:0 48px;height:68px;display:flex;align-items:center;justify-content:space-between;}
+        .logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+        .logo-img{width:44px;height:44px;border-radius:50%;object-fit:cover;}
+        .logo-text{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-0.5px;}
+        .logo-text span{color:var(--red);}
+        nav a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:2px solid rgba(255,255,255,0.2);padding:9px 22px;transition:all 0.2s;}
+        nav a:hover{background:var(--red);border-color:var(--red);color:#fff;}
+
+        /* HERO */
+        .result-hero{position:relative;z-index:1;background:var(--ink);padding:80px 48px 100px;overflow:hidden;border-bottom:6px solid var(--red);}
+        .result-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(192,57,43,0.22) 0%,transparent 70%);pointer-events:none;}
+        .hero-inner{position:relative;z-index:1;max-width:800px;margin:0 auto;text-align:center;}
+        .result-eyebrow{display:inline-block;background:var(--red);color:#fff;padding:6px 20px;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:28px;font-weight:700;}
+        .result-ideology{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2.8rem,8vw,5.5rem);font-weight:900;color:#fff;line-height:1.05;margin-bottom:12px;animation:revealUp 0.7s ease both;}
+        @keyframes revealUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+        .result-match-label{font-size:0.85rem;color:rgba(255,255,255,0.45);margin-bottom:4px;letter-spacing:0.08em;text-transform:uppercase;}
+        .result-match-pct{font-family:'Georgia','Times New Roman',Times,serif;font-size:3.5rem;font-weight:700;color:var(--red);animation:revealUp 0.7s 0.15s ease both;}
+        .match-pct-unit{font-size:1.8rem;}
+        .result-description{font-size:1rem;line-height:1.75;color:rgba(255,255,255,0.5);max-width:540px;margin:24px auto 0;animation:revealUp 0.7s 0.25s ease both;}
+
+        /* CONTENT */
+        .content-wrapper{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:64px 24px 100px;}
+        .section-title{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.6rem;font-weight:900;color:var(--ink);margin-bottom:32px;padding-bottom:12px;border-bottom:3px solid var(--red);}
+
+        /* AXIS BARS */
+        .axes-grid{display:grid;gap:0;margin-bottom:72px;border:1px solid var(--border);background:var(--card);}
+        .axis-row{padding:24px 28px;border-bottom:1px solid var(--border);}
+        .axis-row:last-child{border-bottom:none;}
+        .axis-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:16px;}
+        .axis-info{flex:1;}
+        .axis-name{font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px;}
+        .axis-desc{font-size:0.78rem;color:var(--muted);}
+        .axis-pct-label{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.6rem;font-weight:900;line-height:1;flex-shrink:0;}
+        .axis-track{height:8px;background:var(--border);overflow:hidden;border-radius:1px;margin-bottom:8px;}
+        .axis-fill{height:100%;width:0%;border-radius:1px;transition:width 1.2s cubic-bezier(0.16,1,0.3,1);}
+        .axis-poles{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+
+        /* axis fill colors */
+        .fill-Revolution{background:linear-gradient(90deg,#e74c3c,#c0392b);}
+        .fill-Scientific{background:linear-gradient(90deg,#3498db,#2c7bb6);}
+        .fill-Centralization{background:linear-gradient(90deg,#9b59b6,#8e44ad);}
+        .fill-Internationalism{background:linear-gradient(90deg,#2ecc71,#27ae60);}
+        .fill-Organization{background:linear-gradient(90deg,#e67e22,#d35400);}
+        .fill-Ecology{background:linear-gradient(90deg,#1abc9c,#16a085);}
+        .fill-Social{background:linear-gradient(90deg,#95a5a6,#555);}
+
+        /* axis pct colors */
+        .pct-Revolution{color:#c0392b;}
+        .pct-Scientific{color:#2c7bb6;}
+        .pct-Centralization{color:#8e44ad;}
+        .pct-Internationalism{color:#27ae60;}
+        .pct-Organization{color:#d35400;}
+        .pct-Ecology{color:#16a085;}
+        .pct-Social{color:#555;}
+
+        /* RADAR */
+        .chart-card{background:var(--card);border:1px solid var(--border);border-top:4px solid var(--red);padding:40px;display:flex;flex-direction:column;align-items:center;margin-bottom:72px;}
+        canvas#radar-canvas{max-width:400px;width:100%;height:auto;display:block;}
+
+        /* RUNNER UPS */
+        .runner-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:72px;}
+        .runner-card{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--red);padding:24px;transition:transform 0.2s,box-shadow 0.2s;}
+        .runner-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.08);}
+        .runner-rank{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:8px;font-weight:600;}
+        .runner-name{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.15rem;font-weight:700;margin-bottom:6px;}
+        .runner-pct{font-size:2rem;font-weight:700;font-family:'Georgia','Times New Roman',Times,serif;color:var(--red);}
+        .runner-track{height:4px;background:var(--border);margin-top:12px;overflow:hidden;}
+        .runner-fill{height:100%;background:var(--red);width:0%;transition:width 1s ease 0.5s;}
+        .runner-desc{font-size:0.8rem;color:var(--muted);margin-top:10px;line-height:1.55;}
+
+        /* ACTIONS */
+        .actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:16px;}
+        .btn-retake{display:inline-block;padding:14px 40px;background:var(--red);color:#fff;text-decoration:none;font-size:0.85rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:2px solid var(--red);transition:all 0.2s;}
+        .btn-retake:hover{background:var(--ink);border-color:var(--ink);transform:translateY(-2px);}
+        .btn-home{display:inline-block;padding:14px 40px;background:transparent;color:var(--ink);text-decoration:none;font-size:0.85rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:2px solid var(--ink);transition:all 0.2s;}
+        .btn-home:hover{background:var(--ink);color:#fff;transform:translateY(-2px);}
+
+        /* NO DATA */
+        .no-data{text-align:center;padding:100px 24px;}
+        .no-data h2{font-family:'Georgia','Times New Roman',Times,serif;font-size:2rem;margin-bottom:16px;}
+        .no-data p{color:var(--muted);margin-bottom:32px;}
+
+        /* BREAKDOWN TABLE */
+        .breakdown-grid{background:var(--card);border:1px solid var(--border);margin-bottom:72px;}
+        .breakdown-row{display:grid;grid-template-columns:32px 1fr 1fr 52px;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border);transition:background 0.15s;}
+        .breakdown-row:last-child{border-bottom:none;}
+        .breakdown-row:hover{background:#faf7f3;}
+        .breakdown-top{background:#fff8f7;border-left:4px solid var(--red);}
+        .breakdown-top:hover{background:#fff3f1;}
+        .breakdown-rank{font-family:'Georgia','Times New Roman',Times,serif;font-size:0.85rem;font-weight:700;color:var(--muted);text-align:center;}
+        .breakdown-top .breakdown-rank{color:var(--red);}
+        .breakdown-name{font-size:0.88rem;font-weight:600;color:var(--ink);}
+        .breakdown-top .breakdown-name{font-weight:700;color:var(--red);}
+        .breakdown-bar-wrap{height:6px;background:var(--border);overflow:hidden;}
+        .breakdown-bar{height:100%;background:var(--red);opacity:0.5;transition:width 0.8s cubic-bezier(0.16,1,0.3,1);}
+        .breakdown-top .breakdown-bar{opacity:1;}
+        .breakdown-pct{font-family:'Georgia','Times New Roman',Times,serif;font-size:0.88rem;font-weight:700;color:var(--muted);text-align:right;}
+        .breakdown-top .breakdown-pct{color:var(--red);}
+
+        /* VAULT */
+        .vault-panel{background:var(--card);border:1px solid var(--border);border-top:4px solid var(--ink);padding:32px;margin-bottom:72px;}
+        .vault-intro{font-size:0.92rem;line-height:1.75;color:#444;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+        .vault-intro strong{color:var(--ink);}
+        .vault-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px;}
+        .vault-or{font-size:0.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;}
+        .vault-load-row{display:flex;gap:0;flex:1;min-width:260px;}
+        .vault-input{flex:1;padding:11px 16px;border:2px solid var(--border);border-right:none;font-family:'Georgia','Times New Roman',Times,serif;font-size:0.88rem;background:var(--paper);color:var(--ink);outline:none;transition:border-color 0.2s;}
+        .vault-input:focus{border-color:var(--ink);}
+        .btn-save{padding:12px 28px;background:var(--ink);color:#fff;border:2px solid var(--ink);font-family:'Georgia','Times New Roman',Times,serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+        .btn-save:hover{background:var(--red);border-color:var(--red);}
+        .btn-load{padding:11px 20px;background:var(--red);color:#fff;border:2px solid var(--red);font-family:'Georgia','Times New Roman',Times,serif;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+        .btn-load:hover{background:var(--ink);border-color:var(--ink);}
+        .vault-code-box{margin-top:8px;}
+        .vault-code-label{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:10px;}
+        .vault-code-text{width:100%;height:90px;padding:12px;font-family:'Georgia','Times New Roman',Times,serif;font-size:0.78rem;border:2px solid var(--border);background:var(--paper);color:var(--ink);resize:none;outline:none;letter-spacing:0.03em;line-height:1.5;}
+        .btn-copy{margin-top:10px;padding:10px 24px;background:transparent;color:var(--ink);border:2px solid var(--ink);font-family:'Georgia','Times New Roman',Times,serif;font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+        .btn-copy:hover{background:var(--ink);color:#fff;}
+        .btn-copy.copied{background:var(--ink);color:#fff;border-color:var(--ink);}
+        .vault-security-note{margin-top:20px;padding:16px;background:#f8f4ee;border-left:3px solid var(--muted);font-size:0.8rem;line-height:1.65;color:#555;}
+        .vault-security-note strong{color:var(--ink);}
+        .vault-msg{font-size:0.85rem;font-weight:600;margin-top:12px;min-height:20px;}
+        .vault-msg.ok{color:#27ae60;}
+        .vault-msg.err{color:var(--red);}
+
+        footer{background:#050505;color:rgba(255,255,255,0.22);padding:24px 48px;text-align:center;font-size:0.8rem;position:relative;z-index:1;letter-spacing:0.07em;}
+
+        @media(max-width:768px){
+            header{padding:0 20px;}
+            .result-hero{padding:60px 20px 80px;}
+            .content-wrapper{padding:40px 16px 80px;}
+            .runner-grid{grid-template-columns:1fr 1fr;}
+            .axis-row{padding:18px 16px;}
+        }
+        @media(max-width:480px){
+            .runner-grid{grid-template-columns:1fr;}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a class="logo" href="index.html">
+        <img class="logo-img" src="marx.png" alt="Marx">
+        <span class="logo-text">Marx<span>Values</span></span>
+    </a>
+    <nav><a href="quiz.html">Retake Quiz</a></nav>
+</header>
+
+<div id="app"></div>
+
+<footer><p>&copy; 2024 MarxValues. Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:rgba(255,255,255,0.4);text-decoration:underline;">CC BY-NC-SA 4.0</a>. Your answers are never stored or shared.</p></footer>
+
+<script>
+// ── Constants ──────────────────────────────────────────────
+const AXES = ["Revolution","Scientific","Centralization","Internationalism","Organization","Ecology","Social"];
+
+const AXIS_META = {
+    Revolution:      { high:"Revolution",   low:"Reform",        desc:"Radical overthrow vs. gradual change" },
+    Scientific:      { high:"Scientific",   low:"Utopian",       desc:"Dialectical materialism vs. moral idealism" },
+    Centralization:  { high:"Centralized",  low:"Decentralized", desc:"National planning vs. local autonomy" },
+    Internationalism:{ high:"International",low:"National",      desc:"World revolution vs. national socialism" },
+    Organization:    { high:"Party-Led",    low:"Union-Led",     desc:"Vanguard party vs. revolutionary unionism" },
+    Ecology:         { high:"Production",   low:"Ecology",       desc:"Industrial output vs. environmental sustainability" },
+    Social:          { high:"Progressive",  low:"Conservative",  desc:"Social liberation vs. cultural traditionalism" },
+};
+
+const AXIS_COLORS = {
+    Revolution:"#c0392b", Scientific:"#2c7bb6", Centralization:"#8e44ad",
+    Internationalism:"#27ae60", Organization:"#d35400", Ecology:"#16a085", Social:"#555"
+};
+
+// ── Load from sessionStorage ───────────────────────────────
+const raw = sessionStorage.getItem('marxvalues_result');
+
+if (!raw) {
+    document.getElementById('app').innerHTML = `
+        <div class="no-data">
+            <h2>No Results Found</h2>
+            <p>It looks like you haven't completed the quiz yet, or your session expired.</p>
+            <a href="quiz.html" class="btn-retake">Take the Quiz</a>
+        </div>`;
+} else {
+    try {
+        const data = JSON.parse(raw);
+        if (!data || !data.top || !data.scores) throw new Error('Bad data');
+        renderResults(data.scores, data.top, data.runnerUps || [], data.allRanked || []);
+    } catch(e) {
+        document.getElementById('app').innerHTML = `
+            <div class="no-data">
+                <h2>Something went wrong</h2>
+                <p>Could not load your results. Please retake the quiz.</p>
+                <a href="quiz.html" class="btn-retake">Take the Quiz</a>
+            </div>`;
+    }
+}
+
+// ── Render ─────────────────────────────────────────────────
+function renderResults(scores, top, runnerUps, allRanked) {
+    document.title = 'MarxValues - ' + top.name;
+
+    // Sanitize scores - default missing axes to 50
+    AXES.forEach(ax => {
+        if (typeof scores[ax] !== 'number' || isNaN(scores[ax])) scores[ax] = 50;
+        scores[ax] = Math.max(0, Math.min(100, scores[ax]));
+    });
+
+    const matchPct = typeof top.matchPct === 'number' ? Math.round(top.matchPct) : 0;
+
+    // ── Hero
+    const heroHTML = `
+        <section class="result-hero">
+            <div class="hero-inner">
+                <div class="result-eyebrow">Your Political Ideology</div>
+                <div class="result-ideology">${top.name}</div>
+                <div class="result-match-label">Match Score</div>
+                <div class="result-match-pct" id="match-counter">0<span class="match-pct-unit">%</span></div>
+                <p class="result-description">${top.desc || ''}</p>
+            </div>
+        </section>`;
+
+    // ── Axis bars
+    const axesHTML = AXES.map(ax => {
+        const pct = Math.round(scores[ax]);
+        const m = AXIS_META[ax];
+        const color = AXIS_COLORS[ax];
+        return `
+        <div class="axis-row">
+            <div class="axis-top">
+                <div class="axis-info">
+                    <div class="axis-name pct-${ax}">${ax}</div>
+                    <div class="axis-desc">${m.desc}</div>
+                </div>
+                <div class="axis-pct-label pct-${ax}" id="pct-${ax}">0%</div>
+            </div>
+            <div class="axis-track">
+                <div class="axis-fill fill-${ax}" id="fill-${ax}"></div>
+            </div>
+            <div class="axis-poles">
+                <span>${m.high} &rarr; 100%</span>
+                <span>0% &larr; ${m.low}</span>
+            </div>
+        </div>`;
+    }).join('');
+
+    // ── Runner-ups
+    const runnerHTML = runnerUps.slice(0,3).map((r, i) => `
+        <div class="runner-card">
+            <div class="runner-rank">#${i + 2} Match</div>
+            <div class="runner-name">${r.name}</div>
+            <div class="runner-pct">${Math.round(r.matchPct || 0)}%</div>
+            <div class="runner-track">
+                <div class="runner-fill" id="runner-fill-${i}"></div>
+            </div>
+            <div class="runner-desc">${r.desc || ''}</div>
+        </div>`).join('');
+
+    // ── Full ideology breakdown
+    const breakdownHTML = (allRanked && allRanked.length > 0) ? allRanked.map((r, i) => {
+        const pct = Math.round(r.matchPct || 0);
+        const isTop = i === 0;
+        return `
+        <div class="breakdown-row ${isTop ? 'breakdown-top' : ''}">
+            <div class="breakdown-rank">${i + 1}</div>
+            <div class="breakdown-name">${r.name}</div>
+            <div class="breakdown-bar-wrap">
+                <div class="breakdown-bar" id="bdown-${i}" style="width:0%"></div>
+            </div>
+            <div class="breakdown-pct" id="bdown-pct-${i}">${pct}%</div>
+        </div>`;
+    }).join('') : '<p style="color:var(--muted);font-size:0.9rem;">Full breakdown not available - retake the quiz to see all ideology scores.</p>';
+
+    // ── Inject HTML
+    document.getElementById('app').innerHTML = `
+        ${heroHTML}
+        <div class="content-wrapper">
+            <h2 class="section-title">Your Axis Scores</h2>
+            <div class="axes-grid">${axesHTML}</div>
+            <h2 class="section-title">Radar Chart</h2>
+            <div class="chart-card">
+                <canvas id="radar-canvas" width="400" height="400"></canvas>
+            </div>
+            <h2 class="section-title">All Ideology Matches</h2>
+            <div class="breakdown-grid">${breakdownHTML}</div>
+            <h2 class="section-title">Runner-Up Ideologies</h2>
+            <div class="runner-grid">${runnerHTML}</div>
+            <h2 class="section-title">Save Your Results</h2>
+            <div class="vault-panel" id="vault-panel">
+                <div class="vault-intro">
+                    <p>Your results can be saved as an <strong>encrypted local code</strong>. The code is stored only in your browser - no data is sent anywhere, no account needed, no fingerprints retained. Paste the code back here any time to reload your results.</p>
+                </div>
+                <div class="vault-actions">
+                    <button class="btn-save" id="btn-save" onclick="saveResult()">Generate Save Code</button>
+                    <span class="vault-or">or</span>
+                    <div class="vault-load-row">
+                        <input class="vault-input" id="load-code-input" type="text" placeholder="Paste a save code to load...">
+                        <button class="btn-load" onclick="loadResult()">Load</button>
+                    </div>
+                </div>
+                <div class="vault-code-box" id="vault-code-box" style="display:none;">
+                    <div class="vault-code-label">Your encrypted save code - copy and keep it safe:</div>
+                    <textarea class="vault-code-text" id="vault-code-text" readonly></textarea>
+                    <button class="btn-copy" id="btn-copy" onclick="copyCode()">Copy Code</button>
+                    <div class="vault-security-note">
+                        <strong>Security note:</strong> This code is encrypted with AES-256-GCM using a key generated in your browser. It contains only your axis scores and ideology match - no timestamps, no IP address, no identifying information of any kind.
+                    </div>
+                </div>
+                <div class="vault-msg" id="vault-msg"></div>
+            </div>
+            <div class="actions">
+                <a href="quiz.html" class="btn-retake">Retake the Quiz</a>
+                <a href="index.html" class="btn-home">Home</a>
+            </div>
+        </div>`;
+
+    // ── Animate after DOM is ready
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            // Match counter
+            animateCounter('match-counter', matchPct, true);
+
+            // Axis fills + counters - staggered
+            AXES.forEach((ax, i) => {
+                setTimeout(() => {
+                    const pct = Math.round(scores[ax]);
+                    const fillEl = document.getElementById('fill-' + ax);
+                    if (fillEl) fillEl.style.width = pct + '%';
+                    animateCounter('pct-' + ax, pct, false);
+                }, i * 120);
+            });
+
+            // Runner-up fills
+            runnerUps.slice(0,3).forEach((r, i) => {
+                setTimeout(() => {
+                    const el = document.getElementById('runner-fill-' + i);
+                    if (el) el.style.width = Math.round(r.matchPct || 0) + '%';
+                }, 600 + i * 120);
+            });
+
+            // Full breakdown bars
+            if (allRanked && allRanked.length > 0) {
+                allRanked.forEach((r, i) => {
+                    setTimeout(() => {
+                        const bar = document.getElementById('bdown-' + i);
+                        if (bar) bar.style.width = Math.round(r.matchPct || 0) + '%';
+                    }, i * 60);
+                });
+            }
+
+            // Radar chart
+            drawRadar(scores);
+        }, 80);
+    });
+}
+
+// ── Animated number counter ────────────────────────────────
+function animateCounter(id, target, isMatch) {
+    const el = document.getElementById(id);
+    if (!el || isNaN(target)) return;
+    const duration = 1200;
+    let startTime = null;
+    function step(ts) {
+        if (!startTime) startTime = ts;
+        const progress = Math.min((ts - startTime) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 4);
+        const current = Math.round(ease * target);
+        if (isMatch) {
+            el.innerHTML = current + '<span class="match-pct-unit">%</span>';
+        } else {
+            el.textContent = current + '%';
+        }
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+// ── Radar chart (pure canvas) ──────────────────────────────
+function drawRadar(scores) {
+    const canvas = document.getElementById('radar-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const cx = W / 2, cy = H / 2;
+    const R = Math.min(W, H) * 0.33;
+    const N = AXES.length;
+    const angleStep = (Math.PI * 2) / N;
+
+    function getPoint(i, value) {
+        const angle = angleStep * i - Math.PI / 2;
+        const r = (value / 100) * R;
+        return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+    }
+
+    let progress = 0;
+
+    function drawFrame() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Grid rings
+        for (let ring = 1; ring <= 4; ring++) {
+            ctx.beginPath();
+            for (let i = 0; i < N; i++) {
+                const angle = angleStep * i - Math.PI / 2;
+                const r = (ring / 4) * R;
+                const x = cx + r * Math.cos(angle);
+                const y = cy + r * Math.sin(angle);
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.strokeStyle = 'rgba(0,0,0,0.07)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            if (ring % 2 === 0) {
+                ctx.fillStyle = 'rgba(0,0,0,0.015)';
+                ctx.fill();
+            }
+        }
+
+        // Spokes
+        for (let i = 0; i < N; i++) {
+            const angle = angleStep * i - Math.PI / 2;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + R * Math.cos(angle), cy + R * Math.sin(angle));
+            ctx.strokeStyle = 'rgba(0,0,0,0.09)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        // Animate progress
+        progress = Math.min(progress + 0.04, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+
+        // Data polygon
+        ctx.beginPath();
+        AXES.forEach((ax, i) => {
+            const val = (scores[ax] || 50) * ease;
+            const pt = getPoint(i, val);
+            i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y);
+        });
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(192,57,43,0.15)';
+        ctx.fill();
+        ctx.strokeStyle = '#c0392b';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Dots
+        AXES.forEach((ax, i) => {
+            const val = (scores[ax] || 50) * ease;
+            const pt = getPoint(i, val);
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = AXIS_COLORS[ax];
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        });
+
+        // Labels
+        ctx.textAlign = 'center';
+        AXES.forEach((ax, i) => {
+            const angle = angleStep * i - Math.PI / 2;
+            const labelR = R + 32;
+            const lx = cx + labelR * Math.cos(angle);
+            const ly = cy + labelR * Math.sin(angle);
+            ctx.font = '700 11px Georgia, serif';
+            ctx.fillStyle = AXIS_COLORS[ax];
+            ctx.fillText(ax, lx, ly + 4);
+        });
+
+        if (progress < 1) requestAnimationFrame(drawFrame);
+    }
+
+    requestAnimationFrame(drawFrame);
+}
+
+// ── ENCRYPTED VAULT SYSTEM ─────────────────────────────────
+// Uses Web Crypto API (AES-256-GCM) - all browser-native, no libraries.
+// Stored payload: { ideology, matchPct, scores } - no timestamps, no IDs.
+// Key is embedded in the save code itself (base64url) so we never store it.
+// Format: "MV1." + base64url(key_bytes) + "." + base64url(iv + ciphertext)
+
+const VAULT_PREFIX = 'MV1.';
+
+// Encode bytes to base64url (URL-safe, no padding)
+function toB64(buf) {
+    return btoa(String.fromCharCode(...new Uint8Array(buf)))
+        .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+
+// Decode base64url back to Uint8Array
+function fromB64(str) {
+    const b64 = str.replace(/-/g,'+').replace(/_/g,'/');
+    const pad = b64.length % 4 ? '='.repeat(4 - b64.length % 4) : '';
+    return Uint8Array.from(atob(b64+pad), c => c.charCodeAt(0));
+}
+
+// Generate a fresh AES-256-GCM key
+async function generateKey() {
+    return crypto.subtle.generateKey(
+        { name:'AES-GCM', length:256 },
+        true,   // extractable so we can export it into the save code
+        ['encrypt','decrypt']
+    );
+}
+
+// Export raw key bytes
+async function exportKey(key) {
+    return crypto.subtle.exportKey('raw', key);
+}
+
+// Import raw key bytes back into a CryptoKey
+async function importKey(rawBytes) {
+    return crypto.subtle.importKey(
+        'raw', rawBytes,
+        { name:'AES-GCM', length:256 },
+        false,
+        ['decrypt']
+    );
+}
+
+// Encrypt plaintext string → Uint8Array of (iv[12] || ciphertext)
+async function encrypt(key, plaintext) {
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const encoded = new TextEncoder().encode(plaintext);
+    const ciphertext = await crypto.subtle.encrypt(
+        { name:'AES-GCM', iv },
+        key, encoded
+    );
+    // Prepend IV so we can recover it during decryption
+    const combined = new Uint8Array(12 + ciphertext.byteLength);
+    combined.set(iv, 0);
+    combined.set(new Uint8Array(ciphertext), 12);
+    return combined;
+}
+
+// Decrypt (iv[12] || ciphertext) back to plaintext string
+async function decrypt(key, combined) {
+    const iv = combined.slice(0, 12);
+    const ciphertext = combined.slice(12);
+    const decrypted = await crypto.subtle.decrypt(
+        { name:'AES-GCM', iv },
+        key, ciphertext
+    );
+    return new TextDecoder().decode(decrypted);
+}
+
+// Build the minimal payload - NO timestamps, NO IDs, NO fingerprints
+function buildPayload(scoresObj, topObj) {
+    return JSON.stringify({
+        ideology: topObj.name,
+        match: Math.round(topObj.matchPct || 0),
+        scores: Object.fromEntries(
+            AXES.map(ax => [ax, Math.round(scoresObj[ax] || 50)])
+        )
+    });
+}
+
+// ── SAVE ──────────────────────────────────────────────────
+async function saveResult() {
+    const btn = document.getElementById('btn-save');
+    const box = document.getElementById('vault-code-box');
+    const msg = document.getElementById('vault-msg');
+    btn.textContent = 'Encrypting...';
+    btn.disabled = true;
+    msg.textContent = '';
+    msg.className = 'vault-msg';
+
+    try {
+        // Pull current result from sessionStorage
+        const raw = sessionStorage.getItem('marxvalues_result');
+        if (!raw) throw new Error('No result found - please complete the quiz first.');
+        const data = JSON.parse(raw);
+        if (!data.top || !data.scores) throw new Error('Result data is incomplete.');
+
+        const payload = buildPayload(data.scores, data.top);
+
+        // Generate fresh key + encrypt
+        const key = await generateKey();
+        const keyBytes = await exportKey(key);
+        const encrypted = await encrypt(key, payload);
+
+        // Build save code: prefix + key + encrypted blob
+        const code = VAULT_PREFIX + toB64(keyBytes) + '.' + toB64(encrypted);
+
+        // Show code box
+        document.getElementById('vault-code-text').value = code;
+        box.style.display = 'block';
+        msg.className = 'vault-msg ok';
+        msg.textContent = 'Code generated. Copy it and store it somewhere safe.';
+    } catch(e) {
+        msg.className = 'vault-msg err';
+        msg.textContent = e.message || 'Encryption failed.';
+    } finally {
+        btn.textContent = 'Generate Save Code';
+        btn.disabled = false;
+    }
+}
+
+// ── LOAD ──────────────────────────────────────────────────
+async function loadResult() {
+    const input = document.getElementById('load-code-input');
+    const msg = document.getElementById('vault-msg');
+    const code = input.value.trim();
+    msg.className = 'vault-msg';
+    msg.textContent = '';
+
+    if (!code.startsWith(VAULT_PREFIX)) {
+        msg.className = 'vault-msg err';
+        msg.textContent = 'Invalid code - must start with "' + VAULT_PREFIX + '".';
+        return;
+    }
+
+    const parts = code.slice(VAULT_PREFIX.length).split('.');
+    if (parts.length !== 2) {
+        msg.className = 'vault-msg err';
+        msg.textContent = 'Malformed code - check you copied it in full.';
+        return;
+    }
+
+    try {
+        msg.textContent = 'Decrypting...';
+        const keyBytes = fromB64(parts[0]);
+        const combined = fromB64(parts[1]);
+        const key = await importKey(keyBytes);
+        const plaintext = await decrypt(key, combined);
+        const saved = JSON.parse(plaintext);
+
+        // Reconstruct a result object compatible with sessionStorage format
+        const reconstructed = {
+            scores: saved.scores,
+            top: { name: saved.ideology, matchPct: saved.match, desc: getDesc(saved.ideology) },
+            runnerUps: []
+        };
+
+        sessionStorage.setItem('marxvalues_result', JSON.stringify(reconstructed));
+        msg.className = 'vault-msg ok';
+        msg.textContent = 'Loaded! Reloading your results...';
+        setTimeout(() => location.reload(), 900);
+    } catch(e) {
+        msg.className = 'vault-msg err';
+        msg.textContent = 'Decryption failed - the code may be corrupted or incomplete.';
+    }
+}
+
+// ── COPY ──────────────────────────────────────────────────
+async function copyCode() {
+    const text = document.getElementById('vault-code-text').value;
+    const btn = document.getElementById('btn-copy');
+    try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent='Copy Code'; btn.classList.remove('copied'); }, 2000);
+    } catch(e) {
+        // Fallback for browsers without clipboard API
+        document.getElementById('vault-code-text').select();
+        document.execCommand('copy');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent='Copy Code'; }, 2000);
+    }
+}
+
+// Lookup ideology description for reconstructed results
+function getDesc(name) {
+    const map = {
+        'Marxism':'The foundational framework of scientific socialism: class struggle, historical materialism, and the revolutionary overthrow of capitalism.',
+        'Marxism-Leninism':'Vanguard party, democratic centralism, and the dictatorship of the proletariat - the ideology of the Soviet state.',
+        'Trotskyism':'Permanent revolution, anti-Stalinist workers\' democracy, and uncompromising internationalism.',
+        'MLM':'Marxism-Leninism-Maoism: mass line, people\'s war, cultural revolution, and continuing class struggle under socialism.',
+        'Third Worldism':'The Global South as the primary revolutionary subject; the first-world proletariat as a co-opted labor aristocracy.',
+        'Dengism':'Socialism with Chinese characteristics: market mechanisms, CPC leadership, and the primary stage of socialism.',
+        'Hoxhaism':'Anti-revisionist Marxism-Leninism: strict defense of Stalin, opposition to Maoism and Soviet revisionism alike.',
+        'Syndicalism':'Revolutionary trade unionism - the union, not the party, is the vehicle of socialist transformation.',
+        'Libertarian':'Emphasizes individual liberty, limited government, and free markets above all else.',
+        'Conservative':'Values tradition, authority, and social stability; cautious of rapid change in any direction.',
+        'Liberal':'Supports individual rights, democracy, and social progress alongside regulated capitalism.',
+        'Socialist':'Advocates for social ownership, economic equality, and redistribution of wealth through democratic means.',
+        'Centrist':'Takes a balanced approach, incorporating ideas from multiple political traditions without firm commitments.',
+        'Authoritarian':'Prioritizes order, hierarchy, and state power over individual freedoms and democratic participation.',
+        'Libertarian Socialist':'Combines opposition to state power with support for economic equality and workers\' self-management.',
+        'Anarchist':'Rejects all compulsory government and hierarchy; advocates voluntary association and mutual aid.',
+        'Eco-Socialist':'Combines socialist principles with environmental conservation; capitalism is the root of the ecological crisis.',
+        'Social Democrat':'Gradual reform within capitalism - a strong welfare state, progressive taxation, and parliamentary democracy over revolution.',
+        'Patriotic Socialism':'Socialism organized around national identity - state ownership and workers rights combined with cultural conservatism and rejection of liberal social values.',
+        'Left Communism':'A Marxist critique of Leninism from the left - rejecting parliament, vanguard parties, and trade union bureaucracies in favor of workers councils and class autonomy.',
+        'Luxemburgism':'Mass strike, anti-vanguardism, and the insistence that socialist democracy cannot be deferred - it must be practiced inside the revolutionary movement from the start.',
+        'Autonomism':'Workers self-organization, the refusal of work, and a Marxist analysis expanded to cover all value-producing labor including immaterial, affective, and reproductive work.',
+        'Market Socialism':'Social or worker ownership of productive enterprises combined with market allocation - economic democracy without bureaucratic central planning.',
+    };
+    return map[name] || '';
+}
+</script>
+</body>
+</html>
