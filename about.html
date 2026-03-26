@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!-- ╔══════════════════════════════════════════════════════╗
+     MarxValues - about.html
+     About page: project origins, acknowledgment of LeftValues,
+     open source link, and project philosophy.
+╚══════════════════════════════════════════════════════╝ -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            location.replace('https:' + location.href.slice(5));
+        }
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'none';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        font-src 'self';
+        connect-src 'none';
+        form-action 'none';
+        base-uri 'self';
+        upgrade-insecure-requests;
+    ">
+    <title>MarxValues - About</title>
+    <link rel="icon" type="image/png" href="marx.png">
+    <link rel="apple-touch-icon" href="marx.png">
+
+    <style>
+        :root {
+            --ink:   #0a0a0a;
+            --paper: #f2ede6;
+            --red:   #c0392b;
+            --red2:  #96281b;
+            --muted: #7a7060;
+            --border:#d8cfc4;
+            --card:  #ffffff;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Georgia','Times New Roman',Times,serif;background:var(--paper);color:var(--ink);overflow-x:hidden;}
+        body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+          background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");}
+
+        /* HEADER */
+        header{position:sticky;top:0;z-index:100;background:var(--ink);border-bottom:4px solid var(--red);padding:0 48px;height:68px;display:flex;align-items:center;justify-content:space-between;}
+        .logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+        .logo-img{width:44px;height:44px;border-radius:50%;object-fit:cover;display:block;}
+        .logo-text{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-0.5px;}
+        .logo-text span{color:var(--red);}
+        nav{display:flex;gap:12px;align-items:center;}
+        nav a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:2px solid rgba(255,255,255,0.2);padding:9px 22px;transition:all 0.2s;}
+        nav a:hover{background:var(--red);border-color:var(--red);color:#fff;}
+        nav a.active{background:var(--red);border-color:var(--red);color:#fff;}
+
+        /* PAGE HERO */
+        .page-hero{position:relative;z-index:1;background:var(--ink);padding:100px 48px;border-bottom:6px solid var(--red);overflow:hidden;}
+        .page-hero::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(255,255,255,0.022) 48px);}
+        .page-hero-content{position:relative;z-index:1;max-width:760px;}
+        .eyebrow{display:inline-block;background:var(--red);color:#fff;padding:5px 14px;font-size:0.7rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:28px;}
+        .page-hero h1{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2.8rem,6vw,4.8rem);line-height:1.04;font-weight:900;color:#fff;margin-bottom:20px;}
+        .page-hero h1 em{font-style:italic;color:var(--red);}
+        .page-hero p{font-size:1.05rem;line-height:1.8;color:rgba(255,255,255,0.55);max-width:600px;}
+
+        /* SHARED SECTION */
+        .section{position:relative;z-index:1;padding:100px 48px;}
+        .section-inner{max-width:900px;margin:0 auto;}
+        .section-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;color:var(--red);margin-bottom:16px;}
+        .section h2{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:900;line-height:1.1;margin-bottom:24px;color:var(--ink);}
+        .section h2 em{font-style:italic;color:var(--red);}
+        .prose{font-size:1rem;line-height:1.9;color:#444;margin-bottom:20px;max-width:780px;}
+        .prose strong{color:var(--ink);font-weight:700;}
+
+        /* ACKNOWLEDGMENT CARD - dark */
+        .ack-section{background:var(--ink);}
+        .ack-section .section-label{color:var(--red);}
+        .ack-section h2{color:#fff;}
+        .ack-section .prose{color:rgba(255,255,255,0.55);}
+        .ack-section .prose strong{color:#fff;}
+        .ack-card{background:rgba(255,255,255,0.04);border:2px solid rgba(255,255,255,0.1);border-top:6px solid var(--red);padding:48px;margin-top:40px;}
+        .ack-card-header{display:flex;align-items:flex-start;gap:28px;margin-bottom:28px;}
+        .ack-logo{flex-shrink:0;width:64px;height:64px;background:var(--red);display:flex;align-items:center;justify-content:center;}
+        .ack-logo-text{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.1rem;font-weight:900;color:#fff;letter-spacing:-0.5px;}
+        .ack-card-title{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:6px;}
+        .ack-card-sub{font-size:0.8rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;}
+        .ack-card p{font-size:0.95rem;line-height:1.85;color:rgba(255,255,255,0.5);margin-bottom:16px;}
+        .ack-card p:last-of-type{margin-bottom:28px;}
+        .btn-outline-white{display:inline-block;background:transparent;color:#fff;text-decoration:none;padding:12px 32px;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:2px solid rgba(255,255,255,0.4);transition:all 0.22s;margin-right:12px;margin-bottom:8px;}
+        .btn-outline-white:hover{background:var(--red);border-color:var(--red);}
+        .btn-red{display:inline-block;background:var(--red);color:#fff;text-decoration:none;padding:12px 32px;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:2px solid var(--red);transition:all 0.22s;margin-bottom:8px;}
+        .btn-red:hover{background:transparent;color:var(--red);}
+
+        /* HOW IT DIFFERS section - light */
+        .diff-section{background:var(--paper);}
+        .diff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:40px;}
+        .diff-card{background:var(--card);border:2px solid var(--border);border-top:4px solid var(--red);padding:28px 24px;}
+        .diff-card h3{font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink);margin-bottom:10px;}
+        .diff-card p{font-size:0.88rem;line-height:1.7;color:var(--muted);}
+
+        /* OPEN SOURCE section - red */
+        .oss-section{background:var(--red);}
+        .oss-section .section-label{color:rgba(255,255,255,0.6);}
+        .oss-section h2{color:#fff;}
+        .oss-section .prose{color:rgba(255,255,255,0.65);}
+        .oss-section .prose strong{color:#fff;}
+        .github-card{background:rgba(0,0,0,0.18);border:2px solid rgba(255,255,255,0.15);padding:40px;margin-top:36px;display:flex;align-items:center;gap:32px;}
+        .github-icon{flex-shrink:0;width:56px;height:56px;fill:#fff;opacity:0.9;}
+        .github-card-text h3{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:8px;}
+        .github-card-text p{font-size:0.9rem;line-height:1.75;color:rgba(255,255,255,0.6);margin-bottom:20px;}
+        .btn-white{display:inline-block;background:#fff;color:var(--red);text-decoration:none;padding:13px 32px;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:2px solid #fff;transition:all 0.22s;}
+        .btn-white:hover{background:transparent;color:#fff;}
+
+        /* PHILOSOPHY section */
+        .phil-section{background:var(--paper);}
+        .phil-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:40px;}
+        .phil-block h3{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:12px;border-bottom:3px solid var(--red);padding-bottom:10px;}
+        .phil-block p{font-size:0.92rem;line-height:1.85;color:#555;}
+        .phil-block p + p{margin-top:12px;}
+
+        /* PRIVACY section - dark */
+        .privacy-section{background:var(--ink);}
+        .privacy-section .section-label{color:var(--red);}
+        .privacy-section h2{color:#fff;}
+        .privacy-section .prose{color:rgba(255,255,255,0.5);}
+        .privacy-section .prose strong{color:#fff;}
+        .privacy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:3px;margin-top:36px;}
+        .privacy-item{background:rgba(255,255,255,0.03);border-left:4px solid var(--red);padding:28px 24px;}
+        .privacy-item h3{font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#fff;margin-bottom:10px;}
+        .privacy-item p{font-size:0.88rem;line-height:1.7;color:rgba(255,255,255,0.42);}
+
+        /* CTA */
+        .cta-banner{position:relative;z-index:1;background:var(--paper);padding:100px 48px;text-align:center;border-top:6px solid var(--red);}
+        .cta-banner h2{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2.2rem,5vw,3.5rem);color:var(--ink);font-weight:900;margin-bottom:14px;}
+        .cta-banner h2 em{font-style:italic;color:var(--red);}
+        .cta-banner p{color:var(--muted);font-size:0.95rem;margin-bottom:40px;letter-spacing:0.05em;}
+        .btn-cta{display:inline-block;background:var(--red);color:#fff;text-decoration:none;padding:18px 60px;font-size:0.85rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;border:3px solid var(--red);transition:all 0.22s;}
+        .btn-cta:hover{background:transparent;color:var(--red);}
+
+        footer{background:#050505;color:rgba(255,255,255,0.22);padding:28px 48px;text-align:center;font-size:0.8rem;position:relative;z-index:1;letter-spacing:0.07em;}
+
+        @media(max-width:900px){
+            header{padding:0 20px;}
+            .page-hero{padding:60px 20px;}
+            .section{padding:60px 20px;}
+            .ack-card{padding:28px 20px;}
+            .ack-card-header{flex-direction:column;gap:16px;}
+            .github-card{flex-direction:column;gap:20px;padding:28px 20px;}
+            .phil-grid{grid-template-columns:1fr;}
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <a class="logo" href="index.html">
+        <img class="logo-img" src="marx.png" alt="MarxValues">
+        <span class="logo-text">Marx<span>Values</span></span>
+    </a>
+    <nav>
+        <a href="about.html" class="active">About</a>
+        <a href="resources.html">Resources</a>
+        <a href="contribute.html">Contribute</a><a href="quiz.html">Take the Quiz</a>
+    </nav>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+    <div class="page-hero-content">
+        <div class="eyebrow">About This Project</div>
+        <h1>Built on <em>solidarity,</em> not from scratch.</h1>
+        <p>MarxValues exists because others built something worth building on. This page explains where the project came from, what makes it different, and who made it possible.</p>
+    </div>
+</section>
+
+<!-- ACKNOWLEDGMENT OF LEFTVALUES -->
+<section class="section ack-section">
+    <div class="section-inner">
+        <div class="section-label">Standing on Shoulders</div>
+        <h2>Thank you, <em>LeftValues.</em></h2>
+        <p class="prose">MarxValues would not exist without LeftValues - the open source leftist political quiz that pioneered this format. The LeftValues team created something genuinely valuable: a rigorous, well-researched quiz specifically designed for the left-wing political spectrum, with a thoughtful 7-axis framework that goes far beyond the crude left-right spectrum of mainstream political tests.</p>
+        <p class="prose">Their decision to release the project under the <strong>MIT License</strong> - one of the most permissive open source licenses - made it possible for others to build on their work. MarxValues takes that invitation seriously. We have used LeftValues as our conceptual and structural foundation, expanded the ideology set, deepened the reading materials, added an encrypted results vault, and rebuilt the interface from scratch - but the core intellectual framework of seven axes and Euclidean distance ideology matching comes directly from their work.</p>
+        <p class="prose">The LeftValues team is no longer actively developing their quiz, but their project remains live and is well worth visiting. If you appreciate what MarxValues does, you owe a debt to what they built first.</p>
+
+        <div class="ack-card">
+            <div class="ack-card-header">
+                <div class="ack-logo"><span class="ack-logo-text">LV</span></div>
+                <div>
+                    <div class="ack-card-title">LeftValues</div>
+                    <div class="ack-card-sub">The leftist quiz that started it all - built on 8values, released under MIT License</div>
+                </div>
+            </div>
+            <p>LeftValues measures left-wing political positions across 7 axes - Revolution vs Reform, Collectivism vs Liberalism, Internationalism vs Nationalism, Communist vs Social Democracy, Regulationism vs Laissez-Faire, Acid vs Tradition, and Party vs Union. It was itself built on the open source 8values quiz, continuing a tradition of open political tools built by volunteers.</p>
+            <p>The quiz features 72 questions and matches users to a range of left-wing ideologies. It remains one of the most thoughtful and well-constructed political quizzes available. The LeftValues GitHub repository is open to forks and the authors explicitly encouraged others to build upon it.</p>
+            <a href="https://leftvalues.github.io" target="_blank" rel="noopener noreferrer" class="btn-outline-white">Visit LeftValues</a>
+            <a href="https://github.com/LeftValues/leftvalues.github.io" target="_blank" rel="noopener noreferrer" class="btn-outline-white">LeftValues on GitHub</a>
+        </div>
+    </div>
+</section>
+
+<!-- HOW MARXVALUES DIFFERS -->
+<section class="section diff-section">
+    <div class="section-inner">
+        <div class="section-label">What We Built On Top</div>
+        <h2>How MarxValues <em>differs</em></h2>
+        <p class="prose">MarxValues is not a clone of LeftValues. It is a substantial expansion and reimagining, built using LeftValues as conceptual inspiration while developing its own questions, ideologies, interface, and features.</p>
+        <div class="diff-grid">
+            <div class="diff-card">
+                <h3>Expanded Ideology Set</h3>
+                <p>LeftValues covers a solid set of left tendencies. MarxValues expands this to 21 ideologies, adding Left Communism, Luxemburgism, Autonomism, Market Socialism, Patriotic Socialism, and a broader catch-all for non-left results - with full descriptions and reading lists for each.</p>
+            </div>
+            <div class="diff-card">
+                <h3>58 Original Questions</h3>
+                <p>All 58 questions in MarxValues were written from scratch with research-backed rationale for each. Every question is designed to genuinely differentiate between ideologies, not just confirm broad left/right positions.</p>
+            </div>
+            <div class="diff-card">
+                <h3>Encrypted Results Vault</h3>
+                <p>MarxValues includes a browser-based AES-256-GCM encrypted save system. Users can generate a save code to reload their results later. No data is stored on our server - the key is embedded in the code itself. LeftValues does not have this feature.</p>
+            </div>
+            <div class="diff-card">
+                <h3>Primary Source Integration</h3>
+                <p>Every ideology card links directly to relevant texts on the Marxists Internet Archive. The resources page provides structured reading paths. MarxValues is designed to be a gateway to further study, not just a quiz result.</p>
+            </div>
+            <div class="diff-card">
+                <h3>Privacy-First Architecture</h3>
+                <p>No analytics, no tracking, no cookies, no external scripts. A strict Content Security Policy blocks all external connections. No timestamps are stored anywhere in the system. LeftValues uses basic visitor tracking; MarxValues collects nothing.</p>
+            </div>
+            <div class="diff-card">
+                <h3>Fully Static, No Dependencies</h3>
+                <p>MarxValues runs entirely in the browser with zero external dependencies. No JavaScript libraries, no CDN requests, no Google Fonts. Three HTML files and one image. This makes it fast, private, and impossible to break via third-party service outages.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OPEN SOURCE / GITHUB -->
+<section class="section oss-section">
+    <div class="section-inner">
+        <div class="section-label">Open Source</div>
+        <h2>MarxValues is <em>open source.</em></h2>
+        <p class="prose">In the spirit of LeftValues and the broader tradition of open political tools, MarxValues is fully open source. The complete code is available on GitHub - every question, every ideology score, every line of the scoring algorithm. You can inspect it, fork it, build on it, or use it to verify that the privacy claims on this site are true.</p>
+        <p class="prose">If you find errors in ideology scores, want to suggest new questions, or want to build your own version - the repository is there. Pull requests are welcome. The project is licensed under <strong>CC BY-NC-SA 4.0</strong> - you can use and adapt it freely for non-commercial purposes as long as you credit the project and share your version under the same terms.</p>
+
+        <div class="github-card">
+            <!-- GitHub mark SVG -->
+            <svg class="github-icon" viewBox="0 0 98 96" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z"/></svg>
+            <div class="github-card-text">
+                <h3>xandermckie / political_quiz</h3>
+                <p>The complete source code for MarxValues - all HTML, CSS, JavaScript, questions, ideology scores, and the scoring algorithm. Open to inspection, forks, and contributions. Built on the shoulders of LeftValues and the open source tradition.</p>
+                <a href="https://github.com/xandermckie/political_quiz" target="_blank" rel="noopener noreferrer" class="btn-white">View on GitHub</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROJECT PHILOSOPHY -->
+<section class="section phil-section">
+    <div class="section-inner">
+        <div class="section-label">Project Philosophy</div>
+        <h2>What this project <em>is and isn't</em></h2>
+        <p class="prose">MarxValues is an educational tool, not a political authority. A quiz cannot determine your ideology - only your own study, experience, and reflection can do that. What it can do is give you a rough map of where your current views place you within the tradition of left-wing thought, and point you toward the texts and thinkers who share those positions.</p>
+        <div class="phil-grid">
+            <div class="phil-block">
+                <h3>What MarxValues is</h3>
+                <p>An educational entry point into left political theory. A tool for self-reflection and political orientation. A gateway to primary sources. A free, open, privacy-respecting alternative to commercial political tests that harvest user data.</p>
+                <p>It is also an ongoing project. Ideology scores are research-backed but debatable. Questions are designed to differentiate but are necessarily imperfect. If you disagree with how an ideology is characterized, the GitHub repository is the place to make that argument.</p>
+            </div>
+            <div class="phil-block">
+                <h3>What MarxValues is not</h3>
+                <p>A definitive classification system. A substitute for reading. An endorsement of any particular tendency on the left. A tool for gatekeeping who is or isn't a "real" Marxist, socialist, or anarchist.</p>
+                <p>The left has always been defined by internal debate, disagreement, and development. MarxValues reflects that diversity rather than adjudicating it. Land on any result and take it as a starting point for further reading, not a final verdict.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PRIVACY COMMITMENTS -->
+<section class="section privacy-section">
+    <div class="section-inner">
+        <div class="section-label">Privacy</div>
+        <h2>What we collect: <em>nothing.</em></h2>
+        <p class="prose">Given the political nature of this quiz, privacy is not an afterthought - it is a core design requirement. Here is exactly what happens to your data when you use MarxValues.</p>
+        <div class="privacy-grid">
+            <div class="privacy-item">
+                <h3>Your Answers</h3>
+                <p>Stored only in your browser's sessionStorage for the duration of your session. Cleared automatically when you close the tab. Never sent anywhere. Never logged. We have no way of knowing what you answered.</p>
+            </div>
+            <div class="privacy-item">
+                <h3>Your Results</h3>
+                <p>If you use the encrypted save vault, your result is encrypted in your browser using AES-256-GCM before being shown to you as a code. The encryption key is embedded in that code - we never see it and cannot decrypt your result.</p>
+            </div>
+            <div class="privacy-item">
+                <h3>Analytics</h3>
+                <p>None. No Google Analytics. No tracking pixels. No cookies. The site has a strict Content Security Policy that blocks all external connections. We use no analytics tools whatsoever.</p>
+            </div>
+            <div class="privacy-item">
+                <h3>Cloudflare</h3>
+                <p>The site is hosted on Cloudflare Pages. As a reverse proxy, Cloudflare processes visitor IP addresses as part of normal operations and retains logs for up to 25 hours per their privacy policy. This is unavoidable with any CDN provider and is the tradeoff for DDoS protection.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+    <h2>Ready to find your <em>place on the left?</em></h2>
+    <p>58 questions. 7 axes. 21 ideologies.</p>
+    <a href="quiz.html" class="btn-cta">Take the Quiz</a>
+</section>
+
+<footer>
+    <p>&copy; 2024 MarxValues. Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:rgba(255,255,255,0.4);text-decoration:underline;">CC BY-NC-SA 4.0</a>. Your answers are never stored or shared.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<!-- ╔══════════════════════════════════════════════════════╗
+     MarxValues - contribute.html
+     Contribution / feedback page.
+     
+     HOW SUBMISSIONS WORK:
+     The form builds a pre-filled GitHub Issue URL from the
+     user's input and opens it in a new tab. The user needs
+     a free GitHub account to submit. You receive a GitHub
+     notification, review it, label it, and close it when
+     done. No backend, no database, no spam risk.
+     
+     GitHub repo: github.com/xandermckie/political_quiz
+╚══════════════════════════════════════════════════════╝ -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            location.replace('https:' + location.href.slice(5));
+        }
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'none';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        font-src 'self';
+        connect-src 'none';
+        form-action 'none';
+        base-uri 'self';
+        upgrade-insecure-requests;
+    ">
+    <title>MarxValues - Contribute</title>
+    <link rel="icon" type="image/png" href="marx.png">
+    <link rel="apple-touch-icon" href="marx.png">
+
+    <style>
+        :root {
+            --ink:   #0a0a0a;
+            --paper: #f2ede6;
+            --red:   #c0392b;
+            --red2:  #96281b;
+            --muted: #7a7060;
+            --border:#d8cfc4;
+            --card:  #ffffff;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Georgia','Times New Roman',Times,serif;background:var(--paper);color:var(--ink);overflow-x:hidden;}
+        body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+          background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");}
+
+        /* HEADER */
+        header{position:sticky;top:0;z-index:100;background:var(--ink);border-bottom:4px solid var(--red);padding:0 48px;height:68px;display:flex;align-items:center;justify-content:space-between;}
+        .logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+        .logo-img{width:44px;height:44px;border-radius:50%;object-fit:cover;display:block;}
+        .logo-text{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-0.5px;}
+        .logo-text span{color:var(--red);}
+        nav{display:flex;gap:12px;align-items:center;}
+        nav a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:2px solid rgba(255,255,255,0.2);padding:9px 22px;transition:all 0.2s;}
+        nav a:hover{background:var(--red);border-color:var(--red);color:#fff;}
+        nav a.active{background:var(--red);border-color:var(--red);color:#fff;}
+
+        /* PAGE HERO */
+        .page-hero{position:relative;z-index:1;background:var(--ink);padding:100px 48px;border-bottom:6px solid var(--red);overflow:hidden;}
+        .page-hero::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(255,255,255,0.022) 48px);}
+        .page-hero-content{position:relative;z-index:1;max-width:760px;}
+        .eyebrow{display:inline-block;background:var(--red);color:#fff;padding:5px 14px;font-size:0.7rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:28px;}
+        .page-hero h1{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2.8rem,6vw,4.8rem);line-height:1.04;font-weight:900;color:#fff;margin-bottom:20px;}
+        .page-hero h1 em{font-style:italic;color:var(--red);}
+        .page-hero p{font-size:1.05rem;line-height:1.8;color:rgba(255,255,255,0.55);max-width:600px;}
+
+        /* HOW IT WORKS */
+        .how-section{position:relative;z-index:1;background:var(--red);padding:64px 48px;}
+        .how-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:3px;}
+        .how-step{background:rgba(0,0,0,0.15);border-top:3px solid rgba(255,255,255,0.25);padding:28px 24px;}
+        .how-num{font-family:'Georgia','Times New Roman',Times,serif;font-size:2.4rem;font-weight:900;color:rgba(255,255,255,0.2);line-height:1;margin-bottom:12px;}
+        .how-step h3{font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#fff;margin-bottom:8px;}
+        .how-step p{font-size:0.85rem;line-height:1.7;color:rgba(255,255,255,0.6);}
+
+        /* FORM SECTION */
+        .form-section{position:relative;z-index:1;padding:80px 48px;}
+        .form-inner{max-width:780px;margin:0 auto;}
+        .section-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;color:var(--red);margin-bottom:16px;}
+        .form-section h2{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2rem,4vw,2.6rem);font-weight:900;margin-bottom:10px;color:var(--ink);}
+        .form-section h2 em{font-style:italic;color:var(--red);}
+        .form-section .lead{font-size:0.95rem;line-height:1.8;color:var(--muted);margin-bottom:48px;}
+
+        /* FORM FIELDS */
+        .form-card{background:var(--card);border:2px solid var(--border);border-top:6px solid var(--red);padding:48px;}
+        .field{margin-bottom:28px;}
+        .field label{display:block;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink);margin-bottom:10px;}
+        .field label span{color:var(--red);}
+        .field-hint{font-size:0.78rem;color:var(--muted);margin-bottom:8px;font-style:italic;font-weight:400;text-transform:none;letter-spacing:0;}
+        select, input[type="text"], textarea{
+            width:100%;
+            font-family:'Georgia','Times New Roman',Times,serif;
+            font-size:0.95rem;
+            color:var(--ink);
+            background:#fff;
+            border:2px solid var(--border);
+            padding:12px 16px;
+            appearance:none;
+            transition:border-color 0.2s;
+            outline:none;
+        }
+        select:focus, input[type="text"]:focus, textarea:focus{border-color:var(--red);}
+        select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a7060' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px;cursor:pointer;}
+        textarea{min-height:130px;resize:vertical;line-height:1.7;}
+
+        /* Preview pane */
+        .preview-wrap{margin-bottom:28px;}
+        .preview-label{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:10px;}
+        .preview-box{background:var(--paper);border:2px solid var(--border);border-left:4px solid var(--red);padding:20px;font-size:0.88rem;line-height:1.75;color:#444;white-space:pre-wrap;word-break:break-word;min-height:80px;font-family:'Georgia','Times New Roman',Times,serif;}
+        .preview-box em{color:var(--muted);font-style:italic;}
+
+        /* Submit button */
+        .submit-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+        .btn-submit{display:inline-block;background:var(--red);color:#fff;text-decoration:none;padding:16px 48px;font-size:0.82rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:3px solid var(--red);cursor:pointer;transition:all 0.22s;font-family:'Georgia','Times New Roman',Times,serif;}
+        .btn-submit:hover{background:transparent;color:var(--red);}
+        .btn-submit:disabled{opacity:0.4;cursor:not-allowed;}
+        .submit-note{font-size:0.8rem;color:var(--muted);line-height:1.6;max-width:400px;}
+
+        /* Direct GitHub link */
+        .github-fallback{margin-top:40px;padding-top:32px;border-top:2px solid var(--border);display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+        .github-fallback p{font-size:0.88rem;color:var(--muted);line-height:1.6;}
+        .btn-outline{display:inline-block;background:transparent;color:var(--ink);text-decoration:none;padding:11px 28px;font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:2px solid var(--border);transition:all 0.2s;white-space:nowrap;}
+        .btn-outline:hover{border-color:var(--red);color:var(--red);}
+
+        /* What happens next */
+        .next-section{position:relative;z-index:1;background:var(--ink);padding:80px 48px;}
+        .next-inner{max-width:900px;margin:0 auto;}
+        .next-section .section-label{color:var(--red);}
+        .next-section h2{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:900;color:#fff;margin-bottom:32px;}
+        .next-section h2 em{font-style:italic;color:var(--red);}
+        .next-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:3px;}
+        .next-item{background:rgba(255,255,255,0.03);border-left:4px solid var(--red);padding:28px 22px;}
+        .next-item h3{font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:#fff;margin-bottom:10px;}
+        .next-item p{font-size:0.88rem;line-height:1.75;color:rgba(255,255,255,0.42);}
+
+        footer{background:#050505;color:rgba(255,255,255,0.22);padding:28px 48px;text-align:center;font-size:0.8rem;position:relative;z-index:1;letter-spacing:0.07em;}
+
+        @media(max-width:900px){
+            header{padding:0 20px;}
+            .page-hero,.how-section,.form-section,.next-section{padding:60px 20px;}
+            .form-card{padding:28px 20px;}
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <a class="logo" href="index.html">
+        <img class="logo-img" src="marx.png" alt="MarxValues">
+        <span class="logo-text">Marx<span>Values</span></span>
+    </a>
+    <nav>
+        <a href="about.html">About</a>
+        <a href="resources.html">Resources</a>
+        <a href="contribute.html" class="active">Contribute</a>
+        <a href="quiz.html">Take the Quiz</a>
+    </nav>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+    <div class="page-hero-content">
+        <div class="eyebrow">Community Input</div>
+        <h1>Help make it <em>more accurate.</em></h1>
+        <p>MarxValues is an open project. If you think a question is poorly worded, an ideology score is wrong, a definition is incomplete, or something is missing entirely - tell us. Good theory requires critique.</p>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+    <div class="how-inner">
+        <div class="how-step">
+            <div class="how-num">01</div>
+            <h3>Fill out the form</h3>
+            <p>Choose what type of change you are suggesting and describe it clearly below. The more specific, the better.</p>
+        </div>
+        <div class="how-step">
+            <div class="how-num">02</div>
+            <h3>Submit via GitHub</h3>
+            <p>Clicking Submit opens a pre-filled GitHub Issue in a new tab. You will need a free GitHub account to submit it.</p>
+        </div>
+        <div class="how-step">
+            <div class="how-num">03</div>
+            <h3>Review and discussion</h3>
+            <p>Submissions are reviewed in the GitHub Issues tab. You can see all open suggestions, add comments, and discuss with others.</p>
+        </div>
+        <div class="how-step">
+            <div class="how-num">04</div>
+            <h3>Implementation</h3>
+            <p>If a suggestion is accepted, the change is made in the code and the issue is closed with a note. The site updates automatically on the next push.</p>
+        </div>
+    </div>
+</section>
+
+<!-- FORM -->
+<section class="form-section">
+    <div class="form-inner">
+        <div class="section-label">Submit a Suggestion</div>
+        <h2>What would you like to <em>change?</em></h2>
+        <p class="lead">All fields marked with <span style="color:var(--red);">*</span> are required. The more detail you provide, the more useful the submission.</p>
+
+        <div class="form-card">
+
+            <!-- Type -->
+            <div class="field">
+                <label for="type">Type of suggestion <span>*</span></label>
+                <select id="type" onchange="updatePreview()">
+                    <option value="">-- Select a category --</option>
+                    <option value="question-new">New question suggestion</option>
+                    <option value="question-edit">Edit an existing question</option>
+                    <option value="ideology-score">Ideology axis score correction</option>
+                    <option value="ideology-definition">Ideology definition / description</option>
+                    <option value="ideology-new">Suggest a new ideology</option>
+                    <option value="reading-link">Add or fix a reading / resource link</option>
+                    <option value="bug">Bug report (something is broken)</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Subject -->
+            <div class="field">
+                <label for="subject">Subject <span>*</span>
+                    <span class="field-hint">Which ideology, question, axis, or page does this relate to?</span>
+                </label>
+                <input type="text" id="subject" placeholder="e.g. Luxemburgism, Revolution axis, question 14, results page..." oninput="updatePreview()">
+            </div>
+
+            <!-- Current state -->
+            <div class="field">
+                <label for="current">Current state
+                    <span class="field-hint">What does the site currently say or do? (Quote directly if possible)</span>
+                </label>
+                <textarea id="current" placeholder="e.g. The current Luxemburgism description says X..." oninput="updatePreview()"></textarea>
+            </div>
+
+            <!-- Suggested change -->
+            <div class="field">
+                <label for="suggestion">Suggested change <span>*</span>
+                    <span class="field-hint">What should it say or do instead? Be as specific as possible.</span>
+                </label>
+                <textarea id="suggestion" placeholder="e.g. The description should be changed to... because..." oninput="updatePreview()"></textarea>
+            </div>
+
+            <!-- Rationale -->
+            <div class="field">
+                <label for="rationale">Sources or rationale
+                    <span class="field-hint">What supports this change? Link to a primary source, cite a text, or explain your reasoning.</span>
+                </label>
+                <textarea id="rationale" placeholder="e.g. See Luxemburg's Reform or Revolution (1900), Chapter 3, where she argues..." oninput="updatePreview()"></textarea>
+            </div>
+
+            <!-- Live preview -->
+            <div class="preview-wrap">
+                <div class="preview-label">Issue preview</div>
+                <div class="preview-box" id="preview"><em>Fill out the form above to preview your GitHub issue...</em></div>
+            </div>
+
+            <!-- Submit -->
+            <div class="submit-row">
+                <button class="btn-submit" id="submit-btn" onclick="submitIssue()" disabled>Submit via GitHub</button>
+                <p class="submit-note">This opens GitHub in a new tab with your submission pre-filled. You will need a free GitHub account to complete the submission. Your input is not sent anywhere until you click Submit on GitHub.</p>
+            </div>
+
+            <!-- Fallback -->
+            <div class="github-fallback">
+                <p>Prefer to submit directly on GitHub? You can open a blank issue in the repository and write it yourself.</p>
+                <a href="https://github.com/xandermckie/political_quiz/issues/new" target="_blank" rel="noopener noreferrer" class="btn-outline">Open blank issue on GitHub</a>
+                <a href="https://github.com/xandermckie/political_quiz/issues" target="_blank" rel="noopener noreferrer" class="btn-outline">View all open suggestions</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WHAT HAPPENS NEXT -->
+<section class="next-section">
+    <div class="next-inner">
+        <div class="section-label">After you submit</div>
+        <h2>How suggestions get <em>reviewed</em></h2>
+        <div class="next-grid">
+            <div class="next-item">
+                <h3>All submissions are public</h3>
+                <p>GitHub Issues are publicly visible. Anyone can read, comment on, and discuss your suggestion. This is intentional - good changes are improved through dialogue, not decided in private.</p>
+            </div>
+            <div class="next-item">
+                <h3>Label system</h3>
+                <p>Submissions will be labeled by type: question, ideology, definition, bug, reading list. This makes it easy to browse suggestions by category and see what is already being discussed.</p>
+            </div>
+            <div class="next-item">
+                <h3>Acceptance criteria</h3>
+                <p>Changes to ideology scores must be supported by primary sources. New questions must genuinely differentiate between ideologies. Definitions must be accurate to how a tendency describes itself, not how its critics describe it.</p>
+            </div>
+            <div class="next-item">
+                <h3>When changes are made</h3>
+                <p>Accepted suggestions are implemented in the codebase and pushed to GitHub. Cloudflare deploys the update automatically. The issue is closed with a note referencing the commit that made the change.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2024 MarxValues. Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:rgba(255,255,255,0.4);text-decoration:underline;">CC BY-NC-SA 4.0</a>. Your answers are never stored or shared.</p>
+</footer>
+
+<script>
+/* ── CONTRIBUTION FORM ─────────────────────────────────────────────────────
+   Builds a GitHub Issue URL with all form fields pre-populated as
+   query parameters. Opens in a new tab - no data is sent to our server.
+   
+   GitHub new issue URL format:
+   https://github.com/{owner}/{repo}/issues/new?title=...&body=...&labels=...
+   
+   All values are URL-encoded. The body is formatted as Markdown so it
+   renders nicely in GitHub's issue viewer.
+────────────────────────────────────────────────────────────────────────── */
+
+const REPO = 'xandermckie/political_quiz';
+
+/* Label map: matches each form type to a GitHub label name.
+   These labels should be created in your GitHub repo settings first.
+   Go to: github.com/xandermckie/political_quiz/labels */
+const LABEL_MAP = {
+    'question-new':         'new question',
+    'question-edit':        'question edit',
+    'ideology-score':       'ideology score',
+    'ideology-definition':  'ideology definition',
+    'ideology-new':         'new ideology',
+    'reading-link':         'reading list',
+    'bug':                  'bug',
+    'other':                'other',
+};
+
+const TYPE_TITLES = {
+    'question-new':         'New question suggestion',
+    'question-edit':        'Edit existing question',
+    'ideology-score':       'Ideology score correction',
+    'ideology-definition':  'Ideology definition edit',
+    'ideology-new':         'New ideology suggestion',
+    'reading-link':         'Reading list addition/fix',
+    'bug':                  'Bug report',
+    'other':                'Suggestion',
+};
+
+/* updatePreview(): called on every input event.
+   Builds the Markdown body and renders it in the preview box.
+   Also enables/disables the submit button based on required fields. */
+function updatePreview() {
+    const type       = document.getElementById('type').value;
+    const subject    = document.getElementById('subject').value.trim();
+    const current    = document.getElementById('current').value.trim();
+    const suggestion = document.getElementById('suggestion').value.trim();
+    const rationale  = document.getElementById('rationale').value.trim();
+
+    const btn = document.getElementById('submit-btn');
+    const preview = document.getElementById('preview');
+
+    // Require type, subject, and suggestion before enabling submit
+    const ready = type && subject && suggestion;
+    btn.disabled = !ready;
+
+    if (!ready) {
+        preview.innerHTML = '<em>Fill in the required fields above to preview your GitHub issue...</em>';
+        return;
+    }
+
+    // Build Markdown body - this is what will appear in the GitHub issue
+    let body = '';
+    body += `**Type:** ${TYPE_TITLES[type] || type}\n\n`;
+    body += `**Subject:** ${subject}\n\n`;
+
+    if (current) {
+        body += `**Current state:**\n${current}\n\n`;
+    }
+
+    body += `**Suggested change:**\n${suggestion}\n\n`;
+
+    if (rationale) {
+        body += `**Sources / rationale:**\n${rationale}\n\n`;
+    }
+
+    body += `---\n*Submitted via marxvalues.org/contribute.html*`;
+
+    preview.textContent = body;
+}
+
+/* submitIssue(): builds the full GitHub new-issue URL and opens it.
+   Title format: "[Type] Subject"
+   Labels are passed as a comma-separated query parameter.
+   GitHub pre-fills all fields; the user just clicks Submit on GitHub. */
+function submitIssue() {
+    const type       = document.getElementById('type').value;
+    const subject    = document.getElementById('subject').value.trim();
+    const current    = document.getElementById('current').value.trim();
+    const suggestion = document.getElementById('suggestion').value.trim();
+    const rationale  = document.getElementById('rationale').value.trim();
+
+    if (!type || !subject || !suggestion) return;
+
+    // Build issue title
+    const typeTitle = TYPE_TITLES[type] || 'Suggestion';
+    const title = `[${typeTitle}] ${subject}`;
+
+    // Build Markdown body
+    let body = '';
+    body += `**Type:** ${typeTitle}\n\n`;
+    body += `**Subject:** ${subject}\n\n`;
+    if (current) body += `**Current state:**\n${current}\n\n`;
+    body += `**Suggested change:**\n${suggestion}\n\n`;
+    if (rationale) body += `**Sources / rationale:**\n${rationale}\n\n`;
+    body += `---\n*Submitted via marxvalues.org/contribute.html*`;
+
+    // Get label for this type
+    const label = LABEL_MAP[type] || '';
+
+    // Build the full GitHub URL
+    const params = new URLSearchParams({
+        title: title,
+        body:  body,
+        labels: label,
+    });
+
+    const url = `https://github.com/${REPO}/issues/new?${params.toString()}`;
+
+    // Open in new tab - user completes submission on GitHub
+    window.open(url, '_blank', 'noopener,noreferrer');
+}
+</script>
+
+</body>
+</html>

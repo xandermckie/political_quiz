@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<!-- ╔══════════════════════════════════════════════════════╗
+     MarxValues - resources.html
+     Resources page: why study Marxism, Marxists Internet
+     Archive, Socialism For All YouTube channel, and
+     further reading organized by topic.
+     Matches site design - same header, footer, CSS variables.
+╚══════════════════════════════════════════════════════╝ -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Redirect HTTP to HTTPS in production; skips localhost and file:// -->
+    <script>
+        if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            location.replace('https:' + location.href.slice(5));
+        }
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSP: allows navigation to external links (marxists.org, youtube.com)
+         but blocks all script/style/image loading from external sources. -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'none';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        font-src 'self';
+        connect-src 'none';
+        form-action 'none';
+        base-uri 'self';
+        upgrade-insecure-requests;
+    ">
+    <title>MarxValues - Resources</title>
+    <link rel="icon" type="image/png" href="marx.png">
+    <link rel="apple-touch-icon" href="marx.png">
+
+    <style>
+        /* ── CSS VARIABLES (identical to index.html) ── */
+        :root {
+            --ink:   #0a0a0a;
+            --paper: #f2ede6;
+            --red:   #c0392b;
+            --red2:  #96281b;
+            --muted: #7a7060;
+            --border:#d8cfc4;
+            --card:  #ffffff;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Georgia','Times New Roman',Times,serif;background:var(--paper);color:var(--ink);overflow-x:hidden;}
+        body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+          background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");}
+
+        /* ── HEADER (identical to index.html) ── */
+        header{position:sticky;top:0;z-index:100;background:var(--ink);border-bottom:4px solid var(--red);padding:0 48px;height:68px;display:flex;align-items:center;justify-content:space-between;}
+        .logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+        .logo-img{width:44px;height:44px;border-radius:50%;object-fit:cover;display:block;}
+        .logo-text{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-0.5px;}
+        .logo-text span{color:var(--red);}
+        nav{display:flex;gap:12px;align-items:center;}
+        nav a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:2px solid rgba(255,255,255,0.2);padding:9px 22px;transition:all 0.2s;}
+        nav a:hover{background:var(--red);border-color:var(--red);color:#fff;}
+        nav a.active{background:var(--red);border-color:var(--red);color:#fff;}
+
+        /* ── HERO ── */
+        .page-hero{position:relative;z-index:1;background:var(--ink);padding:100px 48px;border-bottom:6px solid var(--red);overflow:hidden;}
+        .page-hero::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(255,255,255,0.022) 48px);}
+        .page-hero-content{position:relative;z-index:1;max-width:760px;}
+        .eyebrow{display:inline-block;background:var(--red);color:#fff;padding:5px 14px;font-size:0.7rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:28px;}
+        .page-hero h1{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2.8rem,6vw,4.8rem);line-height:1.04;font-weight:900;color:#fff;margin-bottom:20px;}
+        .page-hero h1 em{font-style:italic;color:var(--red);}
+        .page-hero p{font-size:1.05rem;line-height:1.8;color:rgba(255,255,255,0.55);max-width:600px;}
+
+        /* ── SHARED SECTION STYLES ── */
+        .section{position:relative;z-index:1;padding:100px 48px;}
+        .section-inner{max-width:1000px;margin:0 auto;}
+        .section-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;color:var(--red);margin-bottom:16px;}
+        .section h2{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:900;line-height:1.1;margin-bottom:20px;color:var(--ink);}
+        .section h2 em{font-style:italic;color:var(--red);}
+        .section-lead{font-size:1.05rem;line-height:1.85;color:#444;max-width:720px;margin-bottom:48px;}
+
+        /* ── WHY STUDY MARXISM - dark section ── */
+        .why-section{background:var(--ink);}
+        .why-section .section-label{color:var(--red);}
+        .why-section h2{color:#fff;}
+        .why-section .section-lead{color:rgba(255,255,255,0.5);}
+        .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:3px;}
+        .why-card{background:rgba(255,255,255,0.03);border-left:4px solid var(--red);padding:36px 28px;}
+        .why-card-num{font-family:'Georgia','Times New Roman',Times,serif;font-size:3rem;font-weight:900;color:var(--red);opacity:0.25;line-height:1;margin-bottom:16px;}
+        .why-card h3{font-size:0.88rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;}
+        .why-card p{font-size:0.9rem;line-height:1.8;color:rgba(255,255,255,0.45);}
+
+        /* ── MIA SECTION ── */
+        .mia-section{background:var(--paper);}
+        .mia-banner{display:flex;align-items:flex-start;gap:40px;background:var(--card);border:2px solid var(--border);border-top:6px solid var(--red);padding:48px;margin-bottom:48px;}
+        .mia-banner-text h3{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.6rem;font-weight:900;color:var(--ink);margin-bottom:12px;}
+        .mia-banner-text p{font-size:0.95rem;line-height:1.8;color:#555;margin-bottom:24px;}
+        .btn-primary{display:inline-block;background:var(--red);color:#fff;text-decoration:none;padding:14px 36px;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:3px solid var(--red);transition:all 0.22s;}
+        .btn-primary:hover{background:transparent;color:var(--red);}
+        .btn-secondary{display:inline-block;background:transparent;color:var(--ink);text-decoration:none;padding:14px 36px;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:3px solid var(--ink);transition:all 0.22s;margin-left:12px;}
+        .btn-secondary:hover{background:var(--ink);color:#fff;}
+
+        /* MIA subject grid */
+        .subject-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:10px;}
+        .link-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:48px;}
+        .link-card{background:var(--card);border:2px solid var(--border);border-top:4px solid var(--red);padding:24px 22px;text-decoration:none;display:block;transition:all 0.2s;}
+        .link-card:hover{border-color:var(--red);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.09);}
+        .link-card-title{font-family:'Georgia','Times New Roman',Times,serif;font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:6px;}
+        .link-card-author{font-size:0.75rem;color:var(--red);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;font-weight:600;}
+        .link-card-desc{font-size:0.82rem;line-height:1.55;color:var(--muted);}
+
+        /* ── YOUTUBE SECTION ── */
+        .yt-section{background:var(--red);}
+        .yt-section .section-label{color:rgba(255,255,255,0.6);}
+        .yt-section h2{color:#fff;}
+        .yt-section .section-lead{color:rgba(255,255,255,0.65);}
+        .yt-banner{background:rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.15);padding:48px;display:flex;align-items:flex-start;gap:40px;margin-bottom:48px;}
+        .yt-icon{flex-shrink:0;width:64px;height:64px;background:rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+        .yt-icon svg{width:32px;height:32px;fill:#fff;}
+        .yt-banner-text h3{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:10px;}
+        .yt-banner-text p{font-size:0.95rem;line-height:1.8;color:rgba(255,255,255,0.65);margin-bottom:24px;}
+        .btn-yt{display:inline-block;background:#fff;color:var(--red);text-decoration:none;padding:14px 36px;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:3px solid #fff;transition:all 0.22s;}
+        .btn-yt:hover{background:transparent;color:#fff;}
+        .yt-videos-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:rgba(255,255,255,0.5);margin-bottom:20px;border-bottom:2px solid rgba(255,255,255,0.15);padding-bottom:10px;}
+        .yt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:3px;}
+        .yt-card{background:rgba(0,0,0,0.18);border-top:3px solid rgba(255,255,255,0.2);padding:28px 24px;text-decoration:none;display:block;transition:background 0.2s;}
+        .yt-card:hover{background:rgba(0,0,0,0.32);}
+        .yt-card-topic{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.45);margin-bottom:8px;}
+        .yt-card-title{font-family:'Georgia','Times New Roman',Times,serif;font-size:1rem;font-weight:700;color:#fff;line-height:1.3;}
+
+        /* ── ML READING HUB SECTION ── */
+        .ml-section{background:var(--ink);}
+        .ml-section .section-label{color:var(--red);}
+        .ml-section h2{color:#fff;}
+        .ml-section .section-lead{color:rgba(255,255,255,0.5);}
+        .ml-banner{background:rgba(255,255,255,0.04);border:2px solid rgba(255,255,255,0.1);border-top:6px solid var(--red);padding:48px;margin-bottom:40px;}
+        .ml-banner h3{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:12px;}
+        .ml-banner p{font-size:0.95rem;line-height:1.85;color:rgba(255,255,255,0.5);margin-bottom:16px;}
+        .ml-banner p:last-of-type{margin-bottom:28px;}
+        .btn-outline-white{display:inline-block;background:transparent;color:#fff;text-decoration:none;padding:13px 32px;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:2px solid rgba(255,255,255,0.4);transition:all 0.22s;margin-right:12px;margin-bottom:8px;}
+        .btn-outline-white:hover{background:var(--red);border-color:var(--red);}
+        .ml-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:3px;}
+        .ml-feature{background:rgba(255,255,255,0.03);border-left:4px solid var(--red);padding:28px 22px;}
+        .ml-feature h3{font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#fff;margin-bottom:10px;}
+        .ml-feature p{font-size:0.88rem;line-height:1.7;color:rgba(255,255,255,0.42);}
+
+        /* ── READING PATHS SECTION ── */
+        .paths-section{background:var(--paper);}
+        .path{background:var(--card);border:2px solid var(--border);border-left:6px solid var(--red);padding:36px 32px;margin-bottom:16px;}
+        .path-level{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--red);margin-bottom:8px;}
+        .path h3{font-family:'Georgia','Times New Roman',Times,serif;font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:12px;}
+        .path p{font-size:0.9rem;line-height:1.7;color:#555;margin-bottom:16px;}
+        .path-books{display:flex;flex-wrap:wrap;gap:8px;}
+        .path-book{font-size:0.78rem;background:var(--paper);border:1px solid var(--border);padding:5px 12px;color:var(--ink);text-decoration:none;transition:all 0.2s;}
+        .path-book:hover{background:var(--red);color:#fff;border-color:var(--red);}
+
+        /* ── CTA ── */
+        .cta-banner{position:relative;z-index:1;background:var(--ink);padding:100px 48px;text-align:center;border-top:6px solid var(--red);}
+        .cta-banner h2{font-family:'Georgia','Times New Roman',Times,serif;font-size:clamp(2.2rem,5vw,3.5rem);color:#fff;font-weight:900;margin-bottom:14px;}
+        .cta-banner h2 em{font-style:italic;color:var(--red);}
+        .cta-banner p{color:rgba(255,255,255,0.4);font-size:0.95rem;margin-bottom:40px;letter-spacing:0.05em;}
+        .btn-cta{display:inline-block;background:var(--red);color:#fff;text-decoration:none;padding:18px 60px;font-size:0.85rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;border:3px solid var(--red);transition:all 0.22s;}
+        .btn-cta:hover{background:transparent;color:var(--red);}
+
+        /* ── FOOTER ── */
+        footer{background:#050505;color:rgba(255,255,255,0.22);padding:28px 48px;text-align:center;font-size:0.8rem;position:relative;z-index:1;letter-spacing:0.07em;}
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:900px){
+            header{padding:0 20px;}
+            .page-hero{padding:60px 20px;}
+            .section{padding:60px 20px;}
+            .mia-banner,.yt-banner{flex-direction:column;gap:20px;padding:28px;}
+            .btn-secondary{margin-left:0;margin-top:12px;display:inline-block;}
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── HEADER ───────────────────────────────────────────────────────────── -->
+<header>
+    <a class="logo" href="index.html">
+        <img class="logo-img" src="marx.png" alt="MarxValues">
+        <span class="logo-text">Marx<span>Values</span></span>
+    </a>
+    <nav>
+        <a href="about.html">About</a>
+        <a href="resources.html" class="active">Resources</a>
+        <a href="contribute.html">Contribute</a><a href="quiz.html">Take the Quiz</a>
+    </nav>
+</header>
+
+<!-- ── PAGE HERO ─────────────────────────────────────────────────────────── -->
+<section class="page-hero">
+    <div class="page-hero-content">
+        <div class="eyebrow">Study Materials</div>
+        <h1>Learn. Read. <em>Understand.</em></h1>
+        <p>The quiz tells you where you stand. These resources help you understand why - and what to do with that knowledge. Free texts, video lectures, and a structured reading path from beginner to advanced.</p>
+    </div>
+</section>
+
+<!-- ── WHY STUDY MARXISM ─────────────────────────────────────────────────── -->
+<section class="section why-section">
+    <div class="section-inner">
+        <div class="section-label">The Case for Theory</div>
+        <h2>Why Study <em>Marxism?</em></h2>
+        <p class="section-lead">Marxism is not a museum piece. It is the most rigorous framework ever developed for understanding how capitalism works, why it produces inequality, and how it might be overcome. Whether you agree with its conclusions or not, understanding it is essential for anyone serious about politics.</p>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-card-num">01</div>
+                <h3>Capitalism Needs Explaining</h3>
+                <p>We live inside a capitalist system so total that it presents itself as natural and inevitable. Marxism gives you the analytical tools to see through that - to understand exploitation, alienation, and class not as abstract concepts but as daily lived realities. Without theory, we can only react to symptoms rather than address causes.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-card-num">02</div>
+                <h3>History Makes Sense</h3>
+                <p>Historical materialism - the idea that the material conditions of production shape all social, political, and cultural life - transforms how you read history. Wars, revolutions, the rise and fall of empires: all become comprehensible as the outcomes of class struggle and economic contradiction rather than the decisions of great men.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-card-num">03</div>
+                <h3>Strategy Requires Analysis</h3>
+                <p>Left politics without theory produces good intentions and poor results. Understanding why previous revolutions succeeded or failed, why reform strategies stall, and what the structural constraints on change actually are - these questions require serious study. Theory is not a luxury for activists; it is a necessity.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-card-num">04</div>
+                <h3>The Tradition is Rich</h3>
+                <p>150 years of Marxist thought has produced some of the sharpest minds in history grappling with the hardest questions in social science. From Marx's own Capital to Rosa Luxemburg, Antonio Gramsci, CLR James, and beyond - this is an intellectual tradition of extraordinary depth, and most of it is freely available online.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-card-num">05</div>
+                <h3>The Ruling Class Studies It</h3>
+                <p>Business schools teach Marx. Intelligence agencies study revolutionary movements. Corporate strategists read about class conflict. If the people defending the current order take this theory seriously enough to study it, those challenging that order can hardly afford not to. Understanding the enemy's framework is elementary.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-card-num">06</div>
+                <h3>It Is Still Being Developed</h3>
+                <p>Marxism is not a fixed doctrine but a living analytical tradition. Eco-socialism, autonomism, post-colonial Marxism, feminist Marxism - the framework continues to be extended and challenged by new conditions. Studying the tradition means engaging with an ongoing conversation, not memorizing a catechism.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── MARXISTS INTERNET ARCHIVE ─────────────────────────────────────────── -->
+<section class="section mia-section">
+    <div class="section-inner">
+        <div class="section-label">Primary Sources</div>
+        <h2>Marxists <em>Internet Archive</em></h2>
+        <p class="section-lead">The Marxists Internet Archive is a non-profit volunteer project containing over 180,000 documents from more than 850 authors in 80 languages. Every major text in the socialist tradition is available here, free of charge, forever. It is the single most important resource for anyone studying the left.</p>
+
+        <!-- Main MIA banner -->
+        <div class="mia-banner">
+            <div class="mia-banner-text">
+                <h3>marxists.org</h3>
+                <p>Founded in 1990 and maintained entirely by volunteers, the MIA hosts the complete works of Marx and Engels, Lenin, Trotsky, Luxembourg, Gramsci, Mao, and hundreds of others. The archive is incorporated as a US non-profit and its content will always be free. If you read one resource from this page, make it this one.</p>
+                <a href="https://www.marxists.org" target="_blank" rel="noopener noreferrer" class="btn-primary">Visit the Archive</a>
+                <a href="https://www.marxists.org/subject/index.htm" target="_blank" rel="noopener noreferrer" class="btn-secondary">Browse by Subject</a>
+            </div>
+        </div>
+
+        <!-- Essential texts by tendency -->
+        <div class="subject-label">Essential Texts - Marxism &amp; Leninism</div>
+        <div class="link-grid">
+            <a href="https://www.marxists.org/archive/marx/works/1848/communist-manifesto/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">The Communist Manifesto</div>
+                <div class="link-card-author">Karl Marx &amp; Friedrich Engels, 1848</div>
+                <div class="link-card-desc">The foundational text of modern socialism. A short, sharp analysis of capitalism, class struggle, and the communist program. The best starting point for any newcomer.</div>
+            </a>
+            <a href="https://www.marxists.org/archive/marx/works/1867-c1/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">Capital, Volume I</div>
+                <div class="link-card-author">Karl Marx, 1867</div>
+                <div class="link-card-desc">The definitive critique of political economy. Marx dissects how capitalism extracts surplus value from labor. Dense but essential - start with Part One and the final chapters.</div>
+            </a>
+            <a href="https://www.marxists.org/archive/marx/works/1880/soc-utop/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">Socialism: Utopian and Scientific</div>
+                <div class="link-card-author">Friedrich Engels, 1880</div>
+                <div class="link-card-desc">The clearest short introduction to historical materialism and scientific socialism. More accessible than Capital and covers the core theoretical framework in 50 pages.</div>
+            </a>
+            <a href="https://www.marxists.org/archive/lenin/works/1917/staterev/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">The State and Revolution</div>
+                <div class="link-card-author">Vladimir Lenin, 1917</div>
+                <div class="link-card-desc">Lenin's most important theoretical work. Written in hiding weeks before the October Revolution - on what the state is, why it cannot be reformed, and what must replace it.</div>
+            </a>
+            <a href="https://www.marxists.org/archive/lenin/works/1916/imp-hsc/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">Imperialism, the Highest Stage of Capitalism</div>
+                <div class="link-card-author">Vladimir Lenin, 1916</div>
+                <div class="link-card-desc">Lenin's analysis of how capitalism in its monopoly phase exports capital globally and why this produces war. Essential for understanding the relationship between capitalism and empire.</div>
+            </a>
+            <a href="https://www.marxists.org/archive/marx/works/1875/gotha/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">Critique of the Gotha Programme</div>
+                <div class="link-card-author">Karl Marx, 1875</div>
+                <div class="link-card-desc">Marx's most direct statement on the transition from capitalism to communism. Short, sharp, and full of insights on socialist distribution and the role of the workers' state.</div>
+            </a>
+        </div>
+
+        <div class="subject-label">Dissent, Reform &amp; Alternatives</div>
+        <div class="link-grid">
+            <a href="https://www.marxists.org/archive/luxemburg/1900/reform-revolution/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">Reform or Revolution</div>
+                <div class="link-card-author">Rosa Luxemburg, 1900</div>
+                <div class="link-card-desc">Luxemburg's devastating critique of Bernstein's revisionism - the argument that capitalism can be gradually reformed into socialism. One of the great polemics of Marxist literature.</div>
+            </a>
+            <a href="https://www.marxists.org/archive/luxemburg/1906/mass-strike/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">The Mass Strike</div>
+                <div class="link-card-author">Rosa Luxemburg, 1906</div>
+                <div class="link-card-desc">Luxemburg's theory of revolutionary spontaneity drawn from the 1905 Russian Revolution. A counterpoint to Leninist vanguardism and still the best account of how mass movements develop.</div>
+            </a>
+            <a href="https://www.marxists.org/archive/trotsky/1936/revbet/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">The Revolution Betrayed</div>
+                <div class="link-card-author">Leon Trotsky, 1936</div>
+                <div class="link-card-desc">Trotsky's analysis of the degeneration of the Soviet state under Stalin. A rigorous account of how a workers' state becomes bureaucratically distorted - essential for understanding 20th century socialism.</div>
+            </a>
+            <a href="https://www.marxists.org/archive/pannekoe/1947/workers-councils.htm" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">Workers' Councils</div>
+                <div class="link-card-author">Anton Pannekoek, 1941</div>
+                <div class="link-card-desc">The definitive council communist text. Pannekoek argues that workers' self-organized councils - not parties - must be the vehicle of socialist transformation. A key left communist text.</div>
+            </a>
+            <a href="https://www.marxists.org/reference/archive/bernstein/works/1899/evsoc/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">Evolutionary Socialism</div>
+                <div class="link-card-author">Eduard Bernstein, 1899</div>
+                <div class="link-card-desc">The founding text of social democratic reformism. Bernstein argues that Marx was wrong about capitalist collapse and that socialism must be built through gradual democratic reform.</div>
+            </a>
+            <a href="https://www.marxists.org/reference/archive/bakunin/works/godstate/" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">God and the State</div>
+                <div class="link-card-author">Mikhail Bakunin, 1882</div>
+                <div class="link-card-desc">The classic anarchist critique of authority - religious and political. Bakunin argues that any state, even a workers' state, will reproduce domination. The essential anarchist counter to Marxist statism.</div>
+            </a>
+        </div>
+
+        <div class="subject-label">The MIA Subject Archive</div>
+        <div class="link-grid">
+            <a href="https://www.marxists.org/subject/left-wing/index.htm" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">Left Communism Archive</div>
+                <div class="link-card-author">MIA Subject Collection</div>
+                <div class="link-card-desc">The complete collection of left communist and council communist writings - Pannekoek, Gorter, Bordiga, Mattick, and the debates with Lenin and Trotsky.</div>
+            </a>
+            <a href="https://www.marxists.org/subject/africa/index.htm" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">Africa &amp; Anti-Colonialism Archive</div>
+                <div class="link-card-author">MIA Subject Collection</div>
+                <div class="link-card-desc">Fanon, Nkrumah, Cabral, and the tradition of anti-colonial Marxism. Essential for understanding Third Worldism, national liberation, and post-colonial socialist theory.</div>
+            </a>
+            <a href="https://www.marxists.org/subject/women/index.htm" target="_blank" rel="noopener noreferrer" class="link-card">
+                <div class="link-card-title">Women &amp; Marxism Archive</div>
+                <div class="link-card-author">MIA Subject Collection</div>
+                <div class="link-card-desc">Kollontai, Zetkin, Goldman, and the tradition of socialist feminism. The Marxist analysis of women's oppression and its relationship to capitalism and class struggle.</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── SOCIALISM FOR ALL YOUTUBE ──────────────────────────────────────────── -->
+<section class="section yt-section">
+    <div class="section-inner">
+        <div class="section-label">Video Resources</div>
+        <h2>Socialism <em>For All</em></h2>
+        <p class="section-lead">Theory does not have to be inaccessible. Socialism For All makes Marxist ideas clear and engaging for a modern audience - covering political economy, history, ideology, and current events from a socialist perspective.</p>
+
+        <!-- Channel banner -->
+        <div class="yt-banner">
+            <div class="yt-icon">
+                <!-- YouTube play icon -->
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
+            </div>
+            <div class="yt-banner-text">
+                <h3>Socialism For All</h3>
+                <p>An educational YouTube channel dedicated to making socialist theory and history accessible to everyone. From explainers on surplus value to deep dives into historical socialist movements, Socialism For All bridges the gap between dense academic theory and everyday political understanding.</p>
+                <a href="https://www.youtube.com/@SocialismForAll" target="_blank" rel="noopener noreferrer" class="btn-yt">Visit the Channel</a>
+            </div>
+        </div>
+
+        <!-- Topic areas covered -->
+        <div class="yt-videos-label">Topics Covered on the Channel</div>
+        <div class="yt-grid">
+            <a href="https://www.youtube.com/@SocialismForAll" target="_blank" rel="noopener noreferrer" class="yt-card">
+                <div class="yt-card-topic">Political Economy</div>
+                <div class="yt-card-title">How capitalism works - surplus value, exploitation, and the wage relation explained clearly</div>
+            </a>
+            <a href="https://www.youtube.com/@SocialismForAll" target="_blank" rel="noopener noreferrer" class="yt-card">
+                <div class="yt-card-topic">Socialist History</div>
+                <div class="yt-card-title">The Russian Revolution, the Paris Commune, socialist states, and the lessons of historical movements</div>
+            </a>
+            <a href="https://www.youtube.com/@SocialismForAll" target="_blank" rel="noopener noreferrer" class="yt-card">
+                <div class="yt-card-topic">Ideology & Theory</div>
+                <div class="yt-card-title">Marxism, anarchism, social democracy - the differences between left tendencies explained</div>
+            </a>
+            <a href="https://www.youtube.com/@SocialismForAll" target="_blank" rel="noopener noreferrer" class="yt-card">
+                <div class="yt-card-topic">Current Events</div>
+                <div class="yt-card-title">Analysis of contemporary politics, imperialism, and class struggle through a Marxist lens</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── ML READING HUB ─────────────────────────────────────────────────────── -->
+<section class="section ml-section">
+    <div class="section-inner">
+        <div class="section-label">Physical Books &amp; Free Distribution</div>
+        <h2>Marxist-Leninist <em>Reading Hub</em></h2>
+        <p class="section-lead">The ML Reading Hub is a volunteer-run project dedicated to Communist education, unaffiliated with any political party. They provide free texts online, sell physical books, and run a Book Fund that sends revolutionary literature to comrades around the world at no cost to the recipient.</p>
+
+        <div class="ml-banner">
+            <h3>mlreadinghub.org</h3>
+            <p>The Reading Hub hosts a structured reading list organized by stage - from introductory texts like Engels' Principles of Communism through to advanced works by Lenin and Mao. All texts are available free on site as PDF or EPUB download. Physical copies are available for purchase through their Lulu store, and every purchase contributes to their Book Fund.</p>
+            <p>Their Book Fund is particularly worth highlighting: it sends free revolutionary literature to comrades across the world who cannot afford or access books locally. Thousands of books have already been distributed globally through this program. If you can afford to buy a physical copy of a text, doing so directly supports getting books into the hands of those who need them most.</p>
+            <p>The Reading Hub focuses specifically on the Marxist-Leninist tradition - making it an ideal companion to the broader MIA archive for anyone exploring that tendency in depth.</p>
+            <a href="https://www.mlreadinghub.org" target="_blank" rel="noopener noreferrer" class="btn-outline-white">Visit the Reading Hub</a>
+            <a href="https://www.mlreadinghub.org/study-materials/reading-list" target="_blank" rel="noopener noreferrer" class="btn-outline-white">Browse the Reading List</a>
+            <a href="https://www.mlreadinghub.org/book-fund" target="_blank" rel="noopener noreferrer" class="btn-outline-white">Book Fund - Get or Give Free Books</a>
+        </div>
+
+        <div class="ml-features">
+            <div class="ml-feature">
+                <h3>Free Online Texts</h3>
+                <p>Every text in their reading list is available to read free on site or download as PDF or EPUB. Organized into four stages from introduction to organization-level theory.</p>
+            </div>
+            <div class="ml-feature">
+                <h3>Physical Books</h3>
+                <p>Physical copies of essential ML texts are available via their Lulu.com store. All proceeds support the Book Fund and the maintenance of the Reading Hub's projects.</p>
+            </div>
+            <div class="ml-feature">
+                <h3>Global Book Fund</h3>
+                <p>Apply to receive free revolutionary literature if you cannot afford it. Donate to send books to comrades around the world. Thousands of books have already been distributed globally at zero cost to recipients.</p>
+            </div>
+            <div class="ml-feature">
+                <h3>Audiobooks</h3>
+                <p>An audiobook list with links to audio versions of key texts is available on the site - making the tradition accessible to those who prefer to listen rather than read.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── STRUCTURED READING PATHS ───────────────────────────────────────────── -->
+<section class="section paths-section">
+    <div class="section-inner">
+        <div class="section-label">Where to Start</div>
+        <h2>Structured <em>Reading Paths</em></h2>
+        <p class="section-lead">The Marxist canon is vast. These paths give you a structured route through it - from first principles to advanced theory. Every text is available free at the Marxists Internet Archive.</p>
+
+        <div class="path">
+            <div class="path-level">Beginner - Start Here</div>
+            <h3>First Principles</h3>
+            <p>New to socialist theory? These short, accessible texts introduce the core ideas without requiring prior knowledge. Read them in this order - each one builds on the last.</p>
+            <div class="path-books">
+                <a href="https://www.marxists.org/archive/marx/works/1848/communist-manifesto/" target="_blank" rel="noopener noreferrer" class="path-book">The Communist Manifesto - Marx &amp; Engels</a>
+                <a href="https://www.marxists.org/archive/marx/works/1880/soc-utop/" target="_blank" rel="noopener noreferrer" class="path-book">Socialism: Utopian and Scientific - Engels</a>
+                <a href="https://www.marxists.org/archive/marx/works/1847/wage-labour/" target="_blank" rel="noopener noreferrer" class="path-book">Wage Labour and Capital - Marx</a>
+                <a href="https://www.marxists.org/archive/luxemburg/1900/reform-revolution/" target="_blank" rel="noopener noreferrer" class="path-book">Reform or Revolution - Luxemburg</a>
+            </div>
+        </div>
+
+        <div class="path">
+            <div class="path-level">Intermediate - Building the Framework</div>
+            <h3>Core Texts</h3>
+            <p>Once you have the basics, these texts develop the analytical framework in depth. This is where Marxism becomes a tool for understanding history, the state, and imperialism.</p>
+            <div class="path-books">
+                <a href="https://www.marxists.org/archive/marx/works/1867-c1/" target="_blank" rel="noopener noreferrer" class="path-book">Capital Vol. I - Marx</a>
+                <a href="https://www.marxists.org/archive/lenin/works/1917/staterev/" target="_blank" rel="noopener noreferrer" class="path-book">State and Revolution - Lenin</a>
+                <a href="https://www.marxists.org/archive/lenin/works/1916/imp-hsc/" target="_blank" rel="noopener noreferrer" class="path-book">Imperialism - Lenin</a>
+                <a href="https://www.marxists.org/archive/luxemburg/1906/mass-strike/" target="_blank" rel="noopener noreferrer" class="path-book">The Mass Strike - Luxemburg</a>
+                <a href="https://www.marxists.org/archive/trotsky/1936/revbet/" target="_blank" rel="noopener noreferrer" class="path-book">The Revolution Betrayed - Trotsky</a>
+            </div>
+        </div>
+
+        <div class="path">
+            <div class="path-level">Advanced - The Debates</div>
+            <h3>Tendencies and Disputes</h3>
+            <p>The socialist tradition is not monolithic. These texts represent the key theoretical disputes - between Leninism and council communism, anarchism and Marxism, reform and revolution - that define the different tendencies on the left.</p>
+            <div class="path-books">
+                <a href="https://www.marxists.org/archive/pannekoe/1947/workers-councils.htm" target="_blank" rel="noopener noreferrer" class="path-book">Workers' Councils - Pannekoek</a>
+                <a href="https://www.marxists.org/archive/gorter/1920/open-letter/" target="_blank" rel="noopener noreferrer" class="path-book">Open Letter to Lenin - Gorter</a>
+                <a href="https://www.marxists.org/reference/archive/bakunin/works/1873/statism-anarchy.htm" target="_blank" rel="noopener noreferrer" class="path-book">Statism and Anarchy - Bakunin</a>
+                <a href="https://www.marxists.org/archive/trotsky/1938/tp/" target="_blank" rel="noopener noreferrer" class="path-book">Transitional Program - Trotsky</a>
+                <a href="https://www.marxists.org/reference/archive/mao/selected-works/volume-1/mswv1_17.htm" target="_blank" rel="noopener noreferrer" class="path-book">On Contradiction - Mao</a>
+                <a href="https://www.marxists.org/archive/luxemburg/1918/russian-revolution/" target="_blank" rel="noopener noreferrer" class="path-book">The Russian Revolution - Luxemburg</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── CTA ───────────────────────────────────────────────────────────────── -->
+<section class="cta-banner">
+    <h2>Ready to find your <em>place on the left?</em></h2>
+    <p>58 questions. 7 axes. 21 ideologies. See where your beliefs actually land.</p>
+    <a href="quiz.html" class="btn-cta">Take the Quiz</a>
+</section>
+
+<footer>
+    <p>&copy; 2024 MarxValues. Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:rgba(255,255,255,0.4);text-decoration:underline;">CC BY-NC-SA 4.0</a>. Your answers are never stored or shared.</p>
+</footer>
+
+</body>
+</html>
