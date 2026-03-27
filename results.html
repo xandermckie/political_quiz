@@ -352,7 +352,7 @@ function renderResults(scores, top, runnerUps, allRanked) {
         </div>`).join('');
 
     // ── Full ideology breakdown table ───────────────────────────
-    // All 22 ideologies ranked by match %, with animated bars.
+    // All 21 ideologies ranked by match %, with animated bars.
     // Top result gets a red left border and highlighted background.
     // Falls back gracefully if allRanked is missing (old saved results).
     const breakdownHTML = (allRanked && allRanked.length > 0) ? allRanked.map((r, i) => {
@@ -828,17 +828,13 @@ function getDesc(name) {
         'Dengism':'Socialism with Chinese characteristics: market mechanisms, CPC leadership, and the primary stage of socialism.',
         'Hoxhaism':'Anti-revisionist Marxism-Leninism: strict defense of Stalin, opposition to Maoism and Soviet revisionism alike.',
         'Syndicalism':'Revolutionary trade unionism, the union, not the party, is the vehicle of socialist transformation.',
-        'Libertarian':'Emphasizes individual liberty, limited government, and free markets above all else.',
-        'Conservative':'Values tradition, authority, and social stability; cautious of rapid change in any direction.',
-        'Liberal':'Supports individual rights, democracy, and social progress alongside regulated capitalism.',
+        'Liberal / Right':'Your answers align with liberal or right-wing politics outside the left-wing spectrum this quiz measures. Covers social liberalism through to conservatism. Try a general political compass quiz for a fuller picture.',
         'Socialist':'Advocates for social ownership, economic equality, and redistribution of wealth through democratic means.',
-        'Centrist':'Takes a balanced approach, incorporating ideas from multiple political traditions without firm commitments.',
         'Authoritarian':'Prioritizes order, hierarchy, and state power over individual freedoms and democratic participation.',
         'Libertarian Socialist':'Combines opposition to state power with support for economic equality and workers\' self-management.',
         'Anarchist':'Rejects all compulsory government and hierarchy; advocates voluntary association and mutual aid.',
         'Eco-Socialist':'Combines socialist principles with environmental conservation; capitalism is the root of the ecological crisis.',
         'Social Democrat':'Gradual reform within capitalism, a strong welfare state, progressive taxation, and parliamentary democracy over revolution.',
-        'Liberal / Right':'Your answers align with liberal or right-wing politics rather than the left-wing spectrum this quiz measures. Try a general political compass quiz for a fuller picture.',
         'Patriotic Socialism':'Socialism organized around national identity, state ownership and workers rights combined with cultural conservatism and rejection of liberal social values.',
         'Left Communism':'A Marxist critique of Leninism from the left, rejecting parliament, vanguard parties, and trade union bureaucracies in favor of workers councils and class autonomy.',
         'Luxemburgism':'Mass strike, anti-vanguardism, and the insistence that socialist democracy cannot be deferred, it must be practiced inside the revolutionary movement from the start.',
